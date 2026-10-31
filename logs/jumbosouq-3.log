@@ -6,3 +6,9 @@
 23:15:26 [jumbosouq-qa] 100/5747 {'product': 101, 'offers': 101, 'changes': 101}
 23:16:08 [jumbosouq-qa] 125/5747 {'product': 125, 'offers': 125, 'changes': 125, 'not_electronics': 1}
 23:16:49 [jumbosouq-qa] 150/5747 {'product': 150, 'offers': 150, 'changes': 150, 'not_electronics': 1}
+23:17:32 [jumbosouq-qa] 175/5747 {'product': 175, 'offers': 175, 'changes': 175, 'not_electronics': 1}
+23:18:19 [jumbosouq-qa] 200/5747 {'product': 198, 'offers': 198, 'changes': 198, 'not_electronics': 3}
+23:19:04 [jumbosouq-qa] 225/5747 {'product': 221, 'offers': 221, 'changes': 221, 'not_electronics': 4, 'not_product': 1}
+23:19:46 [jumbosouq-qa] 250/5747 {'product': 246, 'offers': 246, 'changes': 246, 'not_electronics': 4, 'not_product': 1}
+23:20:28 [jumbosouq-qa] 275/5747 {'product': 271, 'offers': 271, 'changes': 271, 'not_electronics': 4, 'not_product': 1}
+23:21:11 [jumbosouq-qa] 300/5747 {'product': 296, 'offers': 296, 'changes': 296, 'not_electronics': 4, 'not_product': 1}

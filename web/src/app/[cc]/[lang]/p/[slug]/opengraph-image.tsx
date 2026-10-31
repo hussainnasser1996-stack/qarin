@@ -22,19 +22,30 @@ export default async function Image({ params }: { params: Promise<{ cc: CC; slug
   const min = prices.length ? Math.min(...prices) : null;
   const max = prices.length ? Math.max(...prices) : null;
   const stores = new Set(live.map((o) => o.store)).size;
+  // The renderer only handles PNG/JPEG: fetch the image ourselves and embed it only if it is one of those.
+  let img: string | null = null;
+  if (data?.product.image) {
+    try {
+      const r = await fetch(data.product.image, { signal: AbortSignal.timeout(4000) });
+      const type = r.headers.get("content-type") || "";
+      if (r.ok && /image\/(png|jpe?g)/.test(type)) img = `data:${type};base64,${Buffer.from(await r.arrayBuffer()).toString("base64")}`;
+    } catch { /* no image is fine */ }
+  }
   return new ImageResponse(
     (
       <div style={{ width: "100%", height: "100%", display: "flex", background: "#eef1f0", padding: 56, fontFamily: "sans-serif" }}>
         <div style={{ display: "flex", flex: 1, background: "#fff", borderRadius: 28, border: "2px solid #dde3e2", padding: 48, gap: 48 }}>
           <div style={{ width: 340, height: 340, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 20, border: "2px solid #dde3e2", background: "#fff" }}>
-            {data?.product.image ? (
+            {img ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={data.product.image} width={300} height={300} style={{ objectFit: "contain" }} alt="" />
-            ) : null}
+              <img src={img} width={300} height={300} style={{ objectFit: "contain" }} alt="" />
+            ) : (
+              <div style={{ display: "flex", background: "#ffd23d", color: "#1d1700", borderRadius: "8px 18px 18px 8px", padding: "8px 26px 8px 34px", fontSize: 44, fontWeight: 800 }}>Qarin</div>
+            )}
           </div>
           <div style={{ display: "flex", flexDirection: "column", flex: 1, justifyContent: "space-between" }}>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <div style={{ fontSize: 26, color: "#3a4f55" }}>Qarin · {COUNTRIES[cc]?.en ?? ""}</div>
+              <div style={{ fontSize: 26, color: "#3a4f55" }}>{`Qarin · ${COUNTRIES[cc]?.en ?? ""}`}</div>
               <div style={{ fontSize: 52, fontWeight: 700, color: "#0c1f24", lineHeight: 1.1, marginTop: 12 }}>{data?.product.name ?? "Qarin"}</div>
             </div>
             {min !== null ? (
@@ -43,7 +54,7 @@ export default async function Image({ params }: { params: Promise<{ cc: CC; slug
                   {fmt(min, cur)}
                 </div>
                 <div style={{ fontSize: 28, color: "#05603f", fontWeight: 600 }}>
-                  {max !== null && max > min ? `Save ${fmt(max - min, cur)} across ${stores} stores` : `Lowest price across ${stores} stores`}
+                  {max !== null && max > min ? `Save ${fmt(max - min, cur)} across ${stores} stores` : stores === 1 ? `Lowest price at ${live[0].store}` : `Lowest price across ${stores} stores`}
                 </div>
               </div>
             ) : (

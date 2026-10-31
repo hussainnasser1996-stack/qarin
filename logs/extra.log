@@ -129,3 +129,21 @@
 23:15:25 [extra-sa] 625/17195 {'product': 623, 'offers': 623, 'changes': 623, 'not_electronics': 2, 'not_product': 1}
 23:16:06 [extra-sa] 650/17195 {'product': 648, 'offers': 648, 'changes': 648, 'not_electronics': 2, 'not_product': 1}
 23:16:44 [extra-sa] 675/17195 {'product': 673, 'offers': 673, 'changes': 673, 'not_electronics': 2, 'not_product': 1}
+23:17:20 [extra-sa] done {'product': 696, 'offers': 696, 'changes': 696, 'not_electronics': 2, 'not_product': 1}
+23:17:21   [extra-om] sitemap.xml: +0 products, +8 maps (total 0)
+23:17:22   [extra-om] Product-en-OMR-0-20261031080113-12004417997799543978.xml: +900 products, +0 maps (total 900)
+23:17:23   [extra-om] Product-en-OMR-1-20261031080119-18201294501642542324.xml: +900 products, +0 maps (total 1800)
+23:17:24   [extra-om] Product-en-OMR-2-20261031080123-5172096738008999229.xml: +900 products, +0 maps (total 2700)
+23:17:25   [extra-om] Product-en-OMR-3-20261031080127-16968677885389160329.xml: +900 products, +0 maps (total 3600)
+23:17:26   [extra-om] Product-en-OMR-4-20261031080131-475735098827606203.xml: +900 products, +0 maps (total 4500)
+23:17:27   [extra-om] Product-en-OMR-5-20261031080135-12064158190121004296.xml: +900 products, +0 maps (total 5400)
+23:17:28   [extra-om] Product-en-OMR-6-20261031080139-13594974298797254274.xml: +900 products, +0 maps (total 6300)
+23:17:29   [extra-om] Product-en-OMR-7-20261031080143-14733907130254325878.xml: +528 products, +0 maps (total 6828)
+23:17:32 [extra-om] discovered 6828 candidate product URLs
+23:17:35 [extra-om] 6828 URLs due; budget 20.0 min
+23:17:36 [extra-om] 0/6828 {'product': 1, 'offers': 1, 'changes': 1}
+23:18:21 [extra-om] 25/6828 {'product': 17, 'offers': 17, 'changes': 17, 'not_electronics': 9}
+23:19:03 [extra-om] 50/6828 {'product': 41, 'offers': 41, 'changes': 41, 'not_electronics': 10}
+23:19:42 [extra-om] 75/6828 {'product': 64, 'offers': 64, 'changes': 64, 'not_electronics': 12}
+23:20:21 [extra-om] 100/6828 {'product': 88, 'offers': 88, 'changes': 88, 'not_electronics': 13}
+23:21:01 [extra-om] 125/6828 {'product': 112, 'offers': 112, 'changes': 112, 'not_electronics': 14}

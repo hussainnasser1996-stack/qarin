@@ -97,3 +97,14 @@ def test_2in1_is_not_a_model_code():
     a = K("HP OmniBook 5 Flip 2-in-1 Convertible (2026) Laptop – 3rd Series", "HP")
     b = K("HP OmniBook X Flip 2-in-1 Convertible (2026) Laptop", "HP")
     assert a is None or a != b
+
+
+def test_model_code_ignores_hyphens():
+    assert K("Sony MDR-EX15AP In-Ear Headphone Black", "Sony") == K("Sony MDREX15AP In Ear Headphone Black", "Sony")
+
+
+def test_spec_tokens_never_become_codes():
+    for a, b in [("SanDisk Extreme PRO SDXC UHS-I Memory Card 256GB", "SanDisk Extreme microSDXC UHS-I Card 256GB"),
+                 ("Belkin Power Bank 20000mAh Black BPB012BTBK", "Belkin UltraCharge Power Bank 20000mAh Black")]:
+        ka, kb = K(a, a.split()[0]), K(b, b.split()[0])
+        assert ka is None or ka != kb, (ka, kb)

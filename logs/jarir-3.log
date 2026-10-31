@@ -4,3 +4,7 @@
 23:14:37 [jarir-bh] 50/3427 {'product': 51, 'offers': 51, 'changes': 51}
 23:15:52 [jarir-bh] 75/3427 {'product': 76, 'offers': 76, 'changes': 76}
 23:16:53 [jarir-bh] 100/3427 {'product': 101, 'offers': 101, 'changes': 101}
+23:17:58 [jarir-bh] 125/3427 {'product': 126, 'offers': 126, 'changes': 126}
+23:19:08 [jarir-bh] 150/3427 {'product': 150, 'offers': 150, 'changes': 150, 'not_electronics': 1}
+23:20:16 [jarir-bh] 175/3427 {'product': 150, 'offers': 150, 'changes': 150, 'not_electronics': 26}
+23:21:11 [jarir-bh] 200/3427 {'product': 156, 'offers': 156, 'changes': 156, 'not_electronics': 45}

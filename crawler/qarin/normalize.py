@@ -246,16 +246,25 @@ NOT_CODE = re.compile(r"^(\d+-in-\d+|20\d\d|insta360|wi-?fi-?\d\w*|usb-?c\d*|ddr
                       r"ryzen-?\d*|m\d-?(pro|max)?|\d+(hz|mah|mp|w|nm|gb|tb|mm|cm|kg|ml|fps|k)|hdr\d+|bt-?\d\w*|ip\d\d|qi\d?|a\d{2}-?pro)$")
 
 
+JOIN_STOP = {"for", "and", "the", "pro", "max", "gen", "new", "fhd", "uhd", "usb", "led", "with", "plus", "mini", "air", "ultra",
+             "lite", "ram", "ssd", "hdd", "inch", "oled", "qled", "smart", "tv", "wifi", "dual", "sim", "core", "intel", "amd",
+             "apple", "sony", "lg", "hp", "dell", "asus", "acer", "msi", "jbl", "bose", "nova", "mate", "pura", "redmi", "poco"}
+
+
 def model_code(t: str, brand: str | None) -> str | None:
     """Manufacturer model codes like 'ue55du7000', 'sm-s938b', 'cfi-2000', '55qned86t6a'.
     Picks the LONGEST plausible code (the full SKU usually encodes size/variant), never brand names or spec tokens."""
     best = None
-    for c in MODEL_CODE_RE.findall(t):
+    # Hyphenated SKUs arrive split by normalisation ("mdr-ex15ap" -> "mdr ex15ap"): rejoin prefix + code.
+    joined = [a + b for a, b in re.findall(r"\b([a-z]{2,4}) ([a-z]*\d[a-z0-9]*)\b", t)
+              if a not in JOIN_STOP and re.search(r"[a-z]", b) and sum(ch.isdigit() for ch in b) >= 2
+              and not NOT_CODE.match(b) and not STOP_CODES.match(b)]
+    for c in MODEL_CODE_RE.findall(t) + joined:
         if (len(c) >= 5 and not STOP_CODES.match(c) and not NOT_CODE.match(c) and not re.fullmatch(r"\d+", c)
                 and sum(ch.isdigit() for ch in c) >= 2 and c not in BRANDS and (brand is None or c != brand.replace(" ", ""))):
             if best is None or len(c) > len(best):
                 best = c
-    return best
+    return best.replace("-", "") if best else None
 
 
 def identity(title: str, brand_field: str | None, crumbs: list[str] | None, url: str = "",
