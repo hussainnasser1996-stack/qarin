@@ -68,7 +68,7 @@ export const DOCS: Record<string, Record<Lang, Doc>> = {
   bot: {
     en: { title: "QarinBot — our crawler", body: [
       "QarinBot reads the product information that stores publish for search engines (schema.org data in their product pages and their public sitemaps).",
-      "It identifies itself honestly with the user-agent “QarinBot/1.0 (+https://qarin.vercel.app/en/bot)”, obeys robots.txt and Crawl-delay, waits at least 1.5 seconds between requests to a store, and never runs two crawls of the same store at once.",
+      "It identifies itself honestly with the user-agent “QarinBot/1.0 (+https://qarin-gulf.vercel.app/en/bot)”, obeys robots.txt and Crawl-delay, waits at least 1.5 seconds between requests to a store, and never runs two crawls of the same store at once.",
       "If a site blocks or rate-limits it, it stops. It never disguises itself, solves CAPTCHAs, or uses private APIs or keys.",
       "Store owners: to stop QarinBot, add “User-agent: QarinBot / Disallow: /” to robots.txt, or email us. To send us a product feed instead (faster, more accurate), use “List your store”.",
     ] },

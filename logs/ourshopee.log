@@ -38,3 +38,12 @@
 23:01:11 [ourshopee-ae] 75/9334 {'product': 65, 'offers': 65, 'changes': 65, 'not_product': 9, 'not_electronics': 2}
 23:02:03 [ourshopee-ae] 100/9334 {'product': 87, 'offers': 87, 'changes': 87, 'not_product': 12, 'not_electronics': 2}
 23:02:59 [ourshopee-ae] 125/9334 {'product': 112, 'offers': 112, 'changes': 112, 'not_product': 12, 'not_electronics': 2}
+23:03:44 [ourshopee-ae] 150/9334 {'product': 128, 'offers': 128, 'changes': 128, 'not_product': 21, 'not_electronics': 2}
+23:04:29 [ourshopee-ae] 175/9334 {'product': 139, 'offers': 139, 'changes': 139, 'not_product': 35, 'not_electronics': 2}
+23:05:26 [ourshopee-ae] 200/9334 {'product': 162, 'offers': 162, 'changes': 162, 'not_product': 37, 'not_electronics': 2}
+23:06:16 [ourshopee-ae] 225/9334 {'product': 177, 'offers': 177, 'changes': 177, 'not_product': 47, 'not_electronics': 2}
+23:07:24 [ourshopee-ae] 250/9334 {'product': 202, 'offers': 202, 'changes': 202, 'not_product': 47, 'not_electronics': 2}
+23:08:12 [ourshopee-ae] 275/9334 {'product': 206, 'offers': 206, 'changes': 206, 'not_product': 68, 'not_electronics': 2}
+23:09:02 [ourshopee-ae] 300/9334 {'product': 214, 'offers': 214, 'changes': 214, 'not_product': 85, 'not_electronics': 2}
+23:09:45 [ourshopee-ae] 325/9334 {'product': 229, 'offers': 229, 'changes': 229, 'not_product': 95, 'not_electronics': 2}
+23:10:28 [ourshopee-ae] 350/9334 {'product': 243, 'offers': 243, 'changes': 243, 'not_product': 106, 'not_electronics': 2}

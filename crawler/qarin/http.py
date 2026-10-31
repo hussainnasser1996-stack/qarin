@@ -12,7 +12,7 @@ from urllib.parse import urlparse
 
 import httpx
 
-UA = "QarinBot/1.0 (+https://qarin.vercel.app/en/bot; price comparison; contact hussainnasser.bahrain@gmail.com)"
+UA = "QarinBot/1.0 (+https://qarin-gulf.vercel.app/en/bot; price comparison; contact hussainnasser.bahrain@gmail.com)"
 ROBOTS_UA = "QarinBot"
 BLOCK_STATUSES = {401, 403, 407, 429, 451, 503}
 

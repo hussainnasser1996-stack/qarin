@@ -109,3 +109,13 @@
 23:01:25 [extra-sa] 125/17195 {'product': 126, 'offers': 126, 'changes': 126}
 23:02:12 [extra-sa] 150/17195 {'product': 151, 'offers': 151, 'changes': 151}
 23:02:56 [extra-sa] 175/17195 {'product': 176, 'offers': 176, 'changes': 176}
+23:03:37 [extra-sa] 200/17195 {'product': 201, 'offers': 201, 'changes': 201}
+23:04:18 [extra-sa] 225/17195 {'product': 226, 'offers': 226, 'changes': 226}
+23:05:00 [extra-sa] 250/17195 {'product': 251, 'offers': 251, 'changes': 251}
+23:05:44 [extra-sa] 275/17195 {'product': 276, 'offers': 276, 'changes': 276}
+23:06:26 [extra-sa] 300/17195 {'product': 300, 'offers': 300, 'changes': 300, 'not_electronics': 1}
+23:07:05 [extra-sa] 325/17195 {'product': 325, 'offers': 325, 'changes': 325, 'not_electronics': 1}
+23:07:46 [extra-sa] 350/17195 {'product': 350, 'offers': 350, 'changes': 350, 'not_electronics': 1}
+23:08:27 [extra-sa] 375/17195 {'product': 375, 'offers': 375, 'changes': 375, 'not_electronics': 1}
+23:09:14 [extra-sa] 400/17195 {'product': 400, 'offers': 400, 'changes': 400, 'not_electronics': 1}
+23:09:53 [extra-sa] 425/17195 {'product': 425, 'offers': 425, 'changes': 425, 'not_electronics': 1}

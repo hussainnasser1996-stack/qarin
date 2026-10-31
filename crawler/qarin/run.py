@@ -280,7 +280,7 @@ def cmd_match():
 def cmd_alerts():
     key = os.environ.get("RESEND_API_KEY")
     sender = os.environ.get("ALERT_FROM")
-    site = os.environ.get("SITE_URL", "https://qarin.vercel.app").rstrip("/")
+    site = os.environ.get("SITE_URL", "https://qarin-gulf.vercel.app").rstrip("/")
     if not key or not sender:
         log("alerts: RESEND_API_KEY / ALERT_FROM not set; skipping (alerts stay queued)")
         return
@@ -318,7 +318,7 @@ def cmd_alerts():
 
 
 def cmd_revalidate():
-    site = os.environ.get("SITE_URL", "https://qarin.vercel.app").rstrip("/")
+    site = os.environ.get("SITE_URL", "https://qarin-gulf.vercel.app").rstrip("/")
     secret = os.environ.get("REVALIDATE_SECRET")
     if not secret:
         log("revalidate: REVALIDATE_SECRET not set; skipping")

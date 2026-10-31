@@ -1,6 +1,6 @@
 # Qarin (قارن): electronics price comparison for the GCC
 
-Live site: **https://qarin.vercel.app**. It compares the same electronics product across stores in Bahrain, UAE, Saudi Arabia, Kuwait, Qatar and Oman, with daily price history, a deal verdict, cross-GCC comparison and email price alerts.
+Live site: **https://qarin-gulf.vercel.app**. It compares the same electronics product across stores in Bahrain, UAE, Saudi Arabia, Kuwait, Qatar and Oman, with daily price history, a deal verdict, cross-GCC comparison and email price alerts.
 
 ## How it works
 ```

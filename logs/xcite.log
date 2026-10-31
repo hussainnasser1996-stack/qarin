@@ -149,3 +149,9 @@
 23:01:04 [xcite-kw] 550/734 {'offers': 388, 'changes': 388, 'product': 388, 'not_electronics': 67, 'not_product': 96}
 23:01:47 [xcite-kw] 575/734 {'offers': 405, 'changes': 405, 'product': 405, 'not_electronics': 71, 'not_product': 100}
 23:02:29 [xcite-kw] 600/734 {'offers': 425, 'changes': 425, 'product': 425, 'not_electronics': 74, 'not_product': 102}
+23:03:09 [xcite-kw] 625/734 {'offers': 439, 'changes': 439, 'product': 439, 'not_electronics': 78, 'not_product': 109}
+23:03:50 [xcite-kw] 650/734 {'offers': 458, 'changes': 458, 'product': 458, 'not_electronics': 83, 'not_product': 110}
+23:04:30 [xcite-kw] 675/734 {'offers': 479, 'changes': 479, 'product': 479, 'not_electronics': 85, 'not_product': 112}
+23:05:13 [xcite-kw] 700/734 {'offers': 500, 'changes': 500, 'product': 500, 'not_electronics': 85, 'not_product': 116}
+23:05:55 [xcite-kw] 725/734 {'offers': 521, 'changes': 521, 'product': 521, 'not_electronics': 85, 'not_product': 120}
+23:06:08 [xcite-kw] done {'offers': 527, 'changes': 527, 'product': 527, 'not_electronics': 85, 'not_product': 122}
