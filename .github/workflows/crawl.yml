@@ -1,0 +1,82 @@
+name: Daily crawl
+
+on:
+  schedule:
+    - cron: "0 22 * * *"   # 01:00 Gulf time, every day
+  workflow_dispatch:
+    inputs:
+      minutes:
+        description: "Minutes per job (max ~330)"
+        default: "300"
+
+concurrency: { group: crawl, cancel-in-progress: false }
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      # One job per HOST so a store is never crawled in parallel. Stores sharing a host run in sequence.
+      matrix:
+        include:
+          - { name: sharafdg-bh, stores: "sharafdg-bh", share: 1 }
+          - { name: sharafdg-ae, stores: "sharafdg-ae", share: 1 }
+          - { name: sharafdg-om, stores: "sharafdg-om", share: 1 }
+          - { name: extra, stores: "extra-bh extra-sa extra-om", share: 3 }
+          - { name: jarir, stores: "jarir-bh jarir-sa jarir-kw jarir-qa", share: 4 }
+          - { name: ashrafs-bh, stores: "ashrafs-bh", share: 1 }
+          - { name: jumbo-ae, stores: "jumbo-ae", share: 1 }
+          - { name: almanea-sa, stores: "almanea-sa", share: 1 }
+          - { name: saco-sa, stores: "saco-sa", share: 1 }
+          - { name: alsaif-sa, stores: "alsaif-sa", share: 1 }
+          - { name: xcite-kw, stores: "xcite-kw", share: 1 }
+          - { name: jumbosouq-qa, stores: "jumbosouq-qa", share: 1 }
+          - { name: ansar-qa, stores: "ansar-qa", share: 1 }
+    name: crawl ${{ matrix.name }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip, cache-dependency-path: crawler/requirements.txt }
+      - run: pip install -r crawler/requirements.txt
+      - name: Discover (weekly, or when a store has no URLs yet)
+        working-directory: crawler
+        env: { DATABASE_URL: "${{ secrets.DATABASE_URL }}" }
+        run: |
+          for s in ${{ matrix.stores }}; do
+            if [ "$(date -u +%u)" = "1" ] || python -m qarin.run needs-discover --store "$s"; then
+              python -m qarin.run discover --store "$s" || true
+            fi
+          done
+      - name: Crawl
+        working-directory: crawler
+        env: { DATABASE_URL: "${{ secrets.DATABASE_URL }}" }
+        run: |
+          TOTAL=${{ github.event.inputs.minutes || '300' }}
+          PER=$(( TOTAL / ${{ matrix.share }} ))
+          for s in ${{ matrix.stores }}; do
+            python -m qarin.run crawl --store "$s" --minutes "$PER" --max-pages 20000 || true
+          done
+
+  publish:
+    needs: crawl
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip, cache-dependency-path: crawler/requirements.txt }
+      - run: pip install -r crawler/requirements.txt
+      - name: Match, alert, refresh site
+        working-directory: crawler
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          ALERT_FROM: ${{ secrets.ALERT_FROM }}
+          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+          SITE_URL: ${{ vars.SITE_URL || 'https://qarin.vercel.app' }}
+        run: |
+          python -m qarin.run match
+          python -m qarin.run alerts
+          python -m qarin.run revalidate
+          python -m qarin.run stats

@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+/* Qarin tokens — see DESIGN.md. One accent (deal green) reserved for "cheapest / good price". */
+:root {
+  --paper: #f4f6f8;
+  --surface: #ffffff;
+  --ink: #0f1b2d;
+  --ink-2: #44506a;
+  --muted: #6b7486;
+  --line: #e2e6ec;
+  --line-strong: #c9d0da;
+  --deal: #0b8a5c;
+  --deal-ink: #075e3f;
+  --deal-wash: #e7f6ef;
+  --warn: #b4530f;
+  --warn-wash: #fdf1e7;
+  --focus: #2563eb;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0d131c;
+    --surface: #141c27;
+    --ink: #e8edf4;
+    --ink-2: #b6c0cf;
+    --muted: #8c97a8;
+    --line: #243042;
+    --line-strong: #33425a;
+    --deal: #34c48b;
+    --deal-ink: #7be0b4;
+    --deal-wash: #10291f;
+    --warn: #f0954f;
+    --warn-wash: #2b1b0f;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-deal: var(--deal);
+  --color-deal-ink: var(--deal-ink);
+  --color-deal-wash: var(--deal-wash);
+  --color-warn: var(--warn);
+  --color-warn-wash: var(--warn-wash);
+  --font-sans: var(--font-plex), system-ui, sans-serif;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-plex), system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+}
+[dir="rtl"] body { line-height: 1.75; letter-spacing: 0; }
+.num { font-variant-numeric: tabular-nums; unicode-bidi: isolate; direction: ltr; display: inline-block; }
+.ltr { unicode-bidi: isolate; direction: ltr; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+a { color: inherit; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.flip-rtl { display: inline-block; }
+[dir="rtl"] .flip-rtl { transform: scaleX(-1); }
+.clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
