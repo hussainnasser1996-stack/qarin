@@ -76,3 +76,24 @@ def test_generic_phone_family_merges_colours():
 
 def test_tripod_is_accessory():
     assert identity("Hama FlexPro tripod for smartphones", "Hama", None)["category"] == "accessories"
+
+
+def test_tv_sizes_not_merged():
+    assert K("LG 55-inch QNED86 4K Smart TV 2024 | 55QNED86T6A", "LG") != K("LG 65-inch QNED86 4K Smart TV 2024 | 65QNED86T6A", "LG")
+
+
+def test_rental_is_separate():
+    assert K("[RENTAL] LG 65 inch UHD 4K Smart TV | 65UT80006LA-1-Day", "LG") != K("LG inch 65 UHD 4K Smart TV | 65UT80006LA", "LG")
+
+
+def test_ps5_accessories_are_not_consoles():
+    for t in ["Sony PlayStation 5 Dualsense Wireless Gaming Controller", "Sony 1080P HD Camera for PlayStation 5 White and Black",
+              "Sony Disc Drive for PlayStation 5 Digital Edition Console", "PlayStation 5 Portal (CFIY1016Y-R)"]:
+        assert identity(t, "Sony", None)["category"] != "gaming-consoles", t
+    assert identity("Sony PlayStation 5 Slim Digital Edition Console", "Sony", None)["category"] == "gaming-consoles"
+
+
+def test_2in1_is_not_a_model_code():
+    a = K("HP OmniBook 5 Flip 2-in-1 Convertible (2026) Laptop – 3rd Series", "HP")
+    b = K("HP OmniBook X Flip 2-in-1 Convertible (2026) Laptop", "HP")
+    assert a is None or a != b

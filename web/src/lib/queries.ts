@@ -1,9 +1,16 @@
 import { unstable_cache } from "next/cache";
 import { query, sql } from "./db";
-import { searchNorm } from "./format";
+import { arToEn, searchNorm } from "./format";
 import type { CC } from "./i18n";
 
 export const TAG = "prices";
+
+/** Latin tokens win; leftover Arabic words (e.g. "سعر") are dropped when any product-name token exists. */
+function searchTokens(norm: string): string[] {
+  const all = norm.split(" ").filter(Boolean);
+  const latin = all.filter((x) => !/[\u0600-\u06ff]/.test(x));
+  return (latin.length ? latin : all).slice(0, 6).map((x) => `%${x}%`);
+}
 const cached = <A extends unknown[], R>(fn: (...a: A) => Promise<R>, key: string, revalidate = 3600) =>
   unstable_cache(fn, [key], { tags: [TAG], revalidate });
 
@@ -101,8 +108,8 @@ export const listProducts = cached(async (cc: CC, p: ListParams) => {
   const where: string[] = [];
   let order = "agg.n_offers DESC, p.popularity DESC, agg.min_price ASC";
   if (p.q) {
-    const norm = searchNorm(p.q);
-    const toks = norm.split(" ").filter(Boolean).slice(0, 6).map((x) => `%${x}%`);
+    const norm = arToEn(searchNorm(p.q));
+    const toks = searchTokens(norm);
     if (toks.length) {
       params.push(toks);
       where.push(`p.search_norm ILIKE ALL($${params.length}::text[])`);
@@ -144,8 +151,8 @@ export const listProducts = cached(async (cc: CC, p: ListParams) => {
 }, "list", 1800);
 
 export const suggest = cached(async (cc: CC, q: string) => {
-  const norm = searchNorm(q);
-  const toks = norm.split(" ").filter(Boolean).slice(0, 6).map((x) => `%${x}%`);
+  const norm = arToEn(searchNorm(q));
+  const toks = searchTokens(norm);
   if (!toks.length) return [];
   return (await query(
     `${OFFER_AGG}

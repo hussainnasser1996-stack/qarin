@@ -73,3 +73,23 @@ export function brandName(b: string | null | undefined): string {
   if (UPPER.has(k)) return k.toUpperCase();
   return /^[a-z]/.test(b) ? b.replace(/\b\w/g, (c) => c.toUpperCase()) : b;
 }
+
+/** Arabic shopping terms -> the English words product titles use. Applied after searchNorm. */
+const AR_TERMS: [RegExp, string][] = [
+  [/ايفون|آيفون|اي فون/g, "iphone"], [/ايباد|اي باد/g, "ipad"], [/ماك ?بوك/g, "macbook"], [/ايربودز|اير بودز|ايربود/g, "airpods"],
+  [/ساعه ابل|ابل واتش/g, "apple watch"], [/ابل|آبل/g, "apple"], [/سامسونج|سامسونغ/g, "samsung"], [/جالكسي|جلاكسي|جالاكسي|غالكسي/g, "galaxy"],
+  [/بلايستيشن|بلاي ستيشن|بلي ستيشن|بليستيشن/g, "playstation"], [/اكس ?بوكس/g, "xbox"], [/نينتندو|ننتندو/g, "nintendo"], [/سويتش/g, "switch"],
+  [/هواوي/g, "huawei"], [/شاومي|شيومي/g, "xiaomi"], [/هونر|هونور/g, "honor"], [/سوني/g, "sony"], [/ال ?جي/g, "lg"], [/لينوفو/g, "lenovo"],
+  [/ديل/g, "dell"], [/اتش ?بي/g, "hp"], [/اسوس/g, "asus"], [/ايسر/g, "acer"], [/دايسون|دايسن/g, "dyson"], [/بوز/g, "bose"], [/جي ?بي ?ال/g, "jbl"],
+  [/جوجل|قوقل/g, "google"], [/بكسل|بيكسل/g, "pixel"], [/برو ?ماكس/g, "pro max"], [/برو/g, "pro"], [/الترا|ألترا/g, "ultra"], [/ماكس/g, "max"],
+  [/بلس/g, "plus"], [/ميني/g, "mini"], [/اير/g, "air"], [/لابتوب|لاب توب|كمبيوتر محمول/g, "laptop"], [/تلفزيون|تلفاز|شاشه تلفزيون/g, "tv"],
+  [/شاشه|مونيتر/g, "monitor"], [/سماعه|سماعات/g, "headphones"], [/مكبر صوت|سبيكر/g, "speaker"], [/كاميرا/g, "camera"], [/طابعه/g, "printer"],
+  [/جوال|هاتف|موبايل/g, "phone"], [/جيجا|قيقا/g, "gb"], [/تيرا/g, "tb"], [/يد تحكم|ذراع تحكم|جوي ستيك/g, "controller"], [/مكنسه/g, "vacuum"],
+];
+export function arToEn(norm: string): string {
+  if (!/[\u0600-\u06ff]/.test(norm)) return norm;
+  // Whole-word only (JS \b does not work for Arabic): "ديل" must not match inside "موديل".
+  let out = ` ${norm} `;
+  for (const [re, en] of AR_TERMS) out = out.replace(new RegExp(`(?<=\\s)(?:${re.source})(?=\\s)`, "g"), ` ${en} `);
+  return out.replace(/\s+/g, " ").trim();
+}

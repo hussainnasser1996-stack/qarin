@@ -75,11 +75,14 @@ ACCESSORY_RE = re.compile(
     r"\b(case|cover|protector|screen guard|tempered|glass|strap|band|bands|charger|charging (cable|pad|stand|dock)|"
     r"cable|adapter|adaptor|stand|holder|mount|skin|pouch|sleeve|film|lens protector|replacement|tips|keyboard folio|"
     r"compatible with|for iphone|for ipad|for samsung|for galaxy|for airpods|for macbook|for apple watch|for ps5|"
-    r"for nintendo|for switch|magsafe wallet|wallet|bumper|grip|thumb grips|decal|sticker|tripod|selfie stick|gimbal for|"
+    r"for nintendo|for switch|for playstation|for xbox|magsafe wallet|wallet|bumper|grip|thumb grips|decal|sticker|tripod|selfie stick|gimbal for|"
     r"for smartphones?|for phones?|for mobile|phone holder|car holder|power ?bank|screen protector|earbuds case)\b"
 )
 CATEGORY_RULES: list[tuple[str, str]] = [
-    ("gaming-consoles", r"\b(playstation 5|ps5( pro| slim)?( console| digital| disc)|ps5 console|xbox series [xs]|nintendo switch( 2| oled| lite)?( console)?|steam deck|rog ally|legion go)\b"),
+    ("gaming", r"\b(dualsense|controller|gamepad|joystick|pulse (3d|elite|explore)|playstation portal|ps5 portal|portal remote|disc drive|"
+               r"hd camera|stick module|charging station|racing wheel|headset|vr2|psvr)\b"),
+    ("gaming-consoles", r"\b((ps5|playstation ?5)( pro| slim)?( digital| disc)?( edition)?( console| gaming console)|ps5 (pro|slim)|playstation 5 (pro|slim)|"
+                        r"xbox series [xs]( console)?|nintendo switch( 2| oled| lite)( console)?|nintendo switch console|steam deck|rog ally|legion go)\b"),
     ("phones", r"\b(iphone \d|iphone air|iphone se|galaxy (s|a|m|z ?fold|z ?flip|note)\s?\d|pixel \d|smartphone|mobile phone|redmi note|honor magic|honor \d|huawei (mate|pura|nova|p)\s?\d|oneplus \d|nothing phone)"),
     ("tablets", r"\b(ipad|galaxy tab|tablet|matepad|xiaomi pad|redmi pad|kindle|e-?reader)\b"),
     ("laptops", r"\b(macbook|laptop|notebook|chromebook|ultrabook|zenbook|vivobook|thinkpad|ideapad|yoga slim|pavilion|envy|spectre|xps|inspiron|aspire|swift|predator|rog|tuf gaming|legion|omen|victus)\b"),
@@ -129,7 +132,7 @@ COLOURS = (
     "cloud white|space black|mist blue|lavender|phantom black|onyx|obsidian|porcelain|hazel|peony|aloe"
 )
 COLOUR_RE = re.compile(rf"\b({COLOURS})\b")
-CONDITION_RE = re.compile(r"\b(refurbished|renewed|pre-?owned|used|open box|demo|ex-?display)\b")
+CONDITION_RE = re.compile(r"\b(refurbished|renewed|pre-?owned|used|open box|demo|ex-?display|rental)\b")
 BUNDLE_RE = re.compile(r"(\+\s*\w|\bbundle\b|\bwith (game|controller|voucher)|\bvoucher\b| fc ?2\d| \bgame\b.*\bedition\b)")
 REGION_RE = re.compile(r"\b(international version|middle east version|ksa version|uae version|global version|us version|china version|japan version|hk version|indian version)\b")
 
@@ -211,7 +214,7 @@ def _family(t: str, brand: str | None, category: str | None) -> str | None:
     if m:
         return f"sony {m.group(1)}-{m.group(2).replace(' ', '')}"
     m = re.search(r"\bdualsense( edge)?\b", t)
-    if m and category in ("gaming", "accessories", "gaming-consoles"):
+    if m and category in ("gaming", "accessories", "gaming-consoles") and not re.search(r"console|charging|station|dock|stand|case|skin|cover|bundle|cable", t):
         return "sony dualsense" + (" edge" if m.group(1) else "")
     return None
 
@@ -239,12 +242,20 @@ MODEL_CODE_RE = re.compile(r"\b(?=[a-z0-9-]*\d)(?=[a-z0-9-]*[a-z])[a-z0-9]+(?:-[
 STOP_CODES = re.compile(r"^(\d+(gb|tb|mm|mah|w|hz|k|p|mp|cm|ml|l)|\d+(st|nd|rd|th)|wifi6e?|usb-?c|5g|4g|lte|m\d|a\d{2}|ps\d|x\d|\d+x)$")
 
 
+NOT_CODE = re.compile(r"^(\d+-in-\d+|20\d\d|insta360|wi-?fi-?\d\w*|usb-?c\d*|ddr\d\w*|lpddr\d\w*|rtx-?\d+\w*|gtx-?\d+|i[3579]-?\d+\w*|"
+                      r"ryzen-?\d*|m\d-?(pro|max)?|\d+(hz|mah|mp|w|nm|gb|tb|mm|cm|kg|ml|fps|k)|hdr\d+|bt-?\d\w*|ip\d\d|qi\d?|a\d{2}-?pro)$")
+
+
 def model_code(t: str, brand: str | None) -> str | None:
-    """Manufacturer model codes like 'ue55du7000', 'sm-s938b', 'cfi-2000', 'mx-master-3s'."""
+    """Manufacturer model codes like 'ue55du7000', 'sm-s938b', 'cfi-2000', '55qned86t6a'.
+    Picks the LONGEST plausible code (the full SKU usually encodes size/variant), never brand names or spec tokens."""
+    best = None
     for c in MODEL_CODE_RE.findall(t):
-        if len(c) >= 5 and not STOP_CODES.match(c) and not re.fullmatch(r"\d+", c) and sum(ch.isdigit() for ch in c) >= 2:
-            return c
-    return None
+        if (len(c) >= 5 and not STOP_CODES.match(c) and not NOT_CODE.match(c) and not re.fullmatch(r"\d+", c)
+                and sum(ch.isdigit() for ch in c) >= 2 and c not in BRANDS and (brand is None or c != brand.replace(" ", ""))):
+            if best is None or len(c) > len(best):
+                best = c
+    return best
 
 
 def identity(title: str, brand_field: str | None, crumbs: list[str] | None, url: str = "",

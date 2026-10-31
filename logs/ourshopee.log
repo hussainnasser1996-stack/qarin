@@ -59,3 +59,7 @@
 23:12:50 [ourshopee-kw] 6278 URLs due; budget 14.0 min
 23:12:51 [ourshopee-kw] 0/6278 {'not_product': 1}
 23:13:34 [ourshopee-kw] 25/6278 {'not_product': 17, 'product': 9, 'offers': 9, 'changes': 9}
+23:14:26 [ourshopee-kw] 50/6278 {'not_product': 29, 'product': 22, 'offers': 22, 'changes': 22}
+23:15:12 [ourshopee-kw] 75/6278 {'not_product': 46, 'product': 30, 'offers': 30, 'changes': 30}
+23:15:54 [ourshopee-kw] 100/6278 {'not_product': 65, 'product': 36, 'offers': 36, 'changes': 36}
+23:16:39 [ourshopee-kw] 125/6278 {'not_product': 75, 'product': 51, 'offers': 51, 'changes': 51}

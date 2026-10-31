@@ -34,11 +34,12 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const local = data.offers.filter((o) => o.country === cc && o.price !== null && o.in_stock !== false);
   const min = local.length ? Math.min(...local.map((o) => Number(o.price))) : null;
   const country = COUNTRIES[cc][lang];
+  const nStores = new Set(local.map((o) => o.store)).size;
   const title = d.productTitle(data.product.name, country);
   const desc = min !== null
     ? (lang === "ar"
-      ? `أرخص سعر ${money(min, COUNTRIES[cc].currency, lang)} في ${local.length} محلات في ${country}. قارن الأسعار وشاهد سجل السعر.`
-      : `Lowest price ${money(min, COUNTRIES[cc].currency, lang)} across ${local.length} stores in ${country}. Compare prices and see the price history.`)
+      ? `أرخص سعر ${money(min, COUNTRIES[cc].currency, lang)} في ${nStores} محلات في ${country}. قارن الأسعار وشاهد سجل السعر.`
+      : `Lowest price ${money(min, COUNTRIES[cc].currency, lang)} across ${nStores} ${nStores === 1 ? "store" : "stores"} in ${country}. Compare prices and see the price history.`)
     : d.heroSub;
   return {
     title,
