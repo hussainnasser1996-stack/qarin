@@ -172,9 +172,17 @@ export type Offer = {
 };
 export type HistoryRow = { offer_id: number; store: string; observed_at: string; price: string | null; in_stock: boolean | null };
 
+/** A product id retired by re-matching: find the live product with the same slug so old links keep working. */
+export const productBySlug = cached(async (slug: string) => {
+  const rows = await sql`SELECT id, slug FROM products WHERE slug = ${slug} ORDER BY offer_count DESC, id LIMIT 1`;
+  if (!rows[0]) throw new Error(`slug ${slug} not found`);
+  return rows[0] as { id: number; slug: string };
+}, "productBySlug");
+
 export const getProduct = cached(async (id: number) => {
   const rows = await sql`SELECT id, key, slug, name, brand, family, category, storage, image, gtins, mpns, offer_count, country_count, updated_at FROM products WHERE id = ${id}`;
-  if (!rows[0]) return null;
+  // Throw rather than return null: a thrown result is never cached, so a product that appears after a re-match is found at once.
+  if (!rows[0]) throw new Error(`product ${id} not found`);
   const product = rows[0];
   const [offers, history, variants] = await Promise.all([
     sql`SELECT o.id, o.store_id, s.name AS store, s.country, o.url, o.title, o.price, o.currency, o.in_stock, o.condition,

@@ -55,6 +55,21 @@ def _jsonld_blocks(html: str):
                 yield json.loads(re.sub(r"[\x00-\x1f]", " ", block.strip()))
             except Exception:
                 continue
+    # Next.js App Router sites (e.g. OurShopee Qatar) put their JSON-LD inside the streamed page payload
+    # (self.__next_f.push) instead of a <script> tag. Decode the payload and pull out schema.org objects.
+    if "self.__next_f.push" in html and '"@type\\":\\"Product' in html:
+        payload = ""
+        for chunk in re.findall(r'self\.__next_f\.push\(\[1,("(?:[^"\\]|\\.)*")\]\)', html):
+            try:
+                payload += json.loads(chunk)
+            except Exception:
+                continue
+        dec = json.JSONDecoder()
+        for m in re.finditer(r'\{"@context":"https?://schema\.org/?",', payload):
+            try:
+                yield dec.raw_decode(payload, m.start())[0]
+            except Exception:
+                continue
 
 
 def _walk(d):

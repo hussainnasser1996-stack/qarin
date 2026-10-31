@@ -24,7 +24,9 @@ const display = Readex_Pro({
 export function generateStaticParams() {
   return CCS.flatMap((cc) => LANGS.map((lang) => ({ cc, lang })));
 }
-export const dynamicParams = false;
+// Unknown country/language codes are rejected by notFound() below. dynamicParams=false here would also
+// apply to child routes and 404 every product that was not pre-built.
+export const dynamicParams = true;
 
 export const viewport: Viewport = {
   themeColor: [{ media: "(prefers-color-scheme: light)", color: "#ffffff" }, { media: "(prefers-color-scheme: dark)", color: "#121d20" }],

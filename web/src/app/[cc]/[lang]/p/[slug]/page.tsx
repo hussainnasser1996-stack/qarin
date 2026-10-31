@@ -8,7 +8,7 @@ import { PriceTag, SpreadBar } from "@/components/Spread";
 import { ago, brandName, convert, exactTime, money, parseProductId, productPath } from "@/lib/format";
 import { dailySeries, stats, verdict } from "@/lib/history";
 import { categoryName, CCS, COUNTRIES, t, type CC, type Lang } from "@/lib/i18n";
-import { getProduct, topProductIds } from "@/lib/queries";
+import { getProduct, productBySlug, topProductIds } from "@/lib/queries";
 import { alternates } from "@/lib/seo";
 import { SITE } from "@/lib/site";
 
@@ -25,11 +25,26 @@ export async function generateStaticParams() {
 
 type Params = Promise<{ cc: CC; lang: Lang; slug: string }>;
 
+/**
+ * Load the product or send the visitor where it went. Also called from generateMetadata, which search
+ * engines get before any streaming starts, so they see a real 308 or 404 status rather than a streamed one.
+ */
+async function load(cc: CC, lang: Lang, slug: string, id: number | null) {
+  const data = id ? await getProduct(id).catch(() => null) : null;
+  if (!data) {
+    // A retired id (products are re-matched daily): send old links to the live product with the same name.
+    const moved = await productBySlug(slug.replace(/-\d+$/, "")).catch(() => null);
+    if (moved) permanentRedirect(productPath(cc, lang, moved.slug, moved.id));
+    notFound();
+  }
+  if (slug !== `${data.product.slug}-${data.product.id}`) permanentRedirect(productPath(cc, lang, data.product.slug, data.product.id));
+  return data;
+}
+
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { cc, lang, slug } = await params;
   const id = parseProductId(slug);
-  const data = id ? await getProduct(id).catch(() => null) : null;
-  if (!data) return {};
+  const data = await load(cc, lang, slug, id);
   const d = t(lang);
   const local = data.offers.filter((o) => o.country === cc && o.price !== null && o.in_stock !== false);
   const min = local.length ? Math.min(...local.map((o) => Number(o.price))) : null;
@@ -51,12 +66,8 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function ProductPage({ params }: { params: Params }) {
   const { cc, lang, slug } = await params;
-  const id = parseProductId(slug);
-  if (!id) notFound();
-  const data = await getProduct(id).catch(() => null);
-  if (!data) notFound();
+  const data = await load(cc, lang, slug, parseProductId(slug));
   const { product, offers, history, variants } = data;
-  if (slug !== `${product.slug}-${product.id}`) permanentRedirect(productPath(cc, lang, product.slug, product.id));
 
   const d = t(lang);
   const currency = COUNTRIES[cc].currency;
