@@ -11,7 +11,7 @@ export default async function Search({ params, searchParams }: { params: Promise
   const d = t(lang);
   return (
     <div className="space-y-4">
-      <h1 className="text-[24px] font-bold">{q ? <>“<span className="ltr">{q}</span>”</> : d.search}</h1>
+      <h1 className="font-display text-[24px] font-bold">{q ? <>“<span className="ltr">{q}</span>”</> : d.search}</h1>
       <Listing cc={cc} lang={lang} base={`/${cc}/${lang}/search`} p={{ ...listParams(sp), q }} />
     </div>
   );

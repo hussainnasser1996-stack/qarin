@@ -54,9 +54,9 @@ export function SearchBox({ cc, lang, placeholder, initial = "", big = false }: 
         aria-expanded={open}
         aria-controls={listId}
         aria-activedescendant={active >= 0 ? `${listId}-${active}` : undefined}
-        className={`w-full bg-paper border border-line rounded-[10px] ps-10 pe-3 outline-none focus:border-ink-2 focus:bg-surface placeholder:text-muted ${big ? "h-14 text-[17px]" : "h-11 text-[15px]"}`}
+        className={`w-full border rounded-xl ps-11 pe-3 outline-none placeholder:text-muted transition-colors ${big ? "h-14 text-[17px] bg-surface border-line-strong shadow-[0_8px_24px_-16px_rgba(12,31,36,.4)] focus:border-ink" : "h-11 text-[15px] bg-sunk border-line focus:bg-surface focus:border-ink-2"}`}
       />
-      <svg aria-hidden className="absolute top-1/2 -translate-y-1/2 start-3 text-muted" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+      <svg aria-hidden className="absolute top-1/2 -translate-y-1/2 start-3.5 text-muted" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
       {open && hits.length > 0 && (
         <ul id={listId} role="listbox" className="absolute z-40 mt-1 w-full panel shadow-lg overflow-hidden">
           {hits.map((h, i) => (
@@ -68,7 +68,7 @@ export function SearchBox({ cc, lang, placeholder, initial = "", big = false }: 
                   {h.image ? <img src={h.image} alt="" className="max-w-full max-h-full object-contain" loading="lazy" /> : null}
                 </span>
                 <span className="flex-1 min-w-0 truncate text-[14px]">{h.name}</span>
-                <span className="text-[13px] text-deal-ink font-semibold num">{money(h.min_price, h.currency, lang)}</span>
+                <span className="tag text-[12px] font-bold py-0.5 pe-2 num">{money(h.min_price, h.currency, lang)}</span>
               </button>
             </li>
           ))}

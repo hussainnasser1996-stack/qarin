@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Sans_Arabic } from "next/font/google";
+import { IBM_Plex_Sans_Arabic, Readex_Pro } from "next/font/google";
 import { notFound } from "next/navigation";
 import "../../globals.css";
 import { Header } from "@/components/Header";
@@ -8,10 +8,16 @@ import { Consent } from "@/components/Consent";
 import { CCS, COUNTRIES, isCC, isLang, LANGS, t, type CC, type Lang } from "@/lib/i18n";
 import { SITE } from "@/lib/site";
 
-const plex = IBM_Plex_Sans_Arabic({
+const body = IBM_Plex_Sans_Arabic({
   subsets: ["arabic", "latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-plex",
+  variable: "--font-body",
+  display: "swap",
+});
+const display = Readex_Pro({
+  subsets: ["arabic", "latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-display",
   display: "swap",
 });
 
@@ -21,7 +27,7 @@ export function generateStaticParams() {
 export const dynamicParams = false;
 
 export const viewport: Viewport = {
-  themeColor: [{ media: "(prefers-color-scheme: light)", color: "#f4f6f8" }, { media: "(prefers-color-scheme: dark)", color: "#0d131c" }],
+  themeColor: [{ media: "(prefers-color-scheme: light)", color: "#ffffff" }, { media: "(prefers-color-scheme: dark)", color: "#121d20" }],
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ cc: string; lang: string }> }): Promise<Metadata> {
@@ -43,7 +49,7 @@ export default async function Layout({ children, params }: { children: React.Rea
   const { cc, lang } = await params;
   if (!isCC(cc) || !isLang(lang)) notFound();
   return (
-    <html lang={`${lang}-${COUNTRIES[cc as CC].locale}`} dir={lang === "ar" ? "rtl" : "ltr"} className={plex.variable}>
+    <html lang={`${lang}-${COUNTRIES[cc as CC].locale}`} dir={lang === "ar" ? "rtl" : "ltr"} className={`${body.variable} ${display.variable}`}>
       <body className="min-h-dvh flex flex-col">
         <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:p-2 focus:bg-surface">Skip to content</a>
         <Header cc={cc as CC} lang={lang as Lang} />

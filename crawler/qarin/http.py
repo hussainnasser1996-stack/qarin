@@ -63,10 +63,12 @@ def allowed(url: str) -> bool:
     return robots(url).can_fetch(ROBOTS_UA, url)
 
 
-def get(url: str, min_delay: float = 1.5) -> httpx.Response | None:
+def get(url: str, min_delay: float = 1.5, published_sitemap: bool = False) -> httpx.Response | None:
     """GET if robots allows. Waits max(crawl-delay, min_delay) between hits to the same host.
-    Returns None when robots disallows or the network fails."""
-    if not allowed(url):
+    Returns None when robots disallows or the network fails.
+    published_sitemap=True: the URL is a sitemap the site itself lists in its own robots.txt
+    (e.g. sitemaps hosted on a storage bucket that has no robots.txt of its own)."""
+    if not allowed(url) and not published_sitemap:
         return None
     host = urlparse(url).netloc
     cd = robots(url).crawl_delay(ROBOTS_UA)

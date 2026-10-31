@@ -13,7 +13,7 @@ export default async function ListYourStore({ params }: { params: Promise<{ cc: 
   const d = t(lang);
   return (
     <div className="max-w-2xl space-y-4">
-      <h1 className="text-[28px] font-bold">{d.merchantTitle}</h1>
+      <h1 className="font-display text-[28px] font-bold">{d.merchantTitle}</h1>
       <p className="text-ink-2 text-[16px]">{d.merchantSub}</p>
       <MerchantForm lang={lang} />
     </div>

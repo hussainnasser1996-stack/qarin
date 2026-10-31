@@ -44,8 +44,8 @@ export const categoryName = (slug: string | null | undefined, lang: Lang) =>
 
 const en = {
   tagline: "Compare electronics prices across the Gulf",
-  heroTitle: "Find the lowest price before you buy",
-  heroSub: "Live prices from the stores you already shop at — updated every day, with the full price history.",
+  heroTitle: "Same product. Different store. Different price.",
+  heroSub: "Qarin checks the electronics stores across the Gulf every day and shows you who is cheapest — and whether today's price is actually a good one.",
   searchPlaceholder: "Search a product, e.g. iPhone 17 Pro, PS5, AirPods",
   search: "Search",
   biggestGaps: "Same product, very different prices",
@@ -150,13 +150,16 @@ const en = {
   dropBy: "down",
   wasPrice: "was",
   raisedBefore: "Price was raised shortly before this drop",
+  todayIn: "Today in",
+  apart: "apart",
+  sameItem: "Same item, checked today at",
 };
 type Dict = typeof en;
 
 const ar: Dict = {
   tagline: "قارن أسعار الإلكترونيات في الخليج",
-  heroTitle: "اعرف أرخص سعر قبل ما تشتري",
-  heroSub: "أسعار مباشرة من المحلات اللي تشتري منها — تتحدث كل يوم، مع سجل كامل للأسعار.",
+  heroTitle: "نفس المنتج. محل ثاني. سعر ثاني.",
+  heroSub: "قارن يتابع محلات الإلكترونيات في الخليج كل يوم، ويوضح لك مين الأرخص — وهل سعر اليوم فعلاً سعر زين.",
   searchPlaceholder: "ابحث عن منتج، مثل iPhone 17 Pro أو PS5 أو AirPods",
   search: "بحث",
   biggestGaps: "نفس المنتج… وفرق كبير في السعر",
@@ -261,6 +264,9 @@ const ar: Dict = {
   dropBy: "نزل",
   wasPrice: "كان",
   raisedBefore: "تم رفع السعر قبل هذا التخفيض بفترة قصيرة",
+  todayIn: "اليوم في",
+  apart: "فرق",
+  sameItem: "نفس الجهاز، تم التحقق اليوم في",
 };
 
 export const DICT: Record<Lang, Dict> = { en, ar };

@@ -30,6 +30,9 @@ def _entries(xml: str) -> Iterator[tuple[str, str | None, bool]]:
 
 def discover(store: Store, max_maps: int = 600, log=print) -> dict[str, str | None]:
     roots = store.sitemaps or http.robots_sitemaps(store.home)
+    published = set(http.robots_sitemaps(store.home)) if store.home else set()
+    if store.extra.get("published_children"):
+        published |= set(roots)
     todo, seen, out = list(roots), set(), {}
     child_re = re.compile(store.child_filter, re.I) if store.child_filter else None
     prod_re = re.compile(store.product_re)
@@ -39,7 +42,7 @@ def discover(store: Store, max_maps: int = 600, log=print) -> dict[str, str | No
         if sm in seen:
             continue
         seen.add(sm)
-        r = http.get(sm, min_delay=1.0)
+        r = http.get(sm, min_delay=1.0, published_sitemap=sm in published)
         if r is None or r.status_code != 200 or http.is_block(r):
             log(f"  [{store.id}] skip {sm} ({'robots/net' if r is None else r.status_code})")
             continue

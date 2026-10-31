@@ -1,0 +1,40 @@
+22:44:13   [ourshopee-bh] products-bh-1.xml: +1695 products, +0 maps (total 1695)
+22:44:14   [ourshopee-bh] products-bh-2.xml: +2074 products, +0 maps (total 3769)
+22:44:15   [ourshopee-bh] products-bh-3.xml: +1622 products, +0 maps (total 5391)
+22:44:19 [ourshopee-bh] discovered 5391 candidate product URLs
+22:44:21 [ourshopee-bh] 5391 URLs due; budget 14.0 min
+22:44:24 [ourshopee-bh] 0/5391 {'offers': 1, 'changes': 1, 'product': 1}
+22:45:10 [ourshopee-bh] 25/5391 {'offers': 8, 'changes': 8, 'product': 8, 'not_product': 18}
+22:45:57 [ourshopee-bh] 50/5391 {'offers': 18, 'changes': 18, 'product': 18, 'not_product': 33}
+22:46:55 [ourshopee-bh] 75/5391 {'offers': 40, 'changes': 40, 'product': 40, 'not_product': 36}
+22:47:51 [ourshopee-bh] 100/5391 {'offers': 65, 'changes': 65, 'product': 65, 'not_product': 36}
+22:48:28 [ourshopee-bh] 125/5391 {'offers': 68, 'changes': 68, 'product': 68, 'not_product': 58}
+22:49:11 [ourshopee-bh] 150/5391 {'offers': 75, 'changes': 75, 'product': 75, 'not_product': 76}
+22:49:58 [ourshopee-bh] 175/5391 {'offers': 88, 'changes': 88, 'product': 88, 'not_product': 88}
+22:50:52 [ourshopee-bh] 200/5391 {'offers': 107, 'changes': 107, 'product': 107, 'not_product': 94}
+22:52:10 [ourshopee-bh] 225/5391 {'offers': 132, 'changes': 132, 'product': 132, 'not_product': 94}
+22:52:58 [ourshopee-bh] 250/5391 {'offers': 140, 'changes': 140, 'product': 140, 'not_product': 110, 'not_electronics': 1}
+22:53:38 [ourshopee-bh] 275/5391 {'offers': 144, 'changes': 144, 'product': 144, 'not_product': 131, 'not_electronics': 1}
+22:54:20 [ourshopee-bh] 300/5391 {'offers': 145, 'changes': 145, 'product': 145, 'not_product': 155, 'not_electronics': 1}
+22:55:28 [ourshopee-bh] 325/5391 {'offers': 159, 'changes': 159, 'product': 159, 'not_product': 166, 'not_electronics': 1}
+22:56:14 [ourshopee-bh] 350/5391 {'offers': 171, 'changes': 171, 'product': 171, 'not_product': 179, 'not_electronics': 1}
+22:57:14 [ourshopee-bh] 375/5391 {'offers': 189, 'changes': 189, 'product': 189, 'not_product': 186, 'not_electronics': 1}
+22:58:03 [ourshopee-bh] 400/5391 {'offers': 197, 'changes': 197, 'product': 197, 'not_product': 203, 'not_electronics': 1}
+22:58:21 [ourshopee-bh] done {'offers': 203, 'changes': 203, 'product': 203, 'not_product': 207, 'not_electronics': 1}
+22:58:24   [ourshopee-ae] products-ae-1.xml: +345 products, +0 maps (total 295)
+22:58:25   [ourshopee-ae] products-ae-2.xml: +2136 products, +0 maps (total 2420)
+22:58:26   [ourshopee-ae] products-ae-3.xml: +991 products, +0 maps (total 3387)
+22:58:27   [ourshopee-ae] products-ae-4.xml: +948 products, +0 maps (total 4335)
+22:58:28   [ourshopee-ae] products-ae-5.xml: +1280 products, +0 maps (total 5596)
+22:58:29   [ourshopee-ae] products-ae-6.xml: +1991 products, +0 maps (total 7577)
+22:58:30   [ourshopee-ae] products-ae-7.xml: +543 products, +0 maps (total 8120)
+22:58:31   [ourshopee-ae] products-ae-8.xml: +591 products, +0 maps (total 8711)
+22:58:32   [ourshopee-ae] products-ae-9.xml: +623 products, +0 maps (total 9334)
+22:58:38 [ourshopee-ae] discovered 9334 candidate product URLs
+22:58:41 [ourshopee-ae] 9334 URLs due; budget 14.0 min
+22:58:43 [ourshopee-ae] 0/9334 {'product': 1, 'offers': 1, 'changes': 1}
+22:59:28 [ourshopee-ae] 25/9334 {'product': 19, 'offers': 19, 'changes': 19, 'not_product': 7}
+23:00:18 [ourshopee-ae] 50/9334 {'product': 44, 'offers': 44, 'changes': 44, 'not_product': 7}
+23:01:11 [ourshopee-ae] 75/9334 {'product': 65, 'offers': 65, 'changes': 65, 'not_product': 9, 'not_electronics': 2}
+23:02:03 [ourshopee-ae] 100/9334 {'product': 87, 'offers': 87, 'changes': 87, 'not_product': 12, 'not_electronics': 2}
+23:02:59 [ourshopee-ae] 125/9334 {'product': 112, 'offers': 112, 'changes': 112, 'not_product': 12, 'not_electronics': 2}

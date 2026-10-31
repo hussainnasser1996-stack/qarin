@@ -30,10 +30,10 @@ def log(*a):
 # ---------------------------------------------------------------- discover
 def cmd_discover(store_id: str, max_maps: int):
     st = BY_ID[store_id]
+    # Walk sitemaps first (can take minutes) and only then open a DB connection: Neon drops idle ones.
+    urls = sitemaps.discover(st, max_maps=max_maps, log=log)
     with db.connect() as conn:
         run_id = conn.execute("INSERT INTO scrape_runs (store_id, phase) VALUES (%s,'discover') RETURNING id", (st.id,)).fetchone()[0]
-        conn.commit()
-        urls = sitemaps.discover(st, max_maps=max_maps, log=log)
         with conn.cursor() as cur:
             cur.executemany(
                 """INSERT INTO store_urls (store_id, url, lastmod) VALUES (%s,%s,%s)
@@ -95,58 +95,107 @@ def _upsert_offer(conn, store_id: str, url: str, p: dict, ident: dict) -> bool:
 
 
 def cmd_crawl(store_id: str, minutes: float, max_pages: int):
+    """Fetch due URLs for one store. Survives database disconnects (Neon can drop idle/long connections):
+    each page's writes are committed together and retried once on a fresh connection."""
+    import psycopg
+
     st = BY_ID[store_id]
     deadline = time.time() + minutes * 60
     stats = Counter()
     consecutive_blocks = 0
-    with db.connect() as conn:
-        run_id = conn.execute("INSERT INTO scrape_runs (store_id, phase) VALUES (%s,'crawl') RETURNING id", (st.id,)).fetchone()[0]
-        conn.commit()
-        urls = [r[0] for r in _due(conn, st.id, max_pages)]
-        log(f"[{st.id}] {len(urls)} URLs due; budget {minutes} min")
-        for i, url in enumerate(urls):
-            if time.time() > deadline:
-                break
-            r = http.get(url, min_delay=st.min_delay)
-            kind, status = None, (r.status_code if r is not None else None)
-            if r is None:
-                kind = "error"
-            elif http.is_block(r):
-                kind = "blocked"
-                consecutive_blocks += 1
-            elif r.status_code != 200:
-                kind = "error" if r.status_code >= 500 else "not_product"
-            else:
-                consecutive_blocks = 0
-                p = adapters.parse(r.text, url)
-                if p is None:
-                    kind = "not_product"
-                else:
-                    ident = identity(p["title"], p.get("brand"), p.get("crumbs"), url, p.get("gtin"), p.get("mpn"))
-                    if ident["category"] is None:
-                        kind = "not_electronics"
-                    else:
-                        kind = "product"
-                        stats["offers"] += 1
-                        if _upsert_offer(conn, st.id, url, p, ident):
-                            stats["changes"] += 1
-            stats[kind] += 1
-            conn.execute("UPDATE store_urls SET last_fetched=now(), status=%s, kind=%s WHERE store_id=%s AND url=%s",
-                         (status, kind, st.id, url))
-            if i % 25 == 0:
+    conn = psycopg.connect(db.dsn(), prepare_threshold=None, keepalives=1, keepalives_idle=30)
+
+    def write(fn):
+        nonlocal conn
+        for attempt in (1, 2):
+            try:
+                out = fn(conn)
                 conn.commit()
-                log(f"[{st.id}] {i}/{len(urls)} {dict(stats)}")
-            if consecutive_blocks >= 5:
-                log(f"[{st.id}] 5 blocks in a row; stopping politely")
-                break
-        conn.execute(
-            """UPDATE scrape_runs SET finished_at=now(), pages_ok=%s, pages_blocked=%s, pages_error=%s,
-               offers_seen=%s, price_changes=%s, note=%s WHERE id=%s""",
-            (stats["product"] + stats["not_product"] + stats["not_electronics"], stats["blocked"], stats["error"],
-             stats["offers"], stats["changes"], json.dumps(dict(stats)), run_id),
-        )
-        conn.commit()
+                return out
+            except psycopg.OperationalError as e:
+                log(f"[{st.id}] db reconnect ({str(e).splitlines()[0][:80]})")
+                try:
+                    conn.close()
+                except Exception:
+                    pass
+                time.sleep(3 * attempt)
+                conn = psycopg.connect(db.dsn(), prepare_threshold=None, keepalives=1, keepalives_idle=30)
+        return None
+
+    run_id = write(lambda c: c.execute("INSERT INTO scrape_runs (store_id, phase) VALUES (%s,'crawl') RETURNING id", (st.id,)).fetchone()[0])
+    urls = write(lambda c: [r[0] for r in _due(c, st.id, max_pages)]) or []
+    log(f"[{st.id}] {len(urls)} URLs due; budget {minutes} min")
+    for i, url in enumerate(urls):
+        if time.time() > deadline:
+            break
+        r = http.get(url, min_delay=st.min_delay)
+        kind, status, offer = None, (r.status_code if r is not None else None), None
+        if r is None:
+            kind = "error"
+        elif http.is_block(r):
+            kind = "blocked"
+            consecutive_blocks += 1
+        elif r.status_code != 200:
+            kind = "error" if r.status_code >= 500 else "not_product"
+        else:
+            consecutive_blocks = 0
+            p = adapters.parse(r.text, url)
+            if p is None:
+                kind = "not_product"
+            else:
+                ident = identity(p["title"], p.get("brand"), p.get("crumbs"), url, p.get("gtin"), p.get("mpn"))
+                if ident["category"] is None:
+                    kind = "not_electronics"
+                else:
+                    kind = "product"
+                    offer = (p, ident)
+
+        def save(c, kind=kind, status=status, offer=offer, url=url):
+            changed = _upsert_offer(c, st.id, url, *offer) if offer else False
+            c.execute("UPDATE store_urls SET last_fetched=now(), status=%s, kind=%s WHERE store_id=%s AND url=%s",
+                      (status, kind, st.id, url))
+            return changed
+
+        changed = write(save)
+        stats[kind] += 1
+        if offer:
+            stats["offers"] += 1
+            stats["changes"] += 1 if changed else 0
+        if i % 25 == 0:
+            log(f"[{st.id}] {i}/{len(urls)} {dict(stats)}")
+        if consecutive_blocks >= 5:
+            log(f"[{st.id}] 5 blocks in a row; stopping politely")
+            break
+    write(lambda c: c.execute(
+        """UPDATE scrape_runs SET finished_at=now(), pages_ok=%s, pages_blocked=%s, pages_error=%s,
+           offers_seen=%s, price_changes=%s, note=%s WHERE id=%s""",
+        (stats["product"] + stats["not_product"] + stats["not_electronics"], stats["blocked"], stats["error"],
+         stats["offers"], stats["changes"], json.dumps(dict(stats)), run_id)))
+    conn.close()
     log(f"[{st.id}] done {dict(stats)}")
+
+
+# ---------------------------------------------------------------- rekey
+def cmd_rekey():
+    """Re-run identity() on every stored offer so matcher improvements apply without re-crawling."""
+    with db.connect() as conn:
+        rows = conn.execute("SELECT id, title, brand, category, url, gtin, mpn FROM offers").fetchall()
+        out = []
+        for oid, title, brand, cat, url, gtin, mpn in rows:
+            i = identity(title, brand, None, url, gtin, mpn)
+            category = i["category"] or cat
+            is_acc = i["is_accessory"] or (cat == "accessories" and i["category"] is None)
+            out.append((oid, i["key"], i["match_method"], category, is_acc, i["storage"], i["colour"], i["condition"], i["region"]))
+        conn.execute("""CREATE TEMP TABLE tmp_k (id bigint, key text, method text, category text, is_acc boolean,
+                        storage text, colour text, condition text, region text) ON COMMIT DROP""")
+        with conn.cursor().copy("COPY tmp_k FROM STDIN") as cp:
+            for r in out:
+                cp.write_row(r)
+        n = conn.execute("""UPDATE offers o SET match_key=t.key, match_method=t.method, category=t.category, is_accessory=t.is_acc,
+                              storage=t.storage, colour=t.colour, condition=t.condition, region=t.region
+                            FROM tmp_k t WHERE o.id=t.id""").rowcount
+        conn.commit()
+        log(f"rekey: updated {n} offers")
 
 
 # ---------------------------------------------------------------- match
@@ -174,37 +223,45 @@ def cmd_match():
                 key, method = f"single {r[1]} {r[12] or hashlib.md5(r[3].encode()).hexdigest()[:10]}", "single"
             groups[key].append((r, method))
         log(f"match: {len(rows)} offers -> {len(groups)} products")
-        existing = {k: pid for pid, k in conn.execute("SELECT id, key FROM products").fetchall()}
+        # Bulk write: COPY computed products + offer->key map into temp tables, then merge in SQL.
+        prod_rows, map_rows = [], []
         for key, items in groups.items():
             offers = [r for r, _ in items]
             cats = Counter(r[5] for r in offers if r[5])
             brands = Counter(r[4] for r in offers if r[4])
             titles = sorted({r[3] for r in offers}, key=len)
-            is_family = items[0][1] in ("family",) or any(m == "family" for _, m in items)
+            is_family = any(m == "family" for _, m in items)
             name = display_name(key, titles[0]) if is_family else titles[0]
             image = next((r[10] for r in offers if r[10]), None)
             countries = {r[2] for r in offers}
-            norm = search_norm(" ".join([name] + titles[:3] + [b for b in brands]))[:2000]
-            slug = slugify(name)
-            vals = (name, brands.most_common(1)[0][0] if brands else None, offers[0][5] and cats.most_common(1)[0][0],
-                    next((r[11] for r in offers if r[11]), None), image,
-                    sorted({r[8] for r in offers if r[8]}), sorted({r[9] for r in offers if r[9]}), norm,
-                    len(offers), len(countries), slug)
-            if key in existing:
-                pid = existing[key]
-                conn.execute(
-                    """UPDATE products SET name=%s, brand=%s, category=%s, storage=%s, image=COALESCE(%s,image), gtins=%s, mpns=%s,
-                       search_norm=%s, offer_count=%s, country_count=%s, slug=%s, updated_at=now() WHERE id=%s""",
-                    (*vals, pid),
-                )
-            else:
-                pid = conn.execute(
-                    """INSERT INTO products (name, brand, category, storage, image, gtins, mpns, search_norm, offer_count,
-                       country_count, slug, key, family) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
-                    (*vals, key, key if is_family else None),
-                ).fetchone()[0]
-            ids = [r[0] for r in offers]
-            conn.execute("UPDATE offers SET product_id=%s WHERE id = ANY(%s)", (pid, ids))
+            norm = search_norm(" ".join([name] + titles[:3] + list(brands)))[:2000]
+            prod_rows.append((key, slugify(name), name[:300], brands.most_common(1)[0][0] if brands else None,
+                              key if is_family else None, cats.most_common(1)[0][0] if cats else None,
+                              next((r[11] for r in offers if r[11]), None), image,
+                              "{" + ",".join(sorted({r[8] for r in offers if r[8]})) + "}",
+                              "{" + ",".join('"' + m.replace('"', "") + '"' for m in sorted({r[9] for r in offers if r[9]})) + "}",
+                              norm, len(offers), len(countries)))
+            map_rows.extend((r[0], key) for r in offers)
+        conn.execute("""CREATE TEMP TABLE tmp_p (key text, slug text, name text, brand text, family text, category text,
+                        storage text, image text, gtins text[], mpns text[], search_norm text, offer_count int, country_count int)
+                        ON COMMIT DROP""")
+        conn.execute("CREATE TEMP TABLE tmp_o (offer_id bigint, key text) ON COMMIT DROP")
+        with conn.cursor().copy("COPY tmp_p FROM STDIN") as cp:
+            for row in prod_rows:
+                cp.write_row(row)
+        with conn.cursor().copy("COPY tmp_o FROM STDIN") as cp:
+            for row in map_rows:
+                cp.write_row(row)
+        conn.execute("""INSERT INTO products (key, slug, name, brand, family, category, storage, image, gtins, mpns, search_norm,
+                          offer_count, country_count)
+                        SELECT key, slug, name, brand, family, category, storage, image, gtins, mpns, search_norm, offer_count, country_count FROM tmp_p
+                        ON CONFLICT (key) DO UPDATE SET slug=EXCLUDED.slug, name=EXCLUDED.name, brand=EXCLUDED.brand,
+                          family=EXCLUDED.family, category=EXCLUDED.category, storage=EXCLUDED.storage,
+                          image=COALESCE(EXCLUDED.image, products.image), gtins=EXCLUDED.gtins, mpns=EXCLUDED.mpns,
+                          search_norm=EXCLUDED.search_norm, offer_count=EXCLUDED.offer_count,
+                          country_count=EXCLUDED.country_count, updated_at=now()""")
+        conn.execute("""UPDATE offers o SET product_id = p.id FROM tmp_o t JOIN products p ON p.key = t.key
+                        WHERE o.id = t.offer_id AND o.product_id IS DISTINCT FROM p.id""")
         # products that lost all offers
         conn.execute("DELETE FROM products p WHERE NOT EXISTS (SELECT 1 FROM offers o WHERE o.product_id=p.id) AND NOT EXISTS (SELECT 1 FROM alerts a WHERE a.product_id=p.id)")
         # popularity: clicks in last 30 days
@@ -309,6 +366,9 @@ def main(argv=None):
         for s in stores:
             cmd_crawl(s, a.minutes, a.max_pages)
     elif a.cmd == "match":
+        cmd_match()
+    elif a.cmd == "rekey":
+        cmd_rekey()
         cmd_match()
     elif a.cmd == "alerts":
         cmd_alerts()

@@ -1,0 +1,39 @@
+22:44:13   [lulu-bh] sitemap.xml: +0 products, +1 maps (total 0)
+22:44:13   [lulu-bh] products-1: +262 products, +0 maps (total 262)
+22:44:16 [lulu-bh] discovered 262 candidate product URLs
+22:44:18 [lulu-bh] 262 URLs due; budget 12.0 min
+22:44:22 [lulu-bh] 0/262 {'offers': 1, 'changes': 1, 'product': 1}
+22:45:05 [lulu-bh] 25/262 {'offers': 26, 'changes': 26, 'product': 26}
+22:45:48 [lulu-bh] 50/262 {'offers': 51, 'changes': 51, 'product': 51}
+22:46:33 [lulu-bh] 75/262 {'offers': 73, 'changes': 73, 'product': 73, 'not_electronics': 3}
+22:47:14 [lulu-bh] 100/262 {'offers': 97, 'changes': 97, 'product': 97, 'not_electronics': 4}
+22:47:54 [lulu-bh] 125/262 {'offers': 122, 'changes': 122, 'product': 122, 'not_electronics': 4}
+22:48:38 [lulu-bh] 150/262 {'offers': 147, 'changes': 147, 'product': 147, 'not_electronics': 4}
+22:49:20 [lulu-bh] 175/262 {'offers': 172, 'changes': 172, 'product': 172, 'not_electronics': 4}
+22:50:03 [lulu-bh] 200/262 {'offers': 196, 'changes': 196, 'product': 196, 'not_electronics': 5}
+22:50:47 [lulu-bh] 225/262 {'offers': 221, 'changes': 221, 'product': 221, 'not_electronics': 5}
+22:51:33 [lulu-bh] 250/262 {'offers': 246, 'changes': 246, 'product': 246, 'not_electronics': 5}
+22:51:54 [lulu-bh] done {'offers': 256, 'changes': 256, 'product': 256, 'not_electronics': 6}
+22:51:55   [lulu-ae] sitemap.xml: +0 products, +1 maps (total 0)
+22:51:56   [lulu-ae] products-1: +262 products, +0 maps (total 262)
+22:51:59 [lulu-ae] discovered 262 candidate product URLs
+22:52:01 [lulu-ae] 262 URLs due; budget 12.0 min
+22:52:03 [lulu-ae] 0/262 {'product': 1, 'offers': 1, 'changes': 1}
+22:53:00 [lulu-ae] 25/262 {'product': 26, 'offers': 26, 'changes': 26}
+22:53:51 [lulu-ae] 50/262 {'product': 51, 'offers': 51, 'changes': 51}
+22:54:37 [lulu-ae] 75/262 {'product': 73, 'offers': 73, 'changes': 73, 'not_electronics': 3}
+22:55:24 [lulu-ae] 100/262 {'product': 97, 'offers': 97, 'changes': 97, 'not_electronics': 4}
+22:56:10 [lulu-ae] 125/262 {'product': 122, 'offers': 122, 'changes': 122, 'not_electronics': 4}
+22:56:59 [lulu-ae] 150/262 {'product': 147, 'offers': 147, 'changes': 147, 'not_electronics': 4}
+22:57:46 [lulu-ae] 175/262 {'product': 172, 'offers': 172, 'changes': 172, 'not_electronics': 4}
+22:58:35 [lulu-ae] 200/262 {'product': 196, 'offers': 196, 'changes': 196, 'not_electronics': 5}
+22:59:27 [lulu-ae] 225/262 {'product': 221, 'offers': 221, 'changes': 221, 'not_electronics': 5}
+23:00:16 [lulu-ae] 250/262 {'product': 246, 'offers': 246, 'changes': 246, 'not_electronics': 5}
+23:00:38 [lulu-ae] done {'product': 256, 'offers': 256, 'changes': 256, 'not_electronics': 6}
+23:00:39   [lulu-sa] sitemap.xml: +0 products, +1 maps (total 0)
+23:00:40   [lulu-sa] products-1: +262 products, +0 maps (total 262)
+23:00:42 [lulu-sa] discovered 262 candidate product URLs
+23:00:45 [lulu-sa] 262 URLs due; budget 12.0 min
+23:00:47 [lulu-sa] 0/262 {'product': 1, 'offers': 1, 'changes': 1}
+23:01:37 [lulu-sa] 25/262 {'product': 25, 'offers': 25, 'changes': 25, 'not_electronics': 1}
+23:02:26 [lulu-sa] 50/262 {'product': 50, 'offers': 50, 'changes': 50, 'not_electronics': 1}

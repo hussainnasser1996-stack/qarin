@@ -23,7 +23,7 @@ export default async function Info({ params }: { params: Params }) {
   if (!d) notFound();
   return (
     <article className="max-w-2xl space-y-4">
-      <h1 className="text-[28px] font-bold">{d.title}</h1>
+      <h1 className="font-display text-[28px] font-bold">{d.title}</h1>
       {d.body.map((p, i) => <p key={i} className="text-ink-2 text-[16px]">{p}</p>)}
     </article>
   );

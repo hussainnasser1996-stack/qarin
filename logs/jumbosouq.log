@@ -1,0 +1,42 @@
+22:36:00   [jumbosouq-qa] sitemap.xml: +0 products, +12 maps (total 0)
+22:36:01   [jumbosouq-qa] sitemap-product-en-1.xml: +2524 products, +0 maps (total 2524)
+22:36:03   [jumbosouq-qa] sitemap-product-en-2.xml: +1592 products, +0 maps (total 4116)
+22:36:03   [jumbosouq-qa] sitemap-product-en-3.xml: +1366 products, +0 maps (total 5480)
+22:36:04   [jumbosouq-qa] sitemap-category-en.xml: +1254 products, +0 maps (total 6734)
+22:36:05   [jumbosouq-qa] sitemap-general-en.xml: +4 products, +0 maps (total 6738)
+22:36:06   [jumbosouq-qa] sitemap-blog-en.xml: +19 products, +0 maps (total 6757)
+22:36:07   [jumbosouq-qa] sitemap-product-ar-1.xml: +0 products, +0 maps (total 6757)
+22:36:08   [jumbosouq-qa] sitemap-product-ar-2.xml: +0 products, +0 maps (total 6757)
+22:36:09   [jumbosouq-qa] sitemap-product-ar-3.xml: +0 products, +0 maps (total 6757)
+22:36:10   [jumbosouq-qa] sitemap-category-ar.xml: +0 products, +0 maps (total 6757)
+22:36:11   [jumbosouq-qa] sitemap-general-ar.xml: +0 products, +0 maps (total 6757)
+22:36:12   [jumbosouq-qa] sitemap-blog-ar.xml: +0 products, +0 maps (total 6757)
+22:36:14 [jumbosouq-qa] discovered 6757 candidate product URLs
+22:36:17 [jumbosouq-qa] 6757 URLs due; budget 60.0 min
+22:36:19 [jumbosouq-qa] 0/6757 {'offers': 1, 'changes': 1, 'product': 1}
+22:37:00 [jumbosouq-qa] 25/6757 {'offers': 22, 'changes': 22, 'product': 22, 'not_electronics': 4}
+22:37:39 [jumbosouq-qa] 50/6757 {'offers': 38, 'changes': 38, 'product': 38, 'not_electronics': 13}
+22:38:19 [jumbosouq-qa] 75/6757 {'offers': 59, 'changes': 59, 'product': 59, 'not_electronics': 14, 'not_product': 3}
+22:39:02 [jumbosouq-qa] 100/6757 {'offers': 84, 'changes': 84, 'product': 84, 'not_electronics': 14, 'not_product': 3}
+22:39:44 [jumbosouq-qa] 125/6757 {'offers': 108, 'changes': 108, 'product': 108, 'not_electronics': 14, 'not_product': 4}
+22:40:26 [jumbosouq-qa] 150/6757 {'offers': 133, 'changes': 133, 'product': 133, 'not_electronics': 14, 'not_product': 4}
+22:41:10 [jumbosouq-qa] 175/6757 {'offers': 157, 'changes': 157, 'product': 157, 'not_electronics': 15, 'not_product': 4}
+22:42:07 [jumbosouq-qa] 200/6757 {'offers': 182, 'changes': 182, 'product': 182, 'not_electronics': 15, 'not_product': 4}
+22:42:45 [jumbosouq-qa] 225/6757 {'offers': 207, 'changes': 207, 'product': 207, 'not_electronics': 15, 'not_product': 4}
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/hussainnasser/Developer/Personal Business/Qarin/crawler/qarin/run.py", line 324, in <module>
+    main()
+  File "/Users/hussainnasser/Developer/Personal Business/Qarin/crawler/qarin/run.py", line 310, in main
+    cmd_crawl(s, a.minutes, a.max_pages)
+  File "/Users/hussainnasser/Developer/Personal Business/Qarin/crawler/qarin/run.py", line 134, in cmd_crawl
+    conn.execute("UPDATE store_urls SET last_fetched=now(), status=%s, kind=%s WHERE store_id=%s AND url=%s",
+  File "/Users/hussainnasser/Developer/Personal Business/Qarin/.venv/lib/python3.12/site-packages/psycopg/connection.py", line 304, in execute
+    raise ex.with_traceback(None)
+psycopg.OperationalError: consuming input failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.

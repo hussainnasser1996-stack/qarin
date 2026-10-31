@@ -62,3 +62,17 @@ def test_arabic_search_norm():
 
 def test_display_name():
     assert display_name("apple iphone 17 pro max 256gb", "") == "Apple iPhone 17 Pro Max 256GB"
+
+
+def test_custom_luxury_device_is_not_stock():
+    assert K("Merlin Craft iPhone 18 Pro Max (512GB) – Alligator Brown", "Merlin Craft") != K("Apple iPhone 18 Pro Max 5G Smartphone, 512 GB Storage, Glacier", "Apple")
+
+
+def test_generic_phone_family_merges_colours():
+    a = K("Honor Play 20A 4G 128GB 4GB RAM Black Dual Sim Smartphone", "Honor")
+    b = K("Honor Play 20A 4G 128GB 4GB RAM Blue Dual Sim Smartphone", "Honor")
+    assert a and a == b and "128gb" in a
+
+
+def test_tripod_is_accessory():
+    assert identity("Hama FlexPro tripod for smartphones", "Hama", None)["category"] == "accessories"

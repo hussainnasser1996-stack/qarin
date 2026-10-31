@@ -26,7 +26,7 @@ def dsn() -> str:
 
 @contextmanager
 def connect():
-    with psycopg.connect(dsn(), autocommit=False, prepare_threshold=None) as conn:
+    with psycopg.connect(dsn(), autocommit=False, prepare_threshold=None, keepalives=1, keepalives_idle=30, keepalives_interval=10, keepalives_count=5) as conn:
         yield conn
 
 

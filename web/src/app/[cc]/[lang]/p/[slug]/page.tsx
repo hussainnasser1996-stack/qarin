@@ -4,7 +4,8 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { Thumb } from "@/components/ProductList";
 import { PriceChart } from "@/components/PriceChart";
 import { AlertForm, ReportForm } from "@/components/Forms";
-import { ago, convert, exactTime, money, parseProductId, productPath } from "@/lib/format";
+import { PriceTag, SpreadBar } from "@/components/Spread";
+import { ago, brandName, convert, exactTime, money, parseProductId, productPath } from "@/lib/format";
 import { dailySeries, stats, verdict } from "@/lib/history";
 import { categoryName, CCS, COUNTRIES, t, type CC, type Lang } from "@/lib/i18n";
 import { getProduct, topProductIds } from "@/lib/queries";
@@ -63,6 +64,11 @@ export default async function ProductPage({ params }: { params: Params }) {
   const live = local.filter((o) => o.price !== null && o.in_stock !== false);
   const min = live.length ? Math.min(...live.map((o) => Number(o.price))) : null;
   const max = live.length ? Math.max(...live.map((o) => Number(o.price))) : null;
+  // One dot per store (a store selling several colours at one price counts once).
+  const perStore = new Map<string, number>();
+  for (const o of live) perStore.set(o.store, Math.min(perStore.get(o.store) ?? Infinity, Number(o.price)));
+  const storeSpread = [...perStore].map(([s, p]) => ({ s, p })).sort((a, b) => a.p - b.p);
+  const cheapestStore = storeSpread[0]?.s ?? "";
   const series = dailySeries(history.filter((h) => h.country === cc));
   const st = stats(series.points);
   const v = verdict(min, st);
@@ -83,7 +89,7 @@ export default async function ProductPage({ params }: { params: Params }) {
         "@type": "Product",
         name: product.name,
         image: product.image || undefined,
-        brand: product.brand ? { "@type": "Brand", name: product.brand } : undefined,
+        brand: product.brand ? { "@type": "Brand", name: brandName(product.brand) } : undefined,
         gtin13: product.gtins?.[0] || undefined,
         mpn: product.mpns?.[0] || undefined,
         offers: live.length ? {
@@ -117,27 +123,31 @@ export default async function ProductPage({ params }: { params: Params }) {
         <Link href={`/${cc}/${lang}/c/${product.category}`} className="hover:underline">{categoryName(product.category, lang)}</Link>
       </nav>
 
-      <header className="grid gap-5 md:grid-cols-[auto_1fr] items-start">
-        <Thumb src={product.image} size={140} />
+      <header className="panel p-5 sm:p-7 grid gap-6 md:grid-cols-[180px_1fr] items-start">
+        <Thumb src={product.image} size={180} alt={product.name} />
         <div className="min-w-0">
-          <h1 className="text-[24px] sm:text-[30px] font-bold leading-tight">{product.name}</h1>
-          <p className="text-muted text-[14px] mt-1">{d.productTitle("", country).trim()} · {local.length} {d.stores}</p>
+          <h1 className="font-display text-[26px] sm:text-[34px] font-bold leading-[1.15]">{product.name}</h1>
+          <p className="text-ink-2 text-[14px] mt-2">
+            <span aria-hidden>{COUNTRIES[cc].flag}</span> {country} · <span className="num">{storeSpread.length}</span> {d.stores}
+            {local[0] && <> · {d.checked} {ago(local.reduce((a, b) => (a.last_seen > b.last_seen ? a : b)).last_seen, lang)}</>}
+          </p>
           {min !== null ? (
-            <div className="mt-4 flex flex-wrap items-end gap-x-6 gap-y-2">
-              <div>
-                <p className="text-[13px] text-muted">{d.lowestPrice}</p>
-                <p className="text-[32px] font-bold text-deal-ink leading-none num">{money(min, currency, lang)}</p>
-              </div>
+            <div className="mt-5 flex flex-wrap items-end gap-x-6 gap-y-3">
+              <PriceTag amount={min} currency={currency} lang={lang} size="lg" caption={`${d.lowestPrice} · ${cheapestStore}`} />
               {max !== null && max > min && (
-                <p className="text-[14px] text-ink-2 pb-1">
-                  {d.save} <b className="num">{money(max - min, currency, lang)}</b> {d.vsMost}
+                <p className="pb-1">
+                  <span className="block font-display font-bold text-[22px] text-deal-ink num leading-none">{money(max - min, currency, lang)}</span>
+                  <span className="block text-[13px] text-ink-2 mt-1">{d.save} {d.vsMost}</span>
                 </p>
               )}
             </div>
           ) : (
-            <p className="mt-4 panel p-3 text-ink-2">{d.notInCountry}</p>
+            <p className="mt-4 rounded-xl bg-sunk border border-line p-3 text-ink-2">{d.notInCountry}</p>
           )}
-          {min !== null && <p className={`mt-3 inline-block rounded-md px-3 py-1.5 text-[14px] font-medium ${verdictBox.cls}`}>{verdictBox.text}</p>}
+          {storeSpread.length > 1 && (
+            <div className="max-w-xl mt-1"><SpreadBar spread={storeSpread} currency={currency} lang={lang} size="lg" labels /></div>
+          )}
+          {min !== null && <p className={`inline-block rounded-lg px-3 py-1.5 text-[14px] font-medium ${verdictBox.cls} ${storeSpread.length > 1 ? "" : "mt-4"}`}>{verdictBox.text}</p>}
           {variants.length > 0 && (
             <div className="mt-4">
               <p className="text-[13px] text-muted mb-1.5">{d.variants}</p>
@@ -158,7 +168,7 @@ export default async function ProductPage({ params }: { params: Params }) {
             <section aria-labelledby="offers" className="panel overflow-hidden">
               <h2 id="offers" className="sr-only">{d.price}</h2>
               <table className="w-full text-[14px]">
-                <thead className="bg-paper text-muted text-[12px]">
+                <thead className="bg-sunk text-muted text-[12px]">
                   <tr>
                     <th className="text-start font-medium px-3 sm:px-4 py-2">{d.store}</th>
                     <th className="text-start font-medium px-2 py-2 hidden sm:table-cell">{d.stock}</th>
@@ -167,13 +177,13 @@ export default async function ProductPage({ params }: { params: Params }) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line">
-                  {local.map((o) => {
+                  {local.filter((o) => o.in_stock !== false).map((o) => {
                     const isMin = min !== null && o.price !== null && Number(o.price) === min && o.in_stock !== false;
                     return (
-                      <tr key={o.id} className={isMin ? "bg-deal-wash/60" : ""}>
+                      <tr key={o.id} className={isMin ? "bg-[color-mix(in_srgb,var(--tag)_14%,transparent)]" : ""}>
                         <td className="px-3 sm:px-4 py-3 align-top">
                           <span className="font-semibold">{o.store}</span>
-                          {isMin && <span className="ms-2 text-[11px] font-semibold text-deal-ink bg-deal-wash border border-deal/30 rounded px-1.5 py-0.5">{d.cheapest}</span>}
+                          {isMin && <span className="ms-2 text-[11px] font-semibold text-tag-ink bg-tag rounded px-1.5 py-0.5">{d.cheapest}</span>}
                           <span className="block text-[12px] text-muted clamp-2 mt-0.5">{o.title}</span>
                           <span className="block text-[11px] text-muted mt-0.5">
                             <time dateTime={o.last_seen} title={exactTime(o.last_seen)}>{d.checked} {ago(o.last_seen, lang)}</time>
@@ -186,11 +196,11 @@ export default async function ProductPage({ params }: { params: Params }) {
                           {o.in_stock === false ? <span className="text-muted">{d.outOfStock}</span> : o.in_stock ? <span className="text-deal-ink">{d.inStock}</span> : <span className="text-muted">{d.unknownStock}</span>}
                         </td>
                         <td className="px-2 py-3 align-top text-end">
-                          <span className={`font-bold text-[16px] num ${o.in_stock === false ? "text-muted line-through" : ""}`}>{money(o.price, o.currency || currency, lang)}</span>
+                          <span className={`font-display font-bold text-[16px] num whitespace-nowrap ${o.in_stock === false ? "text-muted line-through" : ""}`}>{money(o.price, o.currency || currency, lang)}</span>
                         </td>
                         <td className="px-3 sm:px-4 py-3 align-top text-end">
                           <a href={`/go/${o.id}?cc=${cc}&lang=${lang}`} rel="sponsored nofollow noopener" target="_blank"
-                            className={`inline-flex items-center gap-1 h-9 px-3 rounded-md text-[13px] font-medium whitespace-nowrap ${isMin ? "bg-deal text-white" : "bg-ink text-surface"}`}>
+                            className={`inline-flex items-center gap-1 h-9 px-3 rounded-lg text-[13px] font-medium whitespace-nowrap transition-opacity hover:opacity-90 ${isMin ? "bg-ink text-surface" : "border border-line-strong hover:bg-sunk"}`}>
                             {d.goToStore} <span aria-hidden className="flip-rtl">↗</span>
                           </a>
                         </td>
@@ -199,13 +209,31 @@ export default async function ProductPage({ params }: { params: Params }) {
                   })}
                 </tbody>
               </table>
+              {local.some((o) => o.in_stock === false) && (
+                <details className="border-t border-line">
+                  <summary className="px-4 py-2.5 text-[13px] text-muted cursor-pointer select-none">
+                    {d.outOfStock} · <span className="num">{local.filter((o) => o.in_stock === false).length}</span>
+                  </summary>
+                  <ul className="divide-y divide-line">
+                    {local.filter((o) => o.in_stock === false).map((o) => (
+                      <li key={o.id} className="px-4 py-2.5 flex items-center justify-between gap-3 text-[13px]">
+                        <span className="min-w-0"><b className="font-semibold">{o.store}</b> <span className="text-muted clamp-2">{o.title}</span></span>
+                        <span className="flex items-center gap-3 shrink-0">
+                          <s className="text-muted num">{money(o.price, o.currency || currency, lang)}</s>
+                          <a href={`/go/${o.id}?cc=${cc}&lang=${lang}`} rel="sponsored nofollow noopener" target="_blank" className="underline underline-offset-4">{d.goToStore}</a>
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              )}
             </section>
           )}
 
           {series.points.length > 1 && (
             <section aria-labelledby="hist" className="panel p-4">
               <div className="flex flex-wrap items-baseline justify-between gap-2 mb-3">
-                <h2 id="hist" className="text-[18px] font-bold">{d.priceHistory}</h2>
+                <h2 id="hist" className="font-display text-[20px] font-bold">{d.priceHistory}</h2>
                 {st && (
                   <dl className="flex flex-wrap gap-x-5 gap-y-1 text-[13px]">
                     <div><dt className="inline text-muted">{d.lowestEver}: </dt><dd className="inline font-semibold num">{money(st.lowestEver, currency, lang)}</dd></div>
@@ -222,29 +250,41 @@ export default async function ProductPage({ params }: { params: Params }) {
           {gccWithPrice.length > 1 && (
             <section aria-labelledby="gcc" className="panel overflow-hidden">
               <div className="p-4 pb-2">
-                <h2 id="gcc" className="text-[18px] font-bold">{d.acrossGcc}</h2>
+                <h2 id="gcc" className="font-display text-[20px] font-bold">{d.acrossGcc}</h2>
                 <p className="text-muted text-[13px]">{d.acrossGccSub} {currency}</p>
               </div>
-              <table className="w-full text-[14px]">
-                <tbody className="divide-y divide-line">
-                  {gcc.map((g) => {
-                    const conv = g.price !== null ? convert(g.price, g.cur, currency) : null;
-                    const best = conv !== null && conv === Math.min(...gccWithPrice.map((x) => convert(x.price!, x.cur, currency)));
+              <ul className="px-4 pb-4 space-y-2.5">
+                {(() => {
+                  const conv = gcc.map((g) => (g.price !== null ? convert(g.price, g.cur, currency) : null));
+                  const vals = conv.filter((x): x is number => x !== null);
+                  const lo = Math.min(...vals), hi = Math.max(...vals);
+                  return gcc.map((g, i) => {
+                    const v = conv[i];
+                    const best = v !== null && v === lo;
+                    const w = v === null ? 0 : 35 + ((v - lo) / (hi - lo || 1)) * 65;
                     return (
-                      <tr key={g.c} className={g.c === cc ? "bg-paper" : ""}>
-                        <td className="px-4 py-2.5">
-                          <Link href={productPath(g.c, lang, product.slug, product.id)} className="hover:underline">
-                            <span aria-hidden>{COUNTRIES[g.c].flag}</span> {COUNTRIES[g.c][lang]}
-                          </Link>
-                          {g.store && <span className="block text-[12px] text-muted">{g.store}</span>}
-                        </td>
-                        <td className="px-2 py-2.5 text-end text-muted num">{g.price !== null ? money(g.price, g.cur, lang) : "—"}</td>
-                        <td className={`px-4 py-2.5 text-end font-semibold num ${best ? "text-deal-ink" : ""}`}>{conv !== null ? money(conv, currency, lang) : ""}</td>
-                      </tr>
+                      <li key={g.c}>
+                        <Link href={productPath(g.c, lang, product.slug, product.id)} className="grid grid-cols-[7.5rem_1fr] sm:grid-cols-[9rem_1fr] items-center gap-3 group">
+                          <span className={`text-[14px] ${g.c === cc ? "font-semibold" : ""}`}>
+                            <span aria-hidden>{COUNTRIES[g.c].flag}</span> <span className="group-hover:underline underline-offset-4">{COUNTRIES[g.c][lang]}</span>
+                          </span>
+                          {v === null ? (
+                            <span className="text-[13px] text-muted">—</span>
+                          ) : (
+                            <span className="relative h-8 rounded-lg bg-sunk overflow-hidden">
+                              <span className={`absolute inset-y-0 start-0 rounded-lg ${best ? "bg-tag" : "bg-line"}`} style={{ width: `${w}%` }} />
+                              <span className="relative z-10 h-full flex items-center justify-between gap-2 px-2.5 text-[13px]">
+                                <span className={`font-semibold num ${best ? "text-tag-ink" : ""}`}>{money(v, currency, lang)}</span>
+                                <span className="text-ink-2 truncate">{g.cur !== currency ? <span className="num">{money(g.price, g.cur, lang)}</span> : g.store}</span>
+                              </span>
+                            </span>
+                          )}
+                        </Link>
+                      </li>
                     );
-                  })}
-                </tbody>
-              </table>
+                  });
+                })()}
+              </ul>
             </section>
           )}
           <p className="text-muted text-[12px]">{d.disclaimer}</p>
@@ -255,8 +295,8 @@ export default async function ProductPage({ params }: { params: Params }) {
           {(product.gtins?.length > 0 || product.mpns?.length > 0 || product.brand) && (
             <div className="panel p-4 text-[13px] space-y-1">
               <p className="font-semibold text-[14px] mb-1">{d.specs}</p>
-              {product.brand && <p><span className="text-muted">Brand:</span> {product.brand}</p>}
-              {product.storage && <p><span className="text-muted">Storage:</span> <span className="ltr">{product.storage}</span></p>}
+              {product.brand && <p><span className="text-muted">{lang === "ar" ? "الماركة" : "Brand"}:</span> {brandName(product.brand)}</p>}
+              {product.storage && <p><span className="text-muted">{lang === "ar" ? "السعة" : "Storage"}:</span> <span className="ltr">{product.storage}</span></p>}
               {product.mpns?.length > 0 && <p className="break-all"><span className="text-muted">MPN:</span> <span className="ltr">{product.mpns.slice(0, 4).join(", ")}</span></p>}
               {product.gtins?.length > 0 && <p className="break-all"><span className="text-muted">EAN:</span> <span className="ltr">{product.gtins.slice(0, 3).join(", ")}</span></p>}
             </div>
@@ -267,10 +307,10 @@ export default async function ProductPage({ params }: { params: Params }) {
 
       {min !== null && (
         <div className="lg:hidden fixed bottom-0 inset-x-0 z-20 bg-surface border-t border-line px-4 py-2.5 flex items-center justify-between gap-3">
-          <span><span className="block text-[11px] text-muted">{d.lowestPrice}</span><span className="font-bold text-deal-ink num">{money(min, currency, lang)}</span></span>
+          <PriceTag amount={min} currency={currency} lang={lang} size="sm" caption={cheapestStore} />
           {live[0] && (
             <a href={`/go/${live.find((o) => Number(o.price) === min)!.id}?cc=${cc}&lang=${lang}`} rel="sponsored nofollow noopener" target="_blank"
-              className="h-10 px-4 rounded-md bg-deal text-white font-medium inline-flex items-center">{d.goToStore}</a>
+              className="h-10 px-4 rounded-lg bg-ink text-surface font-medium inline-flex items-center">{d.goToStore}</a>
           )}
         </div>
       )}

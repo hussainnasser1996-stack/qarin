@@ -22,7 +22,7 @@ export default async function Category({ params, searchParams }: { params: Param
   const d = t(lang);
   return (
     <div className="space-y-4">
-      <h1 className="text-[24px] sm:text-[28px] font-bold">{d.categoryTitle(categoryName(category, lang), COUNTRIES[cc][lang])}</h1>
+      <h1 className="font-display text-[24px] sm:text-[28px] font-bold">{d.categoryTitle(categoryName(category, lang), COUNTRIES[cc][lang])}</h1>
       <Listing cc={cc} lang={lang} base={`/${cc}/${lang}/c/${category}`} p={{ ...listParams(sp), category }} />
     </div>
   );

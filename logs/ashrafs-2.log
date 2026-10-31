@@ -1,0 +1,13 @@
+22:47:58 [ashrafs-bh] 268 URLs due; budget 45.0 min
+22:48:01 [ashrafs-bh] 0/268 {'product': 1, 'offers': 1, 'changes': 1}
+22:48:46 [ashrafs-bh] 25/268 {'product': 18, 'offers': 18, 'changes': 18, 'not_product': 7, 'not_electronics': 1}
+22:49:32 [ashrafs-bh] 50/268 {'product': 35, 'offers': 35, 'changes': 35, 'not_product': 14, 'not_electronics': 2}
+22:50:19 [ashrafs-bh] 75/268 {'product': 56, 'offers': 56, 'changes': 56, 'not_product': 18, 'not_electronics': 2}
+22:51:05 [ashrafs-bh] 100/268 {'product': 69, 'offers': 69, 'changes': 69, 'not_product': 28, 'not_electronics': 4}
+22:51:51 [ashrafs-bh] 125/268 {'product': 84, 'offers': 84, 'changes': 84, 'not_product': 34, 'not_electronics': 8}
+22:52:38 [ashrafs-bh] 150/268 {'product': 101, 'offers': 101, 'changes': 101, 'not_product': 40, 'not_electronics': 10}
+22:53:28 [ashrafs-bh] 175/268 {'product': 119, 'offers': 119, 'changes': 119, 'not_product': 47, 'not_electronics': 10}
+22:54:13 [ashrafs-bh] 200/268 {'product': 135, 'offers': 135, 'changes': 135, 'not_product': 54, 'not_electronics': 12}
+22:54:57 [ashrafs-bh] 225/268 {'product': 149, 'offers': 149, 'changes': 149, 'not_product': 61, 'not_electronics': 16}
+22:55:43 [ashrafs-bh] 250/268 {'product': 166, 'offers': 166, 'changes': 166, 'not_product': 69, 'not_electronics': 16}
+22:56:12 [ashrafs-bh] done {'product': 173, 'offers': 173, 'changes': 173, 'not_product': 73, 'not_electronics': 22}

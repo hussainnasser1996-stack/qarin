@@ -18,14 +18,14 @@ export default async function Stores({ params }: { params: Promise<{ cc: CC; lan
   const all = await getStores().catch(() => []);
   return (
     <div className="space-y-6">
-      <h1 className="text-[26px] font-bold">{d.storesCovered}</h1>
+      <h1 className="font-display text-[26px] font-bold">{d.storesCovered}</h1>
       <p className="text-muted max-w-2xl">{d.coverageNote}</p>
       {CCS.map((c) => {
         const list = all.filter((s) => s.country === c);
         if (!list.length) return null;
         return (
           <section key={c} className={c === cc ? "order-first" : ""}>
-            <h2 className="text-[18px] font-bold mb-2"><span aria-hidden>{COUNTRIES[c].flag}</span> {COUNTRIES[c][lang]}</h2>
+            <h2 className="font-display text-[18px] font-bold mb-2"><span aria-hidden>{COUNTRIES[c].flag}</span> {COUNTRIES[c][lang]}</h2>
             <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {list.map((s) => (
                 <li key={s.id}>

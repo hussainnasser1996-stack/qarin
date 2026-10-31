@@ -25,7 +25,7 @@ export default async function StorePage({ params, searchParams }: { params: Para
     <div className="space-y-4">
       <header className="panel p-4 flex flex-wrap items-center gap-4 justify-between">
         <div>
-          <h1 className="text-[24px] font-bold">{s.name} <span className="text-muted text-[16px] font-medium">· {COUNTRIES[scc][lang]}</span></h1>
+          <h1 className="font-display text-[24px] font-bold">{s.name} <span className="text-muted text-[16px] font-medium">· {COUNTRIES[scc][lang]}</span></h1>
           <p className="text-muted text-[14px]">
             <span className="num">{s.offers.toLocaleString("en-US")}</span> {d.offersTracked} · {d.updated} {ago(s.last_seen, lang)}
           </p>

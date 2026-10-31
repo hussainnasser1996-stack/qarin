@@ -1,0 +1,23 @@
+22:47:59 [saco-sa] 2814 URLs due; budget 45.0 min
+22:48:02 [saco-sa] 0/2814 {'product': 1, 'offers': 1, 'changes': 1}
+22:48:40 [saco-sa] 25/2814 {'product': 18, 'offers': 18, 'changes': 18, 'not_product': 4, 'not_electronics': 4}
+22:49:19 [saco-sa] 50/2814 {'product': 37, 'offers': 37, 'changes': 37, 'not_product': 6, 'not_electronics': 8}
+22:50:00 [saco-sa] 75/2814 {'product': 50, 'offers': 50, 'changes': 50, 'not_product': 10, 'not_electronics': 16}
+22:50:38 [saco-sa] 100/2814 {'product': 67, 'offers': 67, 'changes': 67, 'not_product': 13, 'not_electronics': 21}
+22:51:17 [saco-sa] 125/2814 {'product': 82, 'offers': 82, 'changes': 82, 'not_product': 15, 'not_electronics': 29}
+22:51:55 [saco-sa] 150/2814 {'product': 100, 'offers': 100, 'changes': 100, 'not_product': 18, 'not_electronics': 33}
+22:52:34 [saco-sa] 175/2814 {'product': 119, 'offers': 119, 'changes': 119, 'not_product': 19, 'not_electronics': 38}
+22:53:13 [saco-sa] 200/2814 {'product': 133, 'offers': 133, 'changes': 133, 'not_product': 20, 'not_electronics': 48}
+22:53:54 [saco-sa] 225/2814 {'product': 151, 'offers': 151, 'changes': 151, 'not_product': 24, 'not_electronics': 51}
+22:54:36 [saco-sa] 250/2814 {'product': 171, 'offers': 171, 'changes': 171, 'not_product': 24, 'not_electronics': 56}
+22:55:32 [saco-sa] 275/2814 {'product': 195, 'offers': 195, 'changes': 195, 'not_product': 24, 'not_electronics': 57}
+22:56:10 [saco-sa] 300/2814 {'product': 216, 'offers': 216, 'changes': 216, 'not_product': 25, 'not_electronics': 60}
+22:56:53 [saco-sa] 325/2814 {'product': 238, 'offers': 238, 'changes': 238, 'not_product': 25, 'not_electronics': 63}
+22:57:35 [saco-sa] 350/2814 {'product': 263, 'offers': 263, 'changes': 263, 'not_product': 25, 'not_electronics': 63}
+22:58:14 [saco-sa] 375/2814 {'product': 280, 'offers': 280, 'changes': 280, 'not_product': 25, 'not_electronics': 71}
+22:58:56 [saco-sa] 400/2814 {'product': 288, 'offers': 288, 'changes': 288, 'not_product': 27, 'not_electronics': 86}
+22:59:47 [saco-sa] 425/2814 {'product': 309, 'offers': 309, 'changes': 309, 'not_product': 27, 'not_electronics': 90}
+23:00:28 [saco-sa] 450/2814 {'product': 324, 'offers': 324, 'changes': 324, 'not_product': 28, 'not_electronics': 99}
+23:01:10 [saco-sa] 475/2814 {'product': 343, 'offers': 343, 'changes': 343, 'not_product': 28, 'not_electronics': 105}
+23:01:50 [saco-sa] 500/2814 {'product': 358, 'offers': 358, 'changes': 358, 'not_product': 28, 'not_electronics': 115}
+23:02:29 [saco-sa] 525/2814 {'product': 373, 'offers': 373, 'changes': 373, 'not_product': 29, 'not_electronics': 124}

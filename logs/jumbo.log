@@ -1,0 +1,30 @@
+22:36:01   [jumbo-ae] sitemap.xml: +3016 products, +0 maps (total 3016)
+22:36:05 [jumbo-ae] discovered 3016 candidate product URLs
+22:36:08 [jumbo-ae] 3016 URLs due; budget 60.0 min
+22:36:11 [jumbo-ae] 0/3016 {'not_product': 1}
+22:36:49 [jumbo-ae] 25/3016 {'not_product': 26}
+22:37:30 [jumbo-ae] 50/3016 {'not_product': 51}
+22:38:10 [jumbo-ae] 75/3016 {'not_product': 76}
+22:38:50 [jumbo-ae] 100/3016 {'not_product': 100, 'offers': 1, 'changes': 1, 'product': 1}
+22:39:47 [jumbo-ae] 125/3016 {'not_product': 101, 'offers': 25, 'changes': 25, 'product': 25}
+22:40:38 [jumbo-ae] 150/3016 {'not_product': 101, 'offers': 49, 'changes': 49, 'product': 49, 'not_electronics': 1}
+22:41:28 [jumbo-ae] 175/3016 {'not_product': 101, 'offers': 72, 'changes': 72, 'product': 72, 'not_electronics': 3}
+22:42:16 [jumbo-ae] 200/3016 {'not_product': 101, 'offers': 97, 'changes': 97, 'product': 97, 'not_electronics': 3}
+22:43:12 [jumbo-ae] 225/3016 {'not_product': 101, 'offers': 122, 'changes': 122, 'product': 122, 'not_electronics': 3}
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/hussainnasser/Developer/Personal Business/Qarin/crawler/qarin/run.py", line 324, in <module>
+    main()
+  File "/Users/hussainnasser/Developer/Personal Business/Qarin/crawler/qarin/run.py", line 310, in main
+    cmd_crawl(s, a.minutes, a.max_pages)
+  File "/Users/hussainnasser/Developer/Personal Business/Qarin/crawler/qarin/run.py", line 134, in cmd_crawl
+    conn.execute("UPDATE store_urls SET last_fetched=now(), status=%s, kind=%s WHERE store_id=%s AND url=%s",
+  File "/Users/hussainnasser/Developer/Personal Business/Qarin/.venv/lib/python3.12/site-packages/psycopg/connection.py", line 304, in execute
+    raise ex.with_traceback(None)
+psycopg.OperationalError: consuming input failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.

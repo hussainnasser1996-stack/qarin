@@ -75,7 +75,8 @@ ACCESSORY_RE = re.compile(
     r"\b(case|cover|protector|screen guard|tempered|glass|strap|band|bands|charger|charging (cable|pad|stand|dock)|"
     r"cable|adapter|adaptor|stand|holder|mount|skin|pouch|sleeve|film|lens protector|replacement|tips|keyboard folio|"
     r"compatible with|for iphone|for ipad|for samsung|for galaxy|for airpods|for macbook|for apple watch|for ps5|"
-    r"for nintendo|for switch|magsafe wallet|wallet|bumper|grip|thumb grips|decal|sticker)\b"
+    r"for nintendo|for switch|magsafe wallet|wallet|bumper|grip|thumb grips|decal|sticker|tripod|selfie stick|gimbal for|"
+    r"for smartphones?|for phones?|for mobile|phone holder|car holder|power ?bank|screen protector|earbuds case)\b"
 )
 CATEGORY_RULES: list[tuple[str, str]] = [
     ("gaming-consoles", r"\b(playstation 5|ps5( pro| slim)?( console| digital| disc)|ps5 console|xbox series [xs]|nintendo switch( 2| oled| lite)?( console)?|steam deck|rog ally|legion go)\b"),
@@ -215,6 +216,25 @@ def _family(t: str, brand: str | None, category: str | None) -> str | None:
     return None
 
 
+LUXURY_RE = re.compile(r"\b(merlin craft|caviar|24k|gold plated|gold edition|custom edition|diamond edition|lamborghini edition)\b")
+NOISE = re.compile(rf"\b(dual sim|single sim|esim|5g|4g|lte|smartphone|smart phone|mobile phone|phone|tablet|wi-?fi|cellular|"
+                   rf"middle east version|international version|global version|ai|with|and|facetime|nfc|android|"
+                   rf"{COLOURS})\b")
+
+
+def _generic_family(t: str, brand: str) -> str | None:
+    """Brand + model words up to the first storage/RAM figure: 'honor play 20a 4g 128gb ...' -> 'honor play 20a'."""
+    m = re.search(rf"\b{re.escape(brand)}\b(.*?)(\d{{2,4}}\s?(gb|tb)\b|\(|,| - |$)", t)
+    if not m:
+        return None
+    words = NOISE.sub(" ", m.group(1))
+    words = re.sub(r"[^\w+ ]", " ", words)
+    words = re.sub(r"\s+", " ", words).strip()
+    if not words or len(words) < 2 or not re.search(r"\d|[a-z]{3,}", words):
+        return None
+    return f"{brand} {words}"[:60]
+
+
 MODEL_CODE_RE = re.compile(r"\b(?=[a-z0-9-]*\d)(?=[a-z0-9-]*[a-z])[a-z0-9]+(?:-[a-z0-9]+)*\b")
 STOP_CODES = re.compile(r"^(\d+(gb|tb|mm|mah|w|hz|k|p|mp|cm|ml|l)|\d+(st|nd|rd|th)|wifi6e?|usb-?c|5g|4g|lte|m\d|a\d{2}|ps\d|x\d|\d+x)$")
 
@@ -238,6 +258,14 @@ def identity(title: str, brand_field: str | None, crumbs: list[str] | None, url:
     colour_m = COLOUR_RE.search(t)
     storage = storage_of(t)
     fam = None if is_acc else _family(t, brand, category)
+    # A different maker selling a customised device (e.g. "Merlin Craft iPhone", "Caviar") is not the stock device.
+    bf = search_norm(brand_field or "")
+    foreign = bool(bf) and BRAND_ALIASES.get(bf, bf) not in BRANDS and not re.match(r"^(apple|samsung|sony|google)", bf)
+    if foreign or LUXURY_RE.search(t):
+        fam = None
+        brand = bf or brand
+    if fam is None and not is_acc and category in ("phones", "tablets") and brand and not foreign:
+        fam = _generic_family(t, brand)
     key = None
     method = None
     if fam:

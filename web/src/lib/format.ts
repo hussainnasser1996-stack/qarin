@@ -63,3 +63,13 @@ export function searchNorm(s: string): string {
     .replace(/\s+/g, " ")
     .trim();
 }
+
+const UPPER = new Set(["hp", "lg", "jbl", "tcl", "msi", "dji", "aoc", "benq", "jvc", "nzxt"]);
+const SPECIAL: Record<string, string> = { gopro: "GoPro", oneplus: "OnePlus", "tp-link": "TP-Link", "d-link": "D-Link", hyperx: "HyperX", steelseries: "SteelSeries", sandisk: "SanDisk", playstation: "PlayStation", iphone: "iPhone", asus: "ASUS", "black+decker": "Black+Decker" };
+export function brandName(b: string | null | undefined): string {
+  if (!b) return "";
+  const k = b.toLowerCase();
+  if (SPECIAL[k]) return SPECIAL[k];
+  if (UPPER.has(k)) return k.toUpperCase();
+  return /^[a-z]/.test(b) ? b.replace(/\b\w/g, (c) => c.toUpperCase()) : b;
+}

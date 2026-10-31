@@ -102,6 +102,30 @@ STORES: list[Store] = [
           url_include=None, home="https://www.extra.com/en-om"),
 ]
 
+# ---------------- Multi-country retailers ----------------
+_LULU_NAMES = {"bh": "Lulu", "ae": "Lulu", "sa": "Lulu", "kw": "Lulu", "qa": "Lulu", "om": "Lulu"}
+for _cc in ("bh", "ae", "sa", "kw", "qa", "om"):
+    STORES.append(Store(
+        f"lulu-{_cc}", _cc, "Lulu", "gcc.luluhypermarket.com", "jsonld",
+        [f"https://gcc.luluhypermarket.com/en-{_cc}/sitemap.xml"], rf"/en-{_cc}/.+/p/\d+", child_filter=r"/sitemap/products",
+        home=f"https://gcc.luluhypermarket.com/en-{_cc}/"))
+for _cc, _n in (("ae", 9), ("bh", 3), ("kw", 4), ("om", 5), ("qa", 4)):
+    STORES.append(Store(
+        f"ourshopee-{_cc}", _cc, "OurShopee", "ourshopee.com", "jsonld",
+        [f"https://cdn.ourshopee.com/sitemaps/products-{_cc}-{i}.xml" for i in range(1, _n + 1)], r"ourshopee\.com/",
+        home="https://ourshopee.com/", extra={"published_children": True}))
+STORES += [
+    # Shopify stores below answer 429 to crawlers -> inactive until they send a feed.
+    Store("istyle-ae", "ae", "iStyle", "istyle.ae", "jsonld", ["https://istyle.ae/sitemap.xml"], r"/products/",
+          child_filter=r"sitemap_products", url_include=None, home="https://istyle.ae/", active=False, notes="429 to crawlers"),
+    Store("istyle-om", "om", "iStyle", "istyle.om", "jsonld", ["https://istyle.om/sitemap.xml"], r"/products/",
+          child_filter=r"sitemap_products", url_include=None, home="https://istyle.om/", active=False, notes="429 to crawlers"),
+    Store("letstango-ae", "ae", "Lets Tango", "www.letstango.com", "jsonld", ["https://www.letstango.com/sitemap.xml"],
+          r"/products/", child_filter=r"sitemap_products", home="https://www.letstango.com/", active=False, notes="429 to crawlers"),
+    Store("best-kw", "kw", "Best Al-Yousifi", "best.com.kw", "jsonld", ["https://best.com.kw/sitemap.xml"], r"/p/",
+          home="https://best.com.kw/", active=False, notes="prices rendered client-side; no structured price"),
+]
+
 BY_ID = {s.id: s for s in STORES}
 
 COUNTRIES = {

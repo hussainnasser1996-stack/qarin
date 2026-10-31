@@ -1,0 +1,39 @@
+22:44:13   [ansar-qa] sitemap_4268814.xml: +0 products, +9 maps (total 0)
+22:44:17   [ansar-qa] sitemap_4268814_1.xml: +1317 products, +0 maps (total 1317)
+22:44:20   [ansar-qa] sitemap_4268814_2.xml: +345 products, +0 maps (total 1662)
+22:44:24   [ansar-qa] sitemap_4268814_3.xml: +777 products, +0 maps (total 2439)
+22:44:43   [ansar-qa] sitemap_4268814_4.xml: +11 products, +0 maps (total 2450)
+22:44:49   [ansar-qa] sitemap_4268814_5.xml: +1058 products, +0 maps (total 3508)
+22:45:03   [ansar-qa] sitemap_4268814_6.xml: +52 products, +0 maps (total 3560)
+22:45:19   [ansar-qa] sitemap_4268814_7.xml: +415 products, +0 maps (total 3975)
+22:45:26   [ansar-qa] sitemap_4268814_8.xml: +1381 products, +0 maps (total 5356)
+22:45:28   [ansar-qa] sitemap_4268814_9.xml: +524 products, +0 maps (total 5880)
+22:45:31 [ansar-qa] discovered 5880 candidate product URLs
+22:45:34 [ansar-qa] 5880 URLs due; budget 40.0 min
+22:45:35 [ansar-qa] 0/5880 {'not_product': 1}
+22:46:16 [ansar-qa] 25/5880 {'not_product': 12, 'offers': 14, 'changes': 14, 'product': 14}
+22:46:53 [ansar-qa] 50/5880 {'not_product': 15, 'offers': 36, 'changes': 36, 'product': 36}
+22:47:31 [ansar-qa] 75/5880 {'not_product': 19, 'offers': 56, 'changes': 56, 'product': 56, 'error': 1}
+22:48:08 [ansar-qa] 100/5880 {'not_product': 24, 'offers': 71, 'changes': 71, 'product': 71, 'error': 1, 'not_electronics': 5}
+22:48:46 [ansar-qa] 125/5880 {'not_product': 37, 'offers': 83, 'changes': 83, 'product': 83, 'error': 1, 'not_electronics': 5}
+22:49:25 [ansar-qa] 150/5880 {'not_product': 40, 'offers': 105, 'changes': 105, 'product': 105, 'error': 1, 'not_electronics': 5}
+22:50:05 [ansar-qa] 175/5880 {'not_product': 44, 'offers': 126, 'changes': 126, 'product': 126, 'error': 1, 'not_electronics': 5}
+22:50:48 [ansar-qa] 200/5880 {'not_product': 49, 'offers': 146, 'changes': 146, 'product': 146, 'error': 1, 'not_electronics': 5}
+22:51:27 [ansar-qa] 225/5880 {'not_product': 53, 'offers': 167, 'changes': 167, 'product': 167, 'error': 1, 'not_electronics': 5}
+22:52:07 [ansar-qa] 250/5880 {'not_product': 54, 'offers': 191, 'changes': 191, 'product': 191, 'error': 1, 'not_electronics': 5}
+22:52:48 [ansar-qa] 275/5880 {'not_product': 65, 'offers': 205, 'changes': 205, 'product': 205, 'error': 1, 'not_electronics': 5}
+22:53:28 [ansar-qa] 300/5880 {'not_product': 69, 'offers': 226, 'changes': 226, 'product': 226, 'error': 1, 'not_electronics': 5}
+22:54:07 [ansar-qa] 325/5880 {'not_product': 72, 'offers': 248, 'changes': 248, 'product': 248, 'error': 1, 'not_electronics': 5}
+22:54:46 [ansar-qa] 350/5880 {'not_product': 73, 'offers': 272, 'changes': 272, 'product': 272, 'error': 1, 'not_electronics': 5}
+22:55:27 [ansar-qa] 375/5880 {'not_product': 76, 'offers': 294, 'changes': 294, 'product': 294, 'error': 1, 'not_electronics': 5}
+22:56:11 [ansar-qa] 400/5880 {'not_product': 76, 'offers': 319, 'changes': 319, 'product': 319, 'error': 1, 'not_electronics': 5}
+22:56:49 [ansar-qa] 425/5880 {'not_product': 81, 'offers': 336, 'changes': 336, 'product': 336, 'error': 1, 'not_electronics': 8}
+22:57:27 [ansar-qa] 450/5880 {'not_product': 85, 'offers': 354, 'changes': 354, 'product': 354, 'error': 1, 'not_electronics': 11}
+22:58:08 [ansar-qa] 475/5880 {'not_product': 96, 'offers': 368, 'changes': 368, 'product': 368, 'error': 1, 'not_electronics': 11}
+22:58:47 [ansar-qa] 500/5880 {'not_product': 100, 'offers': 389, 'changes': 389, 'product': 389, 'error': 1, 'not_electronics': 11}
+22:59:25 [ansar-qa] 525/5880 {'not_product': 103, 'offers': 411, 'changes': 411, 'product': 411, 'error': 1, 'not_electronics': 11}
+23:00:07 [ansar-qa] 550/5880 {'not_product': 104, 'offers': 435, 'changes': 435, 'product': 435, 'error': 1, 'not_electronics': 11}
+23:00:47 [ansar-qa] 575/5880 {'not_product': 107, 'offers': 455, 'changes': 455, 'product': 455, 'error': 1, 'not_electronics': 13}
+23:01:27 [ansar-qa] 600/5880 {'not_product': 107, 'offers': 476, 'changes': 476, 'product': 476, 'error': 1, 'not_electronics': 17}
+23:02:06 [ansar-qa] 625/5880 {'not_product': 107, 'offers': 500, 'changes': 500, 'product': 500, 'error': 1, 'not_electronics': 18}
+23:02:59 [ansar-qa] 650/5880 {'not_product': 109, 'offers': 522, 'changes': 522, 'product': 522, 'error': 1, 'not_electronics': 19}

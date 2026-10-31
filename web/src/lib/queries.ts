@@ -11,23 +11,28 @@ export type ListItem = {
   id: number; slug: string; name: string; image: string | null; brand: string | null; category: string | null;
   min_price: string | null; max_price: string | null; n_offers: number; currency: string; last_seen: string;
   cheapest_store?: string | null;
+  spread?: { s: string; p: number }[] | null;
 };
 
+// One row per (product, store): a store selling 4 colours at one price counts once.
 const OFFER_AGG = `
-  WITH agg AS (
-    SELECT o.product_id,
-           min(o.price) FILTER (WHERE o.in_stock IS NOT FALSE) AS min_price,
-           max(o.price) FILTER (WHERE o.in_stock IS NOT FALSE) AS max_price,
-           count(*) FILTER (WHERE o.in_stock IS NOT FALSE) AS n_offers,
-           count(*) AS n_all,
-           max(o.last_seen) AS last_seen,
-           (array_agg(s.name ORDER BY o.price) FILTER (WHERE o.in_stock IS NOT FALSE))[1] AS cheapest_store
+  WITH ps AS (
+    SELECT o.product_id, s.name AS store,
+           min(o.price) FILTER (WHERE o.in_stock IS NOT FALSE) AS price,
+           max(o.last_seen) AS last_seen
     FROM offers o JOIN stores s ON s.id = o.store_id
     WHERE s.country = $1 AND o.price IS NOT NULL AND o.product_id IS NOT NULL
-    GROUP BY o.product_id)`;
+    GROUP BY 1, 2),
+  agg AS (
+    SELECT product_id,
+           min(price) AS min_price, max(price) AS max_price, count(price) AS n_offers,
+           max(last_seen) AS last_seen,
+           (array_agg(store ORDER BY price) FILTER (WHERE price IS NOT NULL))[1] AS cheapest_store,
+           json_agg(json_build_object('s', store, 'p', price) ORDER BY price) FILTER (WHERE price IS NOT NULL) AS spread
+    FROM ps GROUP BY 1)`;
 
 const LIST_COLS = `p.id, p.slug, p.name, p.image, p.brand, p.category, agg.min_price, agg.max_price,
-  agg.n_offers::int AS n_offers, agg.last_seen, agg.cheapest_store, c.currency`;
+  agg.n_offers::int AS n_offers, agg.last_seen, agg.cheapest_store, agg.spread, c.currency`;
 
 // ---------------------------------------------------------------- home
 export const getHome = cached(async (cc: CC) => {

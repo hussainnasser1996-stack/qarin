@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Empty, ProductList } from "./ProductList";
 import { PAGE_SIZE, listProducts, type ListParams } from "@/lib/queries";
+import { brandName } from "@/lib/format";
 import { t, type CC, type Lang } from "@/lib/i18n";
 
 /** Shared search/category listing with filters (plain GET form → works without JS). */
@@ -33,7 +34,7 @@ export async function Listing({ cc, lang, base, p, hidden = {} }: {
         {data.brands.length > 1 && (
           <select name="brand" defaultValue={p.brand || ""} className="h-10 px-2 rounded-md border border-line bg-surface" aria-label={d.filterBrand}>
             <option value="">{d.allBrands}</option>
-            {data.brands.map((b) => <option key={b.brand} value={b.brand}>{b.brand} ({b.n})</option>)}
+            {data.brands.map((b) => <option key={b.brand} value={b.brand}>{brandName(b.brand)} ({b.n})</option>)}
           </select>
         )}
         <label className="inline-flex items-center gap-2 h-10 px-3 rounded-md border border-line bg-surface">

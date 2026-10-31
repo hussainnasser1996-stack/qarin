@@ -19,9 +19,9 @@ export default async function Deals({ params }: { params: Promise<{ cc: CC; lang
   const [home, drops] = await Promise.all([getHome(cc).catch(() => null), getDrops(cc, 30).catch(() => [])]);
   return (
     <div className="space-y-8">
-      <h1 className="text-[26px] sm:text-[30px] font-bold">{d.dealsTitle} · {COUNTRIES[cc][lang]}</h1>
+      <h1 className="font-display text-[26px] sm:text-[30px] font-bold">{d.dealsTitle} · {COUNTRIES[cc][lang]}</h1>
       <section>
-        <h2 className="text-[20px] font-bold">{d.priceDrops}</h2>
+        <h2 className="font-display text-[20px] font-bold">{d.priceDrops}</h2>
         <p className="text-muted text-[14px] mb-3">{d.priceDropsSub}</p>
         {drops.length ? (
           <ul className="panel divide-y divide-line">
@@ -49,7 +49,7 @@ export default async function Deals({ params }: { params: Promise<{ cc: CC; lang
         ) : <Empty title={d.noResults} sub={lang === "ar" ? "تظهر الانخفاضات بعد أول أيام من التتبع." : "Drops appear after the first days of tracking."} />}
       </section>
       <section>
-        <h2 className="text-[20px] font-bold">{d.biggestGaps}</h2>
+        <h2 className="font-display text-[20px] font-bold">{d.biggestGaps}</h2>
         <p className="text-muted text-[14px] mb-3">{d.biggestGapsSub}</p>
         {home?.gaps.length ? <ProductList items={home.gaps} cc={cc} lang={lang} showGap /> : <Empty title={d.noResults} />}
       </section>
