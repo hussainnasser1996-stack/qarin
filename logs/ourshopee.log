@@ -47,3 +47,15 @@
 23:09:02 [ourshopee-ae] 300/9334 {'product': 214, 'offers': 214, 'changes': 214, 'not_product': 85, 'not_electronics': 2}
 23:09:45 [ourshopee-ae] 325/9334 {'product': 229, 'offers': 229, 'changes': 229, 'not_product': 95, 'not_electronics': 2}
 23:10:28 [ourshopee-ae] 350/9334 {'product': 243, 'offers': 243, 'changes': 243, 'not_product': 106, 'not_electronics': 2}
+23:11:15 [ourshopee-ae] 375/9334 {'product': 263, 'offers': 263, 'changes': 263, 'not_product': 111, 'not_electronics': 2}
+23:11:55 [ourshopee-ae] 400/9334 {'product': 268, 'offers': 268, 'changes': 268, 'not_product': 131, 'not_electronics': 2}
+23:12:34 [ourshopee-ae] 425/9334 {'product': 268, 'offers': 268, 'changes': 268, 'not_product': 156, 'not_electronics': 2}
+23:12:39 [ourshopee-ae] done {'product': 268, 'offers': 268, 'changes': 268, 'not_product': 159, 'not_electronics': 2}
+23:12:42   [ourshopee-kw] products-kw-1.xml: +2011 products, +0 maps (total 2011)
+23:12:43   [ourshopee-kw] products-kw-2.xml: +1393 products, +0 maps (total 3404)
+23:12:44   [ourshopee-kw] products-kw-3.xml: +2175 products, +0 maps (total 5579)
+23:12:45   [ourshopee-kw] products-kw-4.xml: +704 products, +0 maps (total 6283)
+23:12:47 [ourshopee-kw] discovered 6283 candidate product URLs
+23:12:50 [ourshopee-kw] 6278 URLs due; budget 14.0 min
+23:12:51 [ourshopee-kw] 0/6278 {'not_product': 1}
+23:13:34 [ourshopee-kw] 25/6278 {'not_product': 17, 'product': 9, 'offers': 9, 'changes': 9}

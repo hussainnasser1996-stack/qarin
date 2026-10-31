@@ -211,3 +211,20 @@ export const getSitemapProducts = cached(async (cc: CC) => {
     [cc],
   )) as { id: number; slug: string; updated_at: string }[];
 }, "sitemap", 21600);
+
+/** Fallback hero: the product sold in the most GCC countries, with each country's lowest in-stock price. */
+export const getGccHero = cached(async () => {
+  const rows = await query(
+    `WITH best AS (
+       SELECT p.id FROM products p WHERE p.family IS NOT NULL AND p.category <> 'accessories' AND p.image IS NOT NULL
+       ORDER BY p.country_count DESC, p.offer_count DESC LIMIT 1)
+     SELECT p.id, p.slug, p.name, p.image, s.country, c.currency, min(o.price) AS price
+     FROM best b JOIN products p ON p.id = b.id JOIN offers o ON o.product_id = p.id
+     JOIN stores s ON s.id = o.store_id JOIN countries c ON c.code = s.country
+     WHERE o.price IS NOT NULL AND o.in_stock IS NOT FALSE
+     GROUP BY p.id, p.slug, p.name, p.image, s.country, c.currency`,
+  );
+  if (rows.length < 2) return null;
+  return { id: rows[0].id as number, slug: rows[0].slug as string, name: rows[0].name as string, image: rows[0].image as string | null,
+           prices: rows.map((r) => ({ country: r.country as CC, currency: r.currency as string, price: Number(r.price) })) };
+}, "gcc-hero");

@@ -1,0 +1,3 @@
+23:12:35 [jumbosouq-qa] 5747 URLs due; budget 25.0 min
+23:12:37 [jumbosouq-qa] 0/5747 {'product': 1, 'offers': 1, 'changes': 1}
+23:13:19 [jumbosouq-qa] 25/5747 {'product': 26, 'offers': 26, 'changes': 26}

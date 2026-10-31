@@ -28,3 +28,29 @@
 23:08:29 [jumbosouq-qa] 650/6531 {'product': 605, 'offers': 605, 'changes': 605, 'not_electronics': 44, 'not_product': 2}
 23:09:14 [jumbosouq-qa] 675/6531 {'product': 628, 'offers': 628, 'changes': 628, 'not_electronics': 46, 'not_product': 2}
 23:09:58 [jumbosouq-qa] 700/6531 {'product': 651, 'offers': 651, 'changes': 651, 'not_electronics': 48, 'not_product': 2}
+23:10:43 [jumbosouq-qa] 725/6531 {'product': 671, 'offers': 671, 'changes': 671, 'not_electronics': 52, 'not_product': 3}
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/hussainnasser/Developer/Personal Business/Qarin/crawler/qarin/run.py", line 350, in <module>
+    ap.add_argument("--max-maps", type=int, default=600)
+    ^^^^^^
+  File "/Users/hussainnasser/Developer/Personal Business/Qarin/crawler/qarin/run.py", line 336, in main
+    (SELECT count(*) FROM store_urls su WHERE su.store_id=s.id AND su.kind IS NOT NULL) fetched,
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hussainnasser/Developer/Personal Business/Qarin/crawler/qarin/run.py", line 159, in cmd_crawl
+    changed = write(save)
+              ^^^^^^^^^^^
+  File "/Users/hussainnasser/Developer/Personal Business/Qarin/crawler/qarin/run.py", line 112, in write
+    out = fn(conn)
+          ^^^^^^^^
+  File "/Users/hussainnasser/Developer/Personal Business/Qarin/crawler/qarin/run.py", line 154, in save
+    changed = _upsert_offer(c, st.id, url, *offer) if offer else False
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hussainnasser/Developer/Personal Business/Qarin/crawler/qarin/run.py", line 76, in _upsert_offer
+    oid = conn.execute(
+          ^^^^^^^^^^^^^
+  File "/Users/hussainnasser/Developer/Personal Business/Qarin/.venv/lib/python3.12/site-packages/psycopg/connection.py", line 304, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.UniqueViolation: duplicate key value violates unique constraint "offers_store_id_url_key"
+DETAIL:  Key (store_id, url)=(jumbosouq-qa, https://js.qa/en/lg-65-oled-4k-smart-tv-oled65cs4va) already exists.

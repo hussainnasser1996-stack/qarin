@@ -73,10 +73,13 @@ def _upsert_offer(conn, store_id: str, url: str, p: dict, ident: dict) -> bool:
     if row is None:
         cols = ", ".join(vals)
         ph = ", ".join(["%s"] * len(vals))
-        oid = conn.execute(
-            f"INSERT INTO offers (store_id, url, {cols}) VALUES (%s,%s,{ph}) RETURNING id",
+        got = conn.execute(
+            f"INSERT INTO offers (store_id, url, {cols}) VALUES (%s,%s,{ph}) ON CONFLICT (store_id, url) DO NOTHING RETURNING id",
             (store_id, url, *vals.values()),
-        ).fetchone()[0]
+        ).fetchone()
+        if got is None:  # another writer inserted it first; treat as an update next run
+            return False
+        oid = got[0]
         conn.execute("INSERT INTO price_history (offer_id, price, in_stock) VALUES (%s,%s,%s)", (oid, vals["price"], vals["in_stock"]))
         return True
     oid, old_price, old_stock = row
@@ -112,6 +115,10 @@ def cmd_crawl(store_id: str, minutes: float, max_pages: int):
                 out = fn(conn)
                 conn.commit()
                 return out
+            except (psycopg.errors.UniqueViolation, psycopg.errors.DataError, psycopg.errors.IntegrityError) as e:
+                conn.rollback()
+                log(f"[{st.id}] skipped a row ({type(e).__name__})")
+                return None
             except psycopg.OperationalError as e:
                 log(f"[{st.id}] db reconnect ({str(e).splitlines()[0][:80]})")
                 try:

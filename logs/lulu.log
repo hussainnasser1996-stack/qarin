@@ -52,3 +52,7 @@
 23:09:16 [lulu-kw] 262 URLs due; budget 12.0 min
 23:09:18 [lulu-kw] 0/262 {'product': 1, 'offers': 1, 'changes': 1}
 23:10:04 [lulu-kw] 25/262 {'product': 26, 'offers': 26, 'changes': 26}
+23:10:51 [lulu-kw] 50/262 {'product': 51, 'offers': 51, 'changes': 51}
+23:11:37 [lulu-kw] 75/262 {'product': 73, 'offers': 73, 'changes': 73, 'not_electronics': 3}
+23:12:20 [lulu-kw] 100/262 {'product': 97, 'offers': 97, 'changes': 97, 'not_electronics': 4}
+23:13:04 [lulu-kw] 125/262 {'product': 122, 'offers': 122, 'changes': 122, 'not_electronics': 4}

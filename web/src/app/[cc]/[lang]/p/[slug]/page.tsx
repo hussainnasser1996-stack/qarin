@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     title,
     description: desc,
     alternates: alternates(cc, lang, `p/${data.product.slug}-${data.product.id}`),
-    openGraph: { title, description: desc, images: data.product.image ? [data.product.image] : undefined },
+    openGraph: { title, description: desc },
   };
 }
 
