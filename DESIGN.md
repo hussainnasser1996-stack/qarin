@@ -72,6 +72,10 @@ Qarin is a price list, not a magazine. The page has one job: show where the same
 - Both are off under `prefers-reduced-motion`.
 
 ## Components
+- **Offers**: one row per store (cheapest first), with the other colours and options folded under a `<details>`. Each row shows a version badge (neutral for ME/GCC, amber for international), condition, seller and freshness. A ranking note sits above the table. The cheapest row also says how much cheaper it is than the next store.
+- **Insight**: trend word, 90-day range bar with today's price on it, and badges following strict rules (lowest in 90 days needs 14+ days of history). Under 7 days it shows only the tracked-since date. The chart is hidden until there are 7 days of history.
+- **Listing filters**: brand, storage, price, store and in-stock as links plus one GET form, so they work without JavaScript and every view has its own URL. Sorting is chip tabs, and active filters show as removable chips.
+- **Watch**: a saved list kept in localStorage, with no account needed. The My list page shows the price when saved next to today's price.
 `Header` (logo is a `.tag` "ق"), `SearchBox` (autocomplete, Arabic → English term mapping), `LocaleSwitch`, `ProductList`, `SpreadBar`, `PriceTag`, `PriceChart` (Recharts), `AlertForm`, `ReportForm`, `MerchantForm`, `Consent`, `Footer`.
 
 ## Do's
