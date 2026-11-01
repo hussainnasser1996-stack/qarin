@@ -1,4 +1,4 @@
-import { ago, bnplName, colourName, conditionLabel, exactTime, money, regionLabel, storeName, warrantyLabel } from "@/lib/format";
+import { ago, bnplFits, bnplLabel, codFits, colourName, conditionLabel, exactTime, money, regionLabel, storeName, warrantyLabel } from "@/lib/format";
 import { t, type CC, type Lang } from "@/lib/i18n";
 import type { Offer } from "@/lib/queries";
 
@@ -6,7 +6,7 @@ import type { Offer } from "@/lib/queries";
  * One row per store (idealo / Geizhals style). A store that lists the same item in five colours shows its best
  * price once, with the other options folded underneath, so the table compares stores, not listings.
  */
-export function Offers({ offers, cc, lang, currency }: { offers: Offer[]; cc: CC; lang: Lang; currency: string }) {
+export function Offers({ offers, cc, lang, currency, category }: { offers: Offer[]; cc: CC; lang: Lang; currency: string; category?: string | null }) {
   const d = t(lang);
   const live = (o: Offer) => o.price !== null && o.in_stock !== false;
   const byStore = new Map<string, Offer[]>();
@@ -47,13 +47,14 @@ export function Offers({ offers, cc, lang, currency }: { offers: Offer[]; cc: CC
     const pol = o.policies;
     const price = Number(o.price);
     for (const b of pol?.bnpl ?? []) {
-      const n = b.payments || null; // only the number of payments the store itself states
+      // Amount only when the store states the number of payments AND this price is inside its published limits.
+      const n = b.payments && price && bnplFits(price, b.notes) ? b.payments : null;
       out.push({
-        text: n && price ? `${bnplName(b.provider, lang)} · ${n} × ${money(price / n, o.currency || currency, lang)}` : bnplName(b.provider, lang),
-        tone: "plain", title: checkedOn(pol),
+        text: n ? `${bnplLabel(b, lang)} · ${n} × ${money(price / n, o.currency || currency, lang)}` : bnplLabel(b, lang),
+        tone: "plain", title: b.notes || checkedOn(pol),
       });
     }
-    if (pol?.cod) out.push({ text: ar ? "الدفع عند الاستلام" : "Cash on delivery", tone: "plain", title: pol.cod_notes || checkedOn(pol) });
+    if (codFits(pol, price, category)) out.push({ text: ar ? "الدفع عند الاستلام" : "Cash on delivery", tone: "plain", title: pol?.cod_notes || checkedOn(pol) });
     if (pol?.free_delivery_over != null && price >= pol.free_delivery_over) out.push({ text: ar ? "توصيل مجاني" : "Free delivery", tone: "plain", title: checkedOn(pol) });
     if (pol?.same_day) out.push({ text: ar ? "خيار توصيل سريع" : "Express delivery option", tone: "plain", title: pol.delivery_days || checkedOn(pol) });
     if (pol?.click_collect) out.push({ text: ar ? "استلام من الفرع" : "Pick up in store", tone: "plain", title: checkedOn(pol) });

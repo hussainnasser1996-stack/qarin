@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { PriceTag } from "@/components/Spread";
 import { Empty } from "@/components/ProductList";
-import { bnplName, brandName, convert, money, productPath, regionLabel, storeName, warrantyLabel } from "@/lib/format";
+import { bnplLabel, brandName, codFits, convert, money, productPath, regionLabel, storeName, warrantyLabel } from "@/lib/format";
 import { dailySeries } from "@/lib/history";
 import { categoryName, CCS, COUNTRIES, t, type CC, type Lang } from "@/lib/i18n";
 import { getProduct } from "@/lib/queries";
@@ -42,8 +42,8 @@ export default async function Compare({ params, searchParams }: { params: Promis
       return { c, v: convert(Number(b.price), b.currency || COUNTRIES[c].currency, cur) };
     });
     const w = live.filter((o) => o.warranty_months).sort((a, b) => (b.warranty_months ?? 0) - (a.warranty_months ?? 0))[0];
-    const bnpl = [...new Set(live.flatMap((o) => (o.policies?.bnpl ?? []).map((b) => b.provider)))];
-    const cod = [...new Set(live.filter((o) => o.policies?.cod).map((o) => o.store))];
+    const bnpl = [...new Set(live.flatMap((o) => (o.policies?.bnpl ?? []).map((b) => bnplLabel(b, lang))))];
+    const cod = [...new Set(live.filter((o) => codFits(o.policies, Number(o.price), product.category)).map((o) => o.store))];
     const versions = [...new Set(live.map((o) => regionLabel(o.region, lang)?.text).filter(Boolean))] as string[];
     return {
       product, best, price: best ? Number(best.price) : null, stores, low90: mins.length >= 7 ? Math.min(...mins) : null,
@@ -102,9 +102,9 @@ export default async function Compare({ params, searchParams }: { params: Promis
             )))}
             {row(ar ? "الضمان" : "Warranty", cols.map((c) => c.w ? <span className="text-deal-ink font-medium">{warrantyLabel(c.w.warranty_months, c.w.warranty_by, lang)}</span> : <span className="text-muted text-[13px]">{ar ? "حسب سياسة المتجر" : "Per store policy"}</span>),
               cols.map((c) => longestW > 0 && (c.w?.warranty_months ?? 0) === longestW))}
-            {row(ar ? "الدفع لاحقاً" : "Pay later", cols.map((c) => c.bnpl.length ? c.bnpl.map((b) => bnplName(b, lang)).join("، ") : "—"))}
-            {row(ar ? "الدفع عند الاستلام" : "Cash on delivery", cols.map((c) => c.cod.length ? c.cod.map((s) => storeName(s, lang)).join("، ") : "—"))}
-            {row(d.version, cols.map((c) => c.versions.length ? c.versions.join("، ") : "—"))}
+            {row(ar ? "الدفع لاحقاً" : "Pay later", cols.map((c) => c.bnpl.length ? c.bnpl.join(lang === "ar" ? "، " : ", ") : "—"))}
+            {row(ar ? "الدفع عند الاستلام" : "Cash on delivery", cols.map((c) => c.cod.length ? c.cod.map((s) => storeName(s, lang)).join(lang === "ar" ? "، " : ", ") : "—"))}
+            {row(d.version, cols.map((c) => c.versions.length ? c.versions.join(lang === "ar" ? "، " : ", ") : "—"))}
             {row(d.storage, cols.map((c) => <span className="ltr">{c.product.storage || "—"}</span>))}
             {row(d.filterBrand, cols.map((c) => brandName(c.product.brand) || "—"))}
             {row(ar ? "القسم" : "Category", cols.map((c) => categoryName(c.product.category, lang)))}

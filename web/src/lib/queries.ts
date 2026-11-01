@@ -131,7 +131,9 @@ export const listProducts = cached(async (cc: CC, p: ListParams) => {
   const offerHas = (cond: string) => `EXISTS (SELECT 1 FROM offers o3 JOIN stores s3 ON s3.id = o3.store_id
       WHERE o3.product_id = p.id AND s3.country = $1 AND o3.price > 0 AND o3.in_stock IS NOT FALSE AND ${cond})`;
   if (p.bnpl) where.push(offerHas(`jsonb_array_length(COALESCE(s3.policies->'bnpl', '[]'::jsonb)) > 0`));
-  if (p.cod) where.push(offerHas(`(s3.policies->>'cod')::boolean IS TRUE`));
+  if (p.cod) where.push(offerHas(`(s3.policies->>'cod')::boolean IS TRUE
+      AND (s3.policies->>'cod_max' IS NULL OR o3.price <= (s3.policies->>'cod_max')::numeric)
+      AND NOT COALESCE(s3.policies->'cod_exclude' ? p.category, false)`));
   if (p.warranty) where.push(offerHas(`o3.warranty_months >= 12`));
   if (p.store) {
     params.push(p.store);
@@ -202,7 +204,7 @@ export type Offer = {
 };
 export type Policies = {
   bnpl?: { provider: string; payments?: number | null; notes?: string | null }[];
-  cod?: boolean | null; cod_notes?: string | null;
+  cod?: boolean | null; cod_notes?: string | null; cod_max?: number | null; cod_exclude?: string[] | null;
   free_delivery_over?: number | null; free_delivery_currency?: string | null; delivery_fee?: number | null;
   delivery_days?: string | null; same_day?: boolean | null; click_collect?: boolean | null;
   returns_days?: number | null; returns_notes?: string | null; warranty_policy?: string | null;

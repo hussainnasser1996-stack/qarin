@@ -1,461 +1,534 @@
 {
-  "sharafdg-bh": {
-    "bnpl": [],
-    "cod": true,
-    "cod_notes": "Pay Later (Cash on Delivery) offered; not available for fridges, ACs, washers, dishwashers, TVs 40in+ and other supplier-delivered major appliances, or some clearance items. COD orders are delivered next day (not same day). No COD fee stated. Bank card installments (Easy Payment Plan, e.g. Standard Chartered up to 6 months, min BHD 100) exist but no BNPL provider is named on the Bahrain pages.",
-    "free_delivery_over": 10,
-    "free_delivery_currency": "BHD",
-    "delivery_fee": 1.5,
-    "delivery_days": "1-3 business days (supplier-delivered large appliances 3-5 business days)",
-    "same_day": true,
-    "click_collect": true,
-    "returns_days": 15,
-    "returns_notes": "Return/exchange within 15 days of purchase, unused and unopened with original packaging. Laptops, tablets, printers, mobile phones, cameras and headsets not returnable once the pack is opened (except defects); opened-but-unused items may be taken back with a minimum 15% restocking fee. Marketplace items follow the seller's policy.",
-    "warranty_policy": "Warranty is provided by the brand's authorized agents/distributors (or the marketplace seller) and is valid in Bahrain only. Extended warranty (DG Shield / DG Shield+) sold separately.",
-    "sources": [
-      "https://bahrain.sharafdg.com/f-a-qs/",
-      "https://bahrain.sharafdg.com/get-free-delivery/",
-      "https://bahrain.sharafdg.com/express-delivery/",
-      "https://bahrain.sharafdg.com/return-exchange-and-warranty/",
-      "https://bahrain.sharafdg.com/epp/"
-    ],
-    "notes": "Free same-day delivery applies to PAID orders of BHD 10+ placed before 5PM; free delivery excludes Marketplace products. Express/'Bullet' 3-hour delivery costs BHD 1.990. Store pickup at City Centre, The Avenues, Enma Mall Riffa, Seef Mall Muharraq and Arad, free of charge; not available for large supplier-delivered items.",
-    "checked": "2026-11-01"
-  },
-  "sharafdg-ae": {
-    "bnpl": [
-      {"provider": "tabby", "payments": 4, "notes": "Dedicated Tabby page: split into four interest-free instalments."},
-      {"provider": "tamara", "payments": 4, "notes": "Listed as a payment option in the FAQ; Tamara page says split into four monthly instalments, no interest, but a small service charge may be added."}
-    ],
-    "cod": true,
-    "cod_notes": "Non-refundable AED 10 convenience fee on top of shipping; maximum COD order AED 5,000; for products sold by Sharaf DG and selected sellers; the order must be confirmed by SMS or IVR within 6 hours.",
-    "free_delivery_over": null,
-    "free_delivery_currency": "AED",
-    "delivery_fee": 13,
-    "delivery_days": "2-5 business days (supplier-delivered large appliances 5-7 business days)",
-    "same_day": true,
-    "click_collect": true,
-    "returns_days": 14,
-    "returns_notes": "Standard 14-day return policy; non-consumables within 14 days; handling charge applies to returns of supplier-delivered goods; dead-on-arrival items exchanged after verification.",
-    "warranty_policy": "All products carry the standard product warranty per Sharaf DG's Warranty Terms; a separate Warranty & Service Policy covers defects in material and workmanship (excludes non-branded accessories, batteries, printheads, consumables). Extended warranty / DG Shield sold separately.",
-    "sources": [
-      "https://uae.sharafdg.com/f-a-qs/",
-      "https://uae.sharafdg.com/express-delivery/",
-      "https://uae.sharafdg.com/terms-and-conditions/",
-      "https://uae.sharafdg.com/return-exchange-and-warranty/",
-      "https://uae.sharafdg.com/warranty-and-service-policy/",
-      "https://uae.sharafdg.com/tabby/",
-      "https://uae.sharafdg.com/tamara/"
-    ],
-    "notes": "No order-value free-delivery threshold is stated. Delivery is AED 13 for non-large items, and DG Members pay no delivery charge on items sold by Sharaf DG. Express delivery: orders before 12 noon arrive the same day in Dubai and Sharjah, otherwise next day within city limits; free for DG Members; only on select products. Store pickup is available at about 10 named stores, and orders are held for 7 days.",
-    "checked": "2026-11-01"
-  },
-  "sharafdg-om": {
-    "bnpl": [],
-    "cod": true,
-    "cod_notes": "Cash on Delivery listed among payment options; no fee or limit stated. Other options: Oman-issued cards, PayPal (USD), Points Pay, gift card, Air Miles, Amex.",
-    "free_delivery_over": null,
-    "free_delivery_currency": "OMR",
-    "delivery_fee": 3,
-    "delivery_days": "2-5 business days (supplier-delivered large appliances 5-7 business days)",
-    "same_day": true,
-    "click_collect": true,
-    "returns_days": 15,
-    "returns_notes": "Standard 15-day return policy for non-consumables; consumables/fresh food within 24 hours; DOA items exchanged/returned after seller verification.",
-    "warranty_policy": "Warranty is provided by the brand's authorized agents/distributors (or the marketplace seller) and is limited to Oman. Extended warranty / DG Shield+ sold separately.",
-    "sources": [
-      "https://oman.sharafdg.com/f-a-qs/",
-      "https://oman.sharafdg.com/express-delivery/",
-      "https://oman.sharafdg.com/return-exchange-and-warranty/"
-    ],
-    "notes": "Delivery is OMR 3 for up to 5 kg (volumetric), plus 200 baisa for each extra kg. No free-delivery threshold is stated. Express delivery is same day in Muscat for orders placed before 3PM, free on selected products; not on Fridays or public holidays, and not for TVs or large appliances. Store pickup is at Muscat Grand Mall, Mall of Oman, City Centre Muscat and Safeer Mall Sohar.",
-    "checked": "2026-11-01"
-  },
-  "extra-sa": {
-    "bnpl": [
-      {"provider": "tabby", "payments": 4, "notes": "Plans of 3, 4, 6, 8 or 12 payments; no admin fee for 3 or 4, a fee applies for 6+. Invoice SAR 200 to 50,000 (SAR 1,500 cap for ages 18-21); not for gift cards."},
-      {"provider": "tamara", "payments": 4, "notes": "Split into 2, 3, 4, 6, 9, 12 or 24 payments; processing fee for 4+ payments; invoice SAR 200 to 50,000; not for gift cards."},
-      {"provider": "other", "payments": null, "notes": "Baseeta and Tasheel finance also offered (installment financing, not standard BNPL)."}
-    ],
-    "cod": null,
-    "cod_notes": "The T&C only say COD is 'not enabled for digital cards', which suggests COD exists, but no page says whether COD is available or what it costs.",
-    "free_delivery_over": null,
-    "free_delivery_currency": "SAR",
-    "delivery_fee": 25,
-    "delivery_days": "1-3 working days in metro cities; max 5 working days elsewhere in KSA",
-    "same_day": true,
-    "click_collect": true,
-    "returns_days": 14,
-    "returns_notes": "14 days for website purchases (7 days in showroom). Mobile phones, computers, gaming devices, printers, health and beauty items and activated SIMs/routers can only be returned if defective within 14 days; software and video games are non-returnable. Open-box returns lose 30%.",
-    "warranty_policy": "Products sold on the website carry a 2-year manufacturer's warranty from the purchase date; ExtraSafeguard extended protection is sold separately.",
-    "sources": [
-      "https://www.extra.com/en-sa/delivery",
-      "https://www.extra.com/en-sa/returnexchange",
-      "https://www.extra.com/en-sa/terms",
-      "https://www.extra.com/en-sa/tabbyterms",
-      "https://www.extra.com/en-sa/tamaraterms"
-    ],
-    "notes": "SAR 25 is the standard fee for small items; large appliances are SAR 49 or 99. No free-delivery threshold appears on the live page; an older 'free above SAR 199' line exists only in commented-out HTML and was ignored. Same-day Express costs SAR 30 for small items (order by 11AM) and SAR 199 for large (by 3PM) in metro cities, not on Fridays. eXtra Now delivers within 2 hours for SAR 35 in parts of Riyadh. Click & collect is available from all stores.",
-    "checked": "2026-11-01"
-  },
-  "extra-bh": {
-    "bnpl": [],
-    "cod": true,
-    "cod_notes": "BHD 1.5 cash-on-delivery charge (T&C). Not available for digital cards.",
-    "free_delivery_over": 10,
-    "free_delivery_currency": "BHD",
-    "delivery_fee": null,
-    "delivery_days": "Small items: same-day dispatch if ordered by 2pm, delivered by 9pm; large items and split ACs: next day",
-    "same_day": true,
-    "click_collect": true,
-    "returns_days": 15,
-    "returns_notes": "Online purchases can be returned within 15 days of receipt if unused and in original condition with all accessories. If home delivery was completed, BHD 10 delivery fee is deducted for change-of-mind returns.",
-    "warranty_policy": "Products carry a 1-year manufacturer's warranty from the purchase date; eXtra extended warranty (Force 24/7) and accidental-damage cover sold separately.",
-    "sources": [
-      "https://www.extra.com/en-bh/delivery",
-      "https://www.extra.com/en-bh/terms",
-      "https://www.extra.com/en-bh/faq"
-    ],
-    "notes": "The site disagrees on the fee below the free threshold. The delivery page says free over BHD 10 and BHD 3 below. The T&C say free from BHD 9.9 and BHD 1.5 below, so delivery_fee is left null. Large items, including ACs, deliver free. Express delivery adds BHD 2.5. Header says 'Collect from store within 1 hour'. A 'Split in 4 with Flooss' banner exists only in commented-out HTML, so no BNPL is recorded.",
-    "checked": "2026-11-01"
-  },
-  "extra-om": {
-    "bnpl": [],
-    "cod": null,
-    "cod_notes": "T&C only say COD is 'not enabled for digital cards', which suggests COD exists, but availability and fees are never stated outright. Bank credit-card installment plans exist (OMR 3 installment fee charged on change-of-mind returns).",
-    "free_delivery_over": 10,
-    "free_delivery_currency": "OMR",
-    "delivery_fee": 2.5,
-    "delivery_days": "Within 24 working hours inside Muscat; max 5 working days elsewhere in Oman",
-    "same_day": true,
-    "click_collect": true,
-    "returns_days": 15,
-    "returns_notes": "Online: request a return within 15 days of receipt. Software, video games, health and beauty items and earphones are excluded for hygiene reasons. Open-box returns face deductions. Change-of-mind returns pay shipment or bank fees (OMR 3).",
-    "warranty_policy": "Products carry a 1-year manufacturer's warranty from the purchase date; eXtra extended warranty (Force 24/7) sold separately.",
-    "sources": [
-      "https://www.extra.com/en-om/delivery",
-      "https://www.extra.com/en-om/returnexchange",
-      "https://www.extra.com/en-om/terms",
-      "https://www.extra.com/en-om/faq"
-    ],
-    "notes": "The free threshold covers small appliances; large appliances (except ACs and built-ins) get free delivery with installation. Same-day delivery is free for orders before 11AM, Muscat only, not on Fridays, and excludes large appliances. Header shows 'Qpay' and 'Collect from store within 1 hour'. Qpay is not explained anywhere, so it is not recorded as BNPL.",
-    "checked": "2026-11-01"
-  },
-  "jarir-sa": {
-    "bnpl": [
-      {"provider": "tabby", "payments": 4, "notes": "FAQ: split into 4 monthly payments, SR 200 to 9,000. The installment-methods page also lists 'Tabby 12' (12 payments, SR 200 to 30,000)."},
-      {"provider": "tamara", "payments": 4, "notes": "FAQ example shows 4 installments, SR 200 to 5,000. The installment-methods page also lists 'Tamara 24' (24 payments, SR 200 to 30,000)."},
-      {"provider": "other", "payments": null, "notes": "Quara Finance, 6 to 36 payments with no down payment, SR 1,500 to 30,000."}
-    ],
-    "cod": false,
-    "cod_notes": "FAQ: 'Is Cash on Delivery available? The service is not available at this time.' (The payment list also mentions a SR 17.25 COD fee but marks it not available.)",
-    "free_delivery_over": null,
-    "free_delivery_currency": "SAR",
-    "delivery_fee": 29,
-    "delivery_days": "1-3 working days (major cities); within 5 days for other Saudi cities",
-    "same_day": null,
-    "click_collect": true,
-    "returns_days": 3,
-    "returns_notes": "Return within 3 days and exchange within 7 days. The online terms say both are counted from receipt, and also mention 'returns and exchanges within 7 days from the date of receiving'. Electronics, books, software, video games and prepaid cards cannot be returned or exchanged unless they have a manufacturing defect. Defective devices are replaced within 3 days of purchase.",
-    "warranty_policy": "All electronic devices carry at least a 2-year warranty (accessories and peripherals excluded), provided by the manufacturer or its official agent, not by Jarir. Extended warranty / Total Protection sold separately.",
-    "sources": [
-      "https://www.jarir.com/sa-en/customer-care/faq",
-      "https://www.jarir.com/sa-en/customer-care/return-and-exchange",
-      "https://www.jarir.com/sa-en/customer-care/warranty-policy",
-      "https://www.jarir.com/sa-en/installment-service-methods"
-    ],
-    "notes": "Shipping is SAR 29 under 30 kg and SAR 79 over 30 kg, VAT included. No free-delivery threshold is stated for home delivery. Collect from Showroom is free regardless of order value.",
-    "checked": "2026-11-01"
-  },
-  "jarir-bh": {
-    "bnpl": [
-      {"provider": "tabby", "payments": 4, "notes": "4 monthly payments, no interest or fees; BD 20 to 500 loan value (spend limit BHD 700)."},
-      {"provider": "other", "payments": 4, "notes": "Flooss (Bahrain): 4 payments, BD 20 to 1,000 on the installment page (FAQ says min BD 50); paid via BenefitPay."}
-    ],
-    "cod": true,
-    "cod_notes": "BHD 1 COD service fee. Limits conflict: the FAQ says max order BHD 500, the COD policy says BHD 400. Only on some orders and product types.",
-    "free_delivery_over": 20,
-    "free_delivery_currency": "BHD",
-    "delivery_fee": 2,
-    "delivery_days": "1-3 working days (major cities); up to 10 days elsewhere in Bahrain",
-    "same_day": null,
-    "click_collect": true,
-    "returns_days": 15,
-    "returns_notes": "Return and exchange within 15 days of purchase in original packing with invoice. Electronics, books, software, video games and prepaid cards excluded unless defective.",
-    "warranty_policy": "All electronic devices carry at least a 1-year warranty (accessories and peripherals excluded), provided by the manufacturer or its official agent.",
-    "sources": [
-      "https://www.jarir.com/bh-en/customer-care/faq",
-      "https://www.jarir.com/bh-en/customer-care/return-and-exchange",
-      "https://www.jarir.com/bh-en/customer-care/warranty-policy",
-      "https://www.jarir.com/bh-en/installment-service-methods"
-    ],
-    "notes": "Delivery is free for orders of BHD 20+, otherwise BHD 2. Orders over 15 kg add BHD 0.2 per extra kg. Couriers are Aramex and Dal. Collect from Showroom is available.",
-    "checked": "2026-11-01"
-  },
-  "jarir-kw": {
-    "bnpl": [
-      {"provider": "other", "payments": 4, "notes": "Deema: 4 payments, KD 20 to 500; service charge applies; Deema purchases can't be returned."},
-      {"provider": "other", "payments": 4, "notes": "Taly: 4 monthly payments (FAQ)."}
-    ],
-    "cod": true,
-    "cod_notes": "KD 1 COD service fee. Limits conflict: the FAQ says max order KD 400, the COD policy says KD 4000. Only on some orders and product types.",
-    "free_delivery_over": 20,
-    "free_delivery_currency": "KWD",
-    "delivery_fee": 3,
-    "delivery_days": "1-3 working days (major cities); up to 10 days elsewhere",
-    "same_day": null,
-    "click_collect": true,
-    "returns_days": 14,
-    "returns_notes": "Return and exchange within 14 days of purchase in original packing with invoice. Electronics, books, software, video games and prepaid cards excluded unless not meeting specifications.",
-    "warranty_policy": "All electronic devices carry at least a 1-year warranty (accessories and peripherals excluded), provided by the manufacturer or its official agent.",
-    "sources": [
-      "https://www.jarir.com/kw-en/customer-care/faq",
-      "https://www.jarir.com/kw-en/customer-care/return-and-exchange",
-      "https://www.jarir.com/kw-en/customer-care/warranty-policy",
-      "https://www.jarir.com/kw-en/installment-service-methods"
-    ],
-    "notes": "Delivery is free for orders of KD 20+, otherwise KD 3. Orders over 15 kg add KD 0.100 per extra kg. Courier is Aramex. K-Net accepted. Collect from Showroom is available.",
-    "checked": "2026-11-01"
-  },
-  "jarir-qa": {
-    "bnpl": [
-      {"provider": "other", "payments": 4, "notes": "'Paylater': 4 payments, QR 200 to 25,000 (installment-methods page)."}
-    ],
-    "cod": true,
-    "cod_notes": "QAR 10 COD service fee. COD orders are refunded as Jarir.com store credit. Only on some orders and product types.",
-    "free_delivery_over": 200,
-    "free_delivery_currency": "QAR",
-    "delivery_fee": 20,
-    "delivery_days": "1-3 working days (major cities); up to 10 days elsewhere",
-    "same_day": null,
-    "click_collect": true,
-    "returns_days": 3,
-    "returns_notes": "Return within 3 days and exchange within 7 days of purchase. Electronics, books, software, video games and prepaid cards excluded unless defective.",
-    "warranty_policy": "All electronic devices carry at least a 1-year warranty (accessories and peripherals excluded), provided by the manufacturer or its official agent.",
-    "sources": [
-      "https://www.jarir.com/qa-en/customer-care/faq",
-      "https://www.jarir.com/qa-en/customer-care/return-and-exchange",
-      "https://www.jarir.com/qa-en/customer-care/warranty-policy",
-      "https://www.jarir.com/qa-en/installment-service-methods"
-    ],
-    "notes": "Delivery is free for orders of QAR 200+, otherwise QAR 20. Orders over 15 kg add QAR 2 per extra kg. Courier is Qatar Post. Collect from Showroom is available.",
-    "checked": "2026-11-01"
-  },
-  "lulu-bh": {
-    "bnpl": [],
-    "cod": false,
-    "cod_notes": "T&C: COD is only for Grocery and Fresh Food products, max BHD 1,000 per COD order, refunds go to Lulu Wallet. So COD does not apply to electronics. The shared FAQ says luluhypermarket.com does not accept COD.",
-    "free_delivery_over": null,
-    "free_delivery_currency": "BHD",
-    "delivery_fee": null,
-    "delivery_days": null,
-    "same_day": null,
-    "click_collect": null,
-    "returns_days": 7,
-    "returns_notes": "'7 Days money back guarantee if you change your mind' and a 7-day return period from receipt. Electronics/electrical items are returned or refunded only if found defective and reported within 7 days, after the authorized service center verifies. Opened large appliances/TVs not accepted.",
-    "warranty_policy": "Service & Warranty Policy: warranty repairs are done by authorized personnel only, carry-in, and are void if misuse is found. No warranty length is stated.",
-    "sources": [
-      "https://gcc.luluhypermarket.com/en-bh/termsAndConditions-bh/",
-      "https://gcc.luluhypermarket.com/en-bh/returnpolicy",
-      "https://gcc.luluhypermarket.com/en-bh/faq",
-      "https://gcc.luluhypermarket.com/en-bh/serviceandwarranty-bh/"
-    ],
-    "notes": "Lulu publishes one GCC-wide policy set; the return and FAQ text is nearly identical in every country, and the FAQ is UAE-oriented. The FAQ says delivery charges depend on location and are shown in the cart, so no fee or threshold is published. The footer 'We Accept' shows only Visa and Mastercard.",
-    "checked": "2026-11-01"
-  },
-  "lulu-ae": {
-    "bnpl": [],
-    "cod": null,
-    "cod_notes": "UAE T&C mention 'COD items' in passing, but no COD terms are stated. The shared FAQ says COD is not accepted.",
-    "free_delivery_over": null,
-    "free_delivery_currency": "AED",
-    "delivery_fee": null,
-    "delivery_days": null,
-    "same_day": null,
-    "click_collect": null,
-    "returns_days": 7,
-    "returns_notes": "Same GCC return policy: 7-day change-of-mind money-back guarantee and a 7-day return period from receipt. Electronics refunded only if defective and reported within 7 days, after service-center verification.",
-    "warranty_policy": "Service & Warranty Policy: carry-in warranty repairs by authorized personnel only; no warranty length stated. Tech Shield extended warranty sold separately.",
-    "sources": [
-      "https://gcc.luluhypermarket.com/en-ae/returnpolicy",
-      "https://gcc.luluhypermarket.com/en-ae/termsAndConditions"
-    ],
-    "notes": "The UAE T&C path is /en-ae/termsAndConditions (no country suffix). The footer 'We Accept' shows Visa and Mastercard only.",
-    "checked": "2026-11-01"
-  },
-  "lulu-sa": {
-    "bnpl": [],
-    "cod": null,
-    "cod_notes": "The KSA T&C have no COD section, and COD is not stated either way.",
-    "free_delivery_over": null,
-    "free_delivery_currency": "SAR",
-    "delivery_fee": null,
-    "delivery_days": null,
-    "same_day": null,
-    "click_collect": null,
-    "returns_days": 7,
-    "returns_notes": "Same GCC return policy (7-day change-of-mind; electronics only if defective within 7 days).",
-    "warranty_policy": "Service & Warranty Policy: carry-in warranty repairs by authorized personnel only; no warranty length stated.",
-    "sources": [
-      "https://gcc.luluhypermarket.com/en-sa/returnpolicy",
-      "https://gcc.luluhypermarket.com/en-sa/termsAndConditions-sa/"
-    ],
-    "notes": "Footer 'We Accept' shows Visa and Mastercard only.",
-    "checked": "2026-11-01"
-  },
-  "lulu-kw": {
-    "bnpl": [],
-    "cod": null,
-    "cod_notes": "The Kuwait T&C have a COD section, but it only says COD returns go to Lulu credit and split payments are not allowed. It doesn't say which products qualify or whether there is a fee or limit.",
-    "free_delivery_over": null,
-    "free_delivery_currency": "KWD",
-    "delivery_fee": null,
-    "delivery_days": null,
-    "same_day": null,
-    "click_collect": null,
-    "returns_days": 7,
-    "returns_notes": "Same GCC return policy (7-day change-of-mind; electronics only if defective within 7 days).",
-    "warranty_policy": "Service & Warranty Policy: carry-in warranty repairs by authorized personnel only; no warranty length stated.",
-    "sources": [
-      "https://gcc.luluhypermarket.com/en-kw/returnpolicy",
-      "https://gcc.luluhypermarket.com/en-kw/termsAndConditions-kw/"
-    ],
-    "notes": "Footer 'We Accept' shows Visa and Mastercard only.",
-    "checked": "2026-11-01"
-  },
-  "lulu-qa": {
-    "bnpl": [],
-    "cod": null,
-    "cod_notes": "Qatar T&C mention 'COD items' in passing but state no COD terms.",
-    "free_delivery_over": null,
-    "free_delivery_currency": "QAR",
-    "delivery_fee": null,
-    "delivery_days": null,
-    "same_day": null,
-    "click_collect": null,
-    "returns_days": 7,
-    "returns_notes": "Same GCC return policy (7-day change-of-mind; electronics only if defective within 7 days).",
-    "warranty_policy": "Service & Warranty Policy: carry-in warranty repairs by authorized personnel only; no warranty length stated.",
-    "sources": [
-      "https://gcc.luluhypermarket.com/en-qa/returnpolicy",
-      "https://gcc.luluhypermarket.com/en-qa/termsAndConditions-qa/"
-    ],
-    "notes": "Footer 'We Accept' shows Visa and Mastercard only.",
-    "checked": "2026-11-01"
-  },
-  "lulu-om": {
-    "bnpl": [],
-    "cod": null,
-    "cod_notes": "The Oman T&C have no COD statement.",
-    "free_delivery_over": null,
-    "free_delivery_currency": "OMR",
-    "delivery_fee": null,
-    "delivery_days": null,
-    "same_day": null,
-    "click_collect": null,
-    "returns_days": 7,
-    "returns_notes": "Same GCC return policy (7-day change-of-mind; electronics only if defective within 7 days).",
-    "warranty_policy": "Service & Warranty Policy: carry-in warranty repairs by authorized personnel only; no warranty length stated.",
-    "sources": [
-      "https://gcc.luluhypermarket.com/en-om/returnpolicy",
-      "https://gcc.luluhypermarket.com/en-om/termsAndConditions-om/"
-    ],
-    "notes": "Footer 'We Accept' shows Visa and Mastercard only.",
-    "checked": "2026-11-01"
-  },
-  "ourshopee-ae": {
-    "bnpl": [
-      {"provider": "tabby", "payments": null, "notes": "Return policy 'Regional Policy': UAE supports Tabby. Number of payments not stated."},
-      {"provider": "tamara", "payments": null, "notes": "Return policy 'Regional Policy': UAE supports Tamara. Number of payments not stated."}
-    ],
-    "cod": null,
-    "cod_notes": "The UAE line of the Regional Policy lists only Tabby, Tamara and cards. The general FAQ lists COD among accepted methods but says options vary by location, so the two sources conflict.",
-    "free_delivery_over": null,
-    "free_delivery_currency": "AED",
-    "delivery_fee": null,
-    "delivery_days": null,
-    "same_day": null,
-    "click_collect": null,
-    "returns_days": 7,
-    "returns_notes": "Return within 7 days of receipt only if the item is damaged, defective or not as described, or the wrong item was sent, and it is unused in original packaging. Refunds within 7 business days to wallet or the payment gateway.",
-    "warranty_policy": "Products under manufacturer warranty are serviced or replaced per brand terms; pre-owned items carry a 1-year warranty from Ourshopee.com.",
-    "sources": [
-      "https://ourshopee.com/return-and-replacement-policy/",
-      "https://ourshopee.com/bahrain-en/faqs/"
-    ],
-    "notes": "One policy page covers all countries, with a short 'Regional Policy' section. The FAQ says delivery charges apply 'in some cases' but gives no fees, thresholds or timeframes.",
-    "checked": "2026-11-01"
-  },
-  "ourshopee-bh": {
-    "bnpl": [],
-    "cod": true,
-    "cod_notes": "Regional Policy: Bahrain payments via credit/debit card or COD. No fee or limit stated.",
-    "free_delivery_over": null,
-    "free_delivery_currency": "BHD",
-    "delivery_fee": null,
-    "delivery_days": null,
-    "same_day": null,
-    "click_collect": null,
-    "returns_days": 7,
-    "returns_notes": "Return within 7 days of receipt only if the item is damaged, defective or not as described, or the wrong item was sent, and it is unused in original packaging.",
-    "warranty_policy": "Products under manufacturer warranty are serviced or replaced per brand terms; pre-owned items carry a 1-year warranty from Ourshopee.com.",
-    "sources": [
-      "https://ourshopee.com/bahrain-en/return-and-replacement-policy/",
-      "https://ourshopee.com/bahrain-en/faqs/",
-      "https://ourshopee.com/bahrain-en/"
-    ],
-    "notes": "The Bahrain homepage says standard orders are 'dispatched within 1-2 business days' (dispatch, not delivery, so delivery_days stays null). It also mentions free shipping on certified refurbished items only. Tabby and Tamara are UAE-only per the Regional Policy.",
-    "checked": "2026-11-01"
-  },
-  "ourshopee-kw": {
-    "bnpl": [],
-    "cod": true,
-    "cod_notes": "Regional Policy: Kuwait payments via credit/debit card or COD.",
-    "free_delivery_over": null,
-    "free_delivery_currency": "KWD",
-    "delivery_fee": null,
-    "delivery_days": null,
-    "same_day": null,
-    "click_collect": null,
-    "returns_days": 7,
-    "returns_notes": "Same chain-wide policy: 7 days, only for damaged, defective, not-as-described or wrong items.",
-    "warranty_policy": "Products under manufacturer warranty are serviced or replaced per brand terms; pre-owned items carry a 1-year warranty from Ourshopee.com.",
-    "sources": ["https://ourshopee.com/return-and-replacement-policy/"],
-    "notes": "A single chain-wide policy is reused here.",
-    "checked": "2026-11-01"
-  },
-  "ourshopee-om": {
-    "bnpl": [],
-    "cod": true,
-    "cod_notes": "Regional Policy: Oman payments via credit/debit card or COD; the Oman homepage also lists COD.",
-    "free_delivery_over": null,
-    "free_delivery_currency": "OMR",
-    "delivery_fee": null,
-    "delivery_days": null,
-    "same_day": null,
-    "click_collect": null,
-    "returns_days": 7,
-    "returns_notes": "Same chain-wide policy: 7 days, only for damaged, defective, not-as-described or wrong items.",
-    "warranty_policy": "Products under manufacturer warranty are serviced or replaced per brand terms; pre-owned items carry a 1-year warranty from Ourshopee.com.",
-    "sources": ["https://ourshopee.com/oman-en/"],
-    "notes": "A single chain-wide policy is reused here.",
-    "checked": "2026-11-01"
-  },
-  "ourshopee-qa": {
-    "bnpl": [],
-    "cod": true,
-    "cod_notes": "Regional Policy: Qatar payments via credit/debit card or COD.",
-    "free_delivery_over": null,
-    "free_delivery_currency": "QAR",
-    "delivery_fee": null,
-    "delivery_days": null,
-    "same_day": null,
-    "click_collect": null,
-    "returns_days": 7,
-    "returns_notes": "Same chain-wide policy: 7 days, only for damaged, defective, not-as-described or wrong items.",
-    "warranty_policy": "Products under manufacturer warranty are serviced or replaced per brand terms; pre-owned items carry a 1-year warranty from Ourshopee.com.",
-    "sources": ["https://ourshopee.com/return-and-replacement-policy/"],
-    "notes": "A single chain-wide policy is reused here.",
-    "checked": "2026-11-01"
-  }
+ "sharafdg-bh": {
+  "bnpl": [],
+  "cod": true,
+  "cod_notes": "Pay Later (Cash on Delivery) offered; not available for fridges, ACs, washers, dishwashers, TVs 40in+ and other supplier-delivered major appliances, or some clearance items. COD orders are delivered next day (not same day). No COD fee stated. Bank card installments (Easy Payment Plan, e.g. Standard Chartered up to 6 months, min BHD 100) exist but no BNPL provider is named on the Bahrain pages.",
+  "free_delivery_over": 10,
+  "free_delivery_currency": "BHD",
+  "delivery_fee": 1.5,
+  "delivery_days": "1-3 business days (supplier-delivered large appliances 3-5 business days)",
+  "same_day": true,
+  "click_collect": true,
+  "returns_days": 15,
+  "returns_notes": "Return/exchange within 15 days of purchase, unused and unopened with original packaging. Laptops, tablets, printers, mobile phones, cameras and headsets not returnable once the pack is opened (except defects); opened-but-unused items may be taken back with a minimum 15% restocking fee. Marketplace items follow the seller's policy.",
+  "warranty_policy": "Warranty is provided by the brand's authorized agents/distributors (or the marketplace seller) and is valid in Bahrain only. Extended warranty (DG Shield / DG Shield+) sold separately.",
+  "sources": [
+   "https://bahrain.sharafdg.com/f-a-qs/",
+   "https://bahrain.sharafdg.com/get-free-delivery/",
+   "https://bahrain.sharafdg.com/express-delivery/",
+   "https://bahrain.sharafdg.com/return-exchange-and-warranty/",
+   "https://bahrain.sharafdg.com/epp/"
+  ],
+  "notes": "Free same-day delivery applies to PAID orders of BHD 10+ placed before 5PM; free delivery excludes Marketplace products. Express/'Bullet' 3-hour delivery costs BHD 1.990. Store pickup at City Centre, The Avenues, Enma Mall Riffa, Seef Mall Muharraq and Arad, free of charge; not available for large supplier-delivered items.",
+  "checked": "2026-11-01",
+  "cod_exclude": [
+   "tvs",
+   "small-appliances"
+  ]
+ },
+ "sharafdg-ae": {
+  "bnpl": [
+   {
+    "provider": "tabby",
+    "payments": 4,
+    "notes": "Dedicated Tabby page: split into four interest-free instalments."
+   },
+   {
+    "provider": "tamara",
+    "payments": 4,
+    "notes": "Listed as a payment option in the FAQ; Tamara page says split into four monthly instalments, no interest, but a small service charge may be added."
+   }
+  ],
+  "cod": true,
+  "cod_notes": "Non-refundable AED 10 convenience fee on top of shipping; maximum COD order AED 5,000; for products sold by Sharaf DG and selected sellers; the order must be confirmed by SMS or IVR within 6 hours.",
+  "free_delivery_over": null,
+  "free_delivery_currency": "AED",
+  "delivery_fee": 13,
+  "delivery_days": "2-5 business days (supplier-delivered large appliances 5-7 business days)",
+  "same_day": true,
+  "click_collect": true,
+  "returns_days": 14,
+  "returns_notes": "Standard 14-day return policy; non-consumables within 14 days; handling charge applies to returns of supplier-delivered goods; dead-on-arrival items exchanged after verification.",
+  "warranty_policy": "All products carry the standard product warranty per Sharaf DG's Warranty Terms; a separate Warranty & Service Policy covers defects in material and workmanship (excludes non-branded accessories, batteries, printheads, consumables). Extended warranty / DG Shield sold separately.",
+  "sources": [
+   "https://uae.sharafdg.com/f-a-qs/",
+   "https://uae.sharafdg.com/express-delivery/",
+   "https://uae.sharafdg.com/terms-and-conditions/",
+   "https://uae.sharafdg.com/return-exchange-and-warranty/",
+   "https://uae.sharafdg.com/warranty-and-service-policy/",
+   "https://uae.sharafdg.com/tabby/",
+   "https://uae.sharafdg.com/tamara/"
+  ],
+  "notes": "No order-value free-delivery threshold is stated. Delivery is AED 13 for non-large items, and DG Members pay no delivery charge on items sold by Sharaf DG. Express delivery: orders before 12 noon arrive the same day in Dubai and Sharjah, otherwise next day within city limits; free for DG Members; only on select products. Store pickup is available at about 10 named stores, and orders are held for 7 days.",
+  "checked": "2026-11-01",
+  "cod_max": 5000
+ },
+ "sharafdg-om": {
+  "bnpl": [],
+  "cod": true,
+  "cod_notes": "Cash on Delivery listed among payment options; no fee or limit stated. Other options: Oman-issued cards, PayPal (USD), Points Pay, gift card, Air Miles, Amex.",
+  "free_delivery_over": null,
+  "free_delivery_currency": "OMR",
+  "delivery_fee": 3,
+  "delivery_days": "2-5 business days (supplier-delivered large appliances 5-7 business days)",
+  "same_day": true,
+  "click_collect": true,
+  "returns_days": 15,
+  "returns_notes": "Standard 15-day return policy for non-consumables; consumables/fresh food within 24 hours; DOA items exchanged/returned after seller verification.",
+  "warranty_policy": "Warranty is provided by the brand's authorized agents/distributors (or the marketplace seller) and is limited to Oman. Extended warranty / DG Shield+ sold separately.",
+  "sources": [
+   "https://oman.sharafdg.com/f-a-qs/",
+   "https://oman.sharafdg.com/express-delivery/",
+   "https://oman.sharafdg.com/return-exchange-and-warranty/"
+  ],
+  "notes": "Delivery is OMR 3 for up to 5 kg (volumetric), plus 200 baisa for each extra kg. No free-delivery threshold is stated. Express delivery is same day in Muscat for orders placed before 3PM, free on selected products; not on Fridays or public holidays, and not for TVs or large appliances. Store pickup is at Muscat Grand Mall, Mall of Oman, City Centre Muscat and Safeer Mall Sohar.",
+  "checked": "2026-11-01"
+ },
+ "extra-sa": {
+  "bnpl": [
+   {
+    "provider": "tabby",
+    "payments": 4,
+    "notes": "Plans of 3, 4, 6, 8 or 12 payments; no admin fee for 3 or 4, a fee applies for 6+. Invoice SAR 200 to 50,000 (SAR 1,500 cap for ages 18-21); not for gift cards."
+   },
+   {
+    "provider": "tamara",
+    "payments": 4,
+    "notes": "Split into 2, 3, 4, 6, 9, 12 or 24 payments; processing fee for 4+ payments; invoice SAR 200 to 50,000; not for gift cards."
+   },
+   {
+    "provider": "other",
+    "payments": null,
+    "notes": "Baseeta and Tasheel finance also offered (installment financing, not standard BNPL)."
+   }
+  ],
+  "cod": null,
+  "cod_notes": "The T&C only say COD is 'not enabled for digital cards', which suggests COD exists, but no page says whether COD is available or what it costs.",
+  "free_delivery_over": null,
+  "free_delivery_currency": "SAR",
+  "delivery_fee": 25,
+  "delivery_days": "1-3 working days in metro cities; max 5 working days elsewhere in KSA",
+  "same_day": true,
+  "click_collect": true,
+  "returns_days": 14,
+  "returns_notes": "14 days for website purchases (7 days in showroom). Mobile phones, computers, gaming devices, printers, health and beauty items and activated SIMs/routers can only be returned if defective within 14 days; software and video games are non-returnable. Open-box returns lose 30%.",
+  "warranty_policy": "Products sold on the website carry a 2-year manufacturer's warranty from the purchase date; ExtraSafeguard extended protection is sold separately.",
+  "sources": [
+   "https://www.extra.com/en-sa/delivery",
+   "https://www.extra.com/en-sa/returnexchange",
+   "https://www.extra.com/en-sa/terms",
+   "https://www.extra.com/en-sa/tabbyterms",
+   "https://www.extra.com/en-sa/tamaraterms"
+  ],
+  "notes": "SAR 25 is the standard fee for small items; large appliances are SAR 49 or 99. No free-delivery threshold appears on the live page; an older 'free above SAR 199' line exists only in commented-out HTML and was ignored. Same-day Express costs SAR 30 for small items (order by 11AM) and SAR 199 for large (by 3PM) in metro cities, not on Fridays. eXtra Now delivers within 2 hours for SAR 35 in parts of Riyadh. Click & collect is available from all stores.",
+  "checked": "2026-11-01"
+ },
+ "extra-bh": {
+  "bnpl": [],
+  "cod": true,
+  "cod_notes": "BHD 1.5 cash-on-delivery charge (T&C). Not available for digital cards.",
+  "free_delivery_over": 10,
+  "free_delivery_currency": "BHD",
+  "delivery_fee": null,
+  "delivery_days": "Small items: same-day dispatch if ordered by 2pm, delivered by 9pm; large items and split ACs: next day",
+  "same_day": true,
+  "click_collect": true,
+  "returns_days": 15,
+  "returns_notes": "Online purchases can be returned within 15 days of receipt if unused and in original condition with all accessories. If home delivery was completed, BHD 10 delivery fee is deducted for change-of-mind returns.",
+  "warranty_policy": "Products carry a 1-year manufacturer's warranty from the purchase date; eXtra extended warranty (Force 24/7) and accidental-damage cover sold separately.",
+  "sources": [
+   "https://www.extra.com/en-bh/delivery",
+   "https://www.extra.com/en-bh/terms",
+   "https://www.extra.com/en-bh/faq"
+  ],
+  "notes": "The site disagrees on the fee below the free threshold. The delivery page says free over BHD 10 and BHD 3 below. The T&C say free from BHD 9.9 and BHD 1.5 below, so delivery_fee is left null. Large items, including ACs, deliver free. Express delivery adds BHD 2.5. Header says 'Collect from store within 1 hour'. A 'Split in 4 with Flooss' banner exists only in commented-out HTML, so no BNPL is recorded.",
+  "checked": "2026-11-01"
+ },
+ "extra-om": {
+  "bnpl": [],
+  "cod": null,
+  "cod_notes": "T&C only say COD is 'not enabled for digital cards', which suggests COD exists, but availability and fees are never stated outright. Bank credit-card installment plans exist (OMR 3 installment fee charged on change-of-mind returns).",
+  "free_delivery_over": 10,
+  "free_delivery_currency": "OMR",
+  "delivery_fee": 2.5,
+  "delivery_days": "Within 24 working hours inside Muscat; max 5 working days elsewhere in Oman",
+  "same_day": true,
+  "click_collect": true,
+  "returns_days": 15,
+  "returns_notes": "Online: request a return within 15 days of receipt. Software, video games, health and beauty items and earphones are excluded for hygiene reasons. Open-box returns face deductions. Change-of-mind returns pay shipment or bank fees (OMR 3).",
+  "warranty_policy": "Products carry a 1-year manufacturer's warranty from the purchase date; eXtra extended warranty (Force 24/7) sold separately.",
+  "sources": [
+   "https://www.extra.com/en-om/delivery",
+   "https://www.extra.com/en-om/returnexchange",
+   "https://www.extra.com/en-om/terms",
+   "https://www.extra.com/en-om/faq"
+  ],
+  "notes": "The free threshold covers small appliances; large appliances (except ACs and built-ins) get free delivery with installation. Same-day delivery is free for orders before 11AM, Muscat only, not on Fridays, and excludes large appliances. Header shows 'Qpay' and 'Collect from store within 1 hour'. Qpay is not explained anywhere, so it is not recorded as BNPL.",
+  "checked": "2026-11-01"
+ },
+ "jarir-sa": {
+  "bnpl": [
+   {
+    "provider": "tabby",
+    "payments": 4,
+    "notes": "FAQ: split into 4 monthly payments, SR 200 to 9,000. The installment-methods page also lists 'Tabby 12' (12 payments, SR 200 to 30,000)."
+   },
+   {
+    "provider": "tamara",
+    "payments": 4,
+    "notes": "FAQ example shows 4 installments, SR 200 to 5,000. The installment-methods page also lists 'Tamara 24' (24 payments, SR 200 to 30,000)."
+   },
+   {
+    "provider": "other",
+    "payments": null,
+    "notes": "Quara Finance, 6 to 36 payments with no down payment, SR 1,500 to 30,000."
+   }
+  ],
+  "cod": false,
+  "cod_notes": "FAQ: 'Is Cash on Delivery available? The service is not available at this time.' (The payment list also mentions a SR 17.25 COD fee but marks it not available.)",
+  "free_delivery_over": null,
+  "free_delivery_currency": "SAR",
+  "delivery_fee": 29,
+  "delivery_days": "1-3 working days (major cities); within 5 days for other Saudi cities",
+  "same_day": null,
+  "click_collect": true,
+  "returns_days": 3,
+  "returns_notes": "Return within 3 days and exchange within 7 days. The online terms say both are counted from receipt, and also mention 'returns and exchanges within 7 days from the date of receiving'. Electronics, books, software, video games and prepaid cards cannot be returned or exchanged unless they have a manufacturing defect. Defective devices are replaced within 3 days of purchase.",
+  "warranty_policy": "All electronic devices carry at least a 2-year warranty (accessories and peripherals excluded), provided by the manufacturer or its official agent, not by Jarir. Extended warranty / Total Protection sold separately.",
+  "sources": [
+   "https://www.jarir.com/sa-en/customer-care/faq",
+   "https://www.jarir.com/sa-en/customer-care/return-and-exchange",
+   "https://www.jarir.com/sa-en/customer-care/warranty-policy",
+   "https://www.jarir.com/sa-en/installment-service-methods"
+  ],
+  "notes": "Shipping is SAR 29 under 30 kg and SAR 79 over 30 kg, VAT included. No free-delivery threshold is stated for home delivery. Collect from Showroom is free regardless of order value.",
+  "checked": "2026-11-01"
+ },
+ "jarir-bh": {
+  "bnpl": [
+   {
+    "provider": "tabby",
+    "payments": 4,
+    "notes": "4 monthly payments, no interest or fees; BD 20 to 500 loan value (spend limit BHD 700)."
+   },
+   {
+    "provider": "other",
+    "payments": 4,
+    "notes": "Flooss (Bahrain): 4 payments, BD 20 to 1,000 on the installment page (FAQ says min BD 50); paid via BenefitPay."
+   }
+  ],
+  "cod": true,
+  "cod_notes": "BHD 1 COD service fee. Limits conflict: the FAQ says max order BHD 500, the COD policy says BHD 400. Only on some orders and product types.",
+  "free_delivery_over": 20,
+  "free_delivery_currency": "BHD",
+  "delivery_fee": 2,
+  "delivery_days": "1-3 working days (major cities); up to 10 days elsewhere in Bahrain",
+  "same_day": null,
+  "click_collect": true,
+  "returns_days": 15,
+  "returns_notes": "Return and exchange within 15 days of purchase in original packing with invoice. Electronics, books, software, video games and prepaid cards excluded unless defective.",
+  "warranty_policy": "All electronic devices carry at least a 1-year warranty (accessories and peripherals excluded), provided by the manufacturer or its official agent.",
+  "sources": [
+   "https://www.jarir.com/bh-en/customer-care/faq",
+   "https://www.jarir.com/bh-en/customer-care/return-and-exchange",
+   "https://www.jarir.com/bh-en/customer-care/warranty-policy",
+   "https://www.jarir.com/bh-en/installment-service-methods"
+  ],
+  "notes": "Delivery is free for orders of BHD 20+, otherwise BHD 2. Orders over 15 kg add BHD 0.2 per extra kg. Couriers are Aramex and Dal. Collect from Showroom is available.",
+  "checked": "2026-11-01",
+  "cod_max": 400
+ },
+ "jarir-kw": {
+  "bnpl": [
+   {
+    "provider": "other",
+    "payments": 4,
+    "notes": "Deema: 4 payments, KD 20 to 500; service charge applies; Deema purchases can't be returned."
+   },
+   {
+    "provider": "other",
+    "payments": 4,
+    "notes": "Taly: 4 monthly payments (FAQ)."
+   }
+  ],
+  "cod": true,
+  "cod_notes": "KD 1 COD service fee. Limits conflict: the FAQ says max order KD 400, the COD policy says KD 4000. Only on some orders and product types.",
+  "free_delivery_over": 20,
+  "free_delivery_currency": "KWD",
+  "delivery_fee": 3,
+  "delivery_days": "1-3 working days (major cities); up to 10 days elsewhere",
+  "same_day": null,
+  "click_collect": true,
+  "returns_days": 14,
+  "returns_notes": "Return and exchange within 14 days of purchase in original packing with invoice. Electronics, books, software, video games and prepaid cards excluded unless not meeting specifications.",
+  "warranty_policy": "All electronic devices carry at least a 1-year warranty (accessories and peripherals excluded), provided by the manufacturer or its official agent.",
+  "sources": [
+   "https://www.jarir.com/kw-en/customer-care/faq",
+   "https://www.jarir.com/kw-en/customer-care/return-and-exchange",
+   "https://www.jarir.com/kw-en/customer-care/warranty-policy",
+   "https://www.jarir.com/kw-en/installment-service-methods"
+  ],
+  "notes": "Delivery is free for orders of KD 20+, otherwise KD 3. Orders over 15 kg add KD 0.100 per extra kg. Courier is Aramex. K-Net accepted. Collect from Showroom is available.",
+  "checked": "2026-11-01",
+  "cod_max": 400
+ },
+ "jarir-qa": {
+  "bnpl": [
+   {
+    "provider": "other",
+    "payments": 4,
+    "notes": "'Paylater': 4 payments, QR 200 to 25,000 (installment-methods page)."
+   }
+  ],
+  "cod": true,
+  "cod_notes": "QAR 10 COD service fee. COD orders are refunded as Jarir.com store credit. Only on some orders and product types.",
+  "free_delivery_over": 200,
+  "free_delivery_currency": "QAR",
+  "delivery_fee": 20,
+  "delivery_days": "1-3 working days (major cities); up to 10 days elsewhere",
+  "same_day": null,
+  "click_collect": true,
+  "returns_days": 3,
+  "returns_notes": "Return within 3 days and exchange within 7 days of purchase. Electronics, books, software, video games and prepaid cards excluded unless defective.",
+  "warranty_policy": "All electronic devices carry at least a 1-year warranty (accessories and peripherals excluded), provided by the manufacturer or its official agent.",
+  "sources": [
+   "https://www.jarir.com/qa-en/customer-care/faq",
+   "https://www.jarir.com/qa-en/customer-care/return-and-exchange",
+   "https://www.jarir.com/qa-en/customer-care/warranty-policy",
+   "https://www.jarir.com/qa-en/installment-service-methods"
+  ],
+  "notes": "Delivery is free for orders of QAR 200+, otherwise QAR 20. Orders over 15 kg add QAR 2 per extra kg. Courier is Qatar Post. Collect from Showroom is available.",
+  "checked": "2026-11-01"
+ },
+ "lulu-bh": {
+  "bnpl": [],
+  "cod": false,
+  "cod_notes": "T&C: COD is only for Grocery and Fresh Food products, max BHD 1,000 per COD order, refunds go to Lulu Wallet. So COD does not apply to electronics. The shared FAQ says luluhypermarket.com does not accept COD.",
+  "free_delivery_over": null,
+  "free_delivery_currency": "BHD",
+  "delivery_fee": null,
+  "delivery_days": null,
+  "same_day": null,
+  "click_collect": null,
+  "returns_days": 7,
+  "returns_notes": "'7 Days money back guarantee if you change your mind' and a 7-day return period from receipt. Electronics/electrical items are returned or refunded only if found defective and reported within 7 days, after the authorized service center verifies. Opened large appliances/TVs not accepted.",
+  "warranty_policy": "Service & Warranty Policy: warranty repairs are done by authorized personnel only, carry-in, and are void if misuse is found. No warranty length is stated.",
+  "sources": [
+   "https://gcc.luluhypermarket.com/en-bh/termsAndConditions-bh/",
+   "https://gcc.luluhypermarket.com/en-bh/returnpolicy",
+   "https://gcc.luluhypermarket.com/en-bh/faq",
+   "https://gcc.luluhypermarket.com/en-bh/serviceandwarranty-bh/"
+  ],
+  "notes": "Lulu publishes one GCC-wide policy set; the return and FAQ text is nearly identical in every country, and the FAQ is UAE-oriented. The FAQ says delivery charges depend on location and are shown in the cart, so no fee or threshold is published. The footer 'We Accept' shows only Visa and Mastercard.",
+  "checked": "2026-11-01"
+ },
+ "lulu-ae": {
+  "bnpl": [],
+  "cod": null,
+  "cod_notes": "UAE T&C mention 'COD items' in passing, but no COD terms are stated. The shared FAQ says COD is not accepted.",
+  "free_delivery_over": null,
+  "free_delivery_currency": "AED",
+  "delivery_fee": null,
+  "delivery_days": null,
+  "same_day": null,
+  "click_collect": null,
+  "returns_days": 7,
+  "returns_notes": "Same GCC return policy: 7-day change-of-mind money-back guarantee and a 7-day return period from receipt. Electronics refunded only if defective and reported within 7 days, after service-center verification.",
+  "warranty_policy": "Service & Warranty Policy: carry-in warranty repairs by authorized personnel only; no warranty length stated. Tech Shield extended warranty sold separately.",
+  "sources": [
+   "https://gcc.luluhypermarket.com/en-ae/returnpolicy",
+   "https://gcc.luluhypermarket.com/en-ae/termsAndConditions"
+  ],
+  "notes": "The UAE T&C path is /en-ae/termsAndConditions (no country suffix). The footer 'We Accept' shows Visa and Mastercard only.",
+  "checked": "2026-11-01"
+ },
+ "lulu-sa": {
+  "bnpl": [],
+  "cod": null,
+  "cod_notes": "The KSA T&C have no COD section, and COD is not stated either way.",
+  "free_delivery_over": null,
+  "free_delivery_currency": "SAR",
+  "delivery_fee": null,
+  "delivery_days": null,
+  "same_day": null,
+  "click_collect": null,
+  "returns_days": 7,
+  "returns_notes": "Same GCC return policy (7-day change-of-mind; electronics only if defective within 7 days).",
+  "warranty_policy": "Service & Warranty Policy: carry-in warranty repairs by authorized personnel only; no warranty length stated.",
+  "sources": [
+   "https://gcc.luluhypermarket.com/en-sa/returnpolicy",
+   "https://gcc.luluhypermarket.com/en-sa/termsAndConditions-sa/"
+  ],
+  "notes": "Footer 'We Accept' shows Visa and Mastercard only.",
+  "checked": "2026-11-01"
+ },
+ "lulu-kw": {
+  "bnpl": [],
+  "cod": null,
+  "cod_notes": "The Kuwait T&C have a COD section, but it only says COD returns go to Lulu credit and split payments are not allowed. It doesn't say which products qualify or whether there is a fee or limit.",
+  "free_delivery_over": null,
+  "free_delivery_currency": "KWD",
+  "delivery_fee": null,
+  "delivery_days": null,
+  "same_day": null,
+  "click_collect": null,
+  "returns_days": 7,
+  "returns_notes": "Same GCC return policy (7-day change-of-mind; electronics only if defective within 7 days).",
+  "warranty_policy": "Service & Warranty Policy: carry-in warranty repairs by authorized personnel only; no warranty length stated.",
+  "sources": [
+   "https://gcc.luluhypermarket.com/en-kw/returnpolicy",
+   "https://gcc.luluhypermarket.com/en-kw/termsAndConditions-kw/"
+  ],
+  "notes": "Footer 'We Accept' shows Visa and Mastercard only.",
+  "checked": "2026-11-01"
+ },
+ "lulu-qa": {
+  "bnpl": [],
+  "cod": null,
+  "cod_notes": "Qatar T&C mention 'COD items' in passing but state no COD terms.",
+  "free_delivery_over": null,
+  "free_delivery_currency": "QAR",
+  "delivery_fee": null,
+  "delivery_days": null,
+  "same_day": null,
+  "click_collect": null,
+  "returns_days": 7,
+  "returns_notes": "Same GCC return policy (7-day change-of-mind; electronics only if defective within 7 days).",
+  "warranty_policy": "Service & Warranty Policy: carry-in warranty repairs by authorized personnel only; no warranty length stated.",
+  "sources": [
+   "https://gcc.luluhypermarket.com/en-qa/returnpolicy",
+   "https://gcc.luluhypermarket.com/en-qa/termsAndConditions-qa/"
+  ],
+  "notes": "Footer 'We Accept' shows Visa and Mastercard only.",
+  "checked": "2026-11-01"
+ },
+ "lulu-om": {
+  "bnpl": [],
+  "cod": null,
+  "cod_notes": "The Oman T&C have no COD statement.",
+  "free_delivery_over": null,
+  "free_delivery_currency": "OMR",
+  "delivery_fee": null,
+  "delivery_days": null,
+  "same_day": null,
+  "click_collect": null,
+  "returns_days": 7,
+  "returns_notes": "Same GCC return policy (7-day change-of-mind; electronics only if defective within 7 days).",
+  "warranty_policy": "Service & Warranty Policy: carry-in warranty repairs by authorized personnel only; no warranty length stated.",
+  "sources": [
+   "https://gcc.luluhypermarket.com/en-om/returnpolicy",
+   "https://gcc.luluhypermarket.com/en-om/termsAndConditions-om/"
+  ],
+  "notes": "Footer 'We Accept' shows Visa and Mastercard only.",
+  "checked": "2026-11-01"
+ },
+ "ourshopee-ae": {
+  "bnpl": [
+   {
+    "provider": "tabby",
+    "payments": null,
+    "notes": "Return policy 'Regional Policy': UAE supports Tabby. Number of payments not stated."
+   },
+   {
+    "provider": "tamara",
+    "payments": null,
+    "notes": "Return policy 'Regional Policy': UAE supports Tamara. Number of payments not stated."
+   }
+  ],
+  "cod": null,
+  "cod_notes": "The UAE line of the Regional Policy lists only Tabby, Tamara and cards. The general FAQ lists COD among accepted methods but says options vary by location, so the two sources conflict.",
+  "free_delivery_over": null,
+  "free_delivery_currency": "AED",
+  "delivery_fee": null,
+  "delivery_days": null,
+  "same_day": null,
+  "click_collect": null,
+  "returns_days": 7,
+  "returns_notes": "Return within 7 days of receipt only if the item is damaged, defective or not as described, or the wrong item was sent, and it is unused in original packaging. Refunds within 7 business days to wallet or the payment gateway.",
+  "warranty_policy": "Products under manufacturer warranty are serviced or replaced per brand terms; pre-owned items carry a 1-year warranty from Ourshopee.com.",
+  "sources": [
+   "https://ourshopee.com/return-and-replacement-policy/",
+   "https://ourshopee.com/bahrain-en/faqs/"
+  ],
+  "notes": "One policy page covers all countries, with a short 'Regional Policy' section. The FAQ says delivery charges apply 'in some cases' but gives no fees, thresholds or timeframes.",
+  "checked": "2026-11-01"
+ },
+ "ourshopee-bh": {
+  "bnpl": [],
+  "cod": true,
+  "cod_notes": "Regional Policy: Bahrain payments via credit/debit card or COD. No fee or limit stated.",
+  "free_delivery_over": null,
+  "free_delivery_currency": "BHD",
+  "delivery_fee": null,
+  "delivery_days": null,
+  "same_day": null,
+  "click_collect": null,
+  "returns_days": 7,
+  "returns_notes": "Return within 7 days of receipt only if the item is damaged, defective or not as described, or the wrong item was sent, and it is unused in original packaging.",
+  "warranty_policy": "Products under manufacturer warranty are serviced or replaced per brand terms; pre-owned items carry a 1-year warranty from Ourshopee.com.",
+  "sources": [
+   "https://ourshopee.com/bahrain-en/return-and-replacement-policy/",
+   "https://ourshopee.com/bahrain-en/faqs/",
+   "https://ourshopee.com/bahrain-en/"
+  ],
+  "notes": "The Bahrain homepage says standard orders are 'dispatched within 1-2 business days' (dispatch, not delivery, so delivery_days stays null). It also mentions free shipping on certified refurbished items only. Tabby and Tamara are UAE-only per the Regional Policy.",
+  "checked": "2026-11-01"
+ },
+ "ourshopee-kw": {
+  "bnpl": [],
+  "cod": true,
+  "cod_notes": "Regional Policy: Kuwait payments via credit/debit card or COD.",
+  "free_delivery_over": null,
+  "free_delivery_currency": "KWD",
+  "delivery_fee": null,
+  "delivery_days": null,
+  "same_day": null,
+  "click_collect": null,
+  "returns_days": 7,
+  "returns_notes": "Same chain-wide policy: 7 days, only for damaged, defective, not-as-described or wrong items.",
+  "warranty_policy": "Products under manufacturer warranty are serviced or replaced per brand terms; pre-owned items carry a 1-year warranty from Ourshopee.com.",
+  "sources": [
+   "https://ourshopee.com/return-and-replacement-policy/"
+  ],
+  "notes": "A single chain-wide policy is reused here.",
+  "checked": "2026-11-01"
+ },
+ "ourshopee-om": {
+  "bnpl": [],
+  "cod": true,
+  "cod_notes": "Regional Policy: Oman payments via credit/debit card or COD; the Oman homepage also lists COD.",
+  "free_delivery_over": null,
+  "free_delivery_currency": "OMR",
+  "delivery_fee": null,
+  "delivery_days": null,
+  "same_day": null,
+  "click_collect": null,
+  "returns_days": 7,
+  "returns_notes": "Same chain-wide policy: 7 days, only for damaged, defective, not-as-described or wrong items.",
+  "warranty_policy": "Products under manufacturer warranty are serviced or replaced per brand terms; pre-owned items carry a 1-year warranty from Ourshopee.com.",
+  "sources": [
+   "https://ourshopee.com/oman-en/"
+  ],
+  "notes": "A single chain-wide policy is reused here.",
+  "checked": "2026-11-01"
+ },
+ "ourshopee-qa": {
+  "bnpl": [],
+  "cod": true,
+  "cod_notes": "Regional Policy: Qatar payments via credit/debit card or COD.",
+  "free_delivery_over": null,
+  "free_delivery_currency": "QAR",
+  "delivery_fee": null,
+  "delivery_days": null,
+  "same_day": null,
+  "click_collect": null,
+  "returns_days": 7,
+  "returns_notes": "Same chain-wide policy: 7 days, only for damaged, defective, not-as-described or wrong items.",
+  "warranty_policy": "Products under manufacturer warranty are serviced or replaced per brand terms; pre-owned items carry a 1-year warranty from Ourshopee.com.",
+  "sources": [
+   "https://ourshopee.com/return-and-replacement-policy/"
+  ],
+  "notes": "A single chain-wide policy is reused here.",
+  "checked": "2026-11-01"
+ }
 }

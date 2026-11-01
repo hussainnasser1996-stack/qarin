@@ -1,4 +1,4 @@
-import { bnplName } from "@/lib/format";
+import { bnplLabel } from "@/lib/format";
 import type { Lang } from "@/lib/i18n";
 import type { Policies } from "@/lib/queries";
 
@@ -8,7 +8,7 @@ export function StorePolicies({ p, lang }: { p: Policies | null; lang: Lang }) {
   const yes = ar ? "نعم" : "Yes", no = ar ? "لا" : "No";
   if (!p) return null;
   const rows: [string, string | null][] = [
-    [ar ? "الدفع لاحقاً" : "Pay later", p.bnpl?.length ? p.bnpl.map((b) => `${bnplName(b.provider, lang)}${b.payments ? ` (${b.payments} ${ar ? "دفعات" : "payments"})` : ""}`).join("، ") : p.bnpl ? no : null],
+    [ar ? "الدفع لاحقاً" : "Pay later", p.bnpl?.length ? p.bnpl.map((b) => `${bnplLabel(b, lang)}${b.payments ? ` (${b.payments} ${ar ? "دفعات" : "payments"})` : ""}`).join(lang === "ar" ? "، " : ", ") : p.bnpl ? no : null],
     [ar ? "الدفع عند الاستلام" : "Cash on delivery", p.cod == null ? null : `${p.cod ? yes : no}${p.cod_notes ? ` — ${p.cod_notes}` : ""}`],
     [ar ? "التوصيل المجاني" : "Free delivery", p.free_delivery_over == null ? null : p.free_delivery_over === 0 ? (ar ? "على كل الطلبات" : "On all orders") : `${ar ? "للطلبات فوق" : "Orders over"} ${p.free_delivery_over} ${p.free_delivery_currency ?? ""}`],
     [ar ? "مدة التوصيل" : "Delivery time", p.delivery_days ?? null],

@@ -9,7 +9,7 @@ import { Offers } from "@/components/Offers";
 import { Insight } from "@/components/Insight";
 import { ShareButton, WatchButton } from "@/components/Watch";
 import { CompareToggle } from "@/components/Compare";
-import { ago, bnplName, brandName, convert, money, parseProductId, productPath, regionLabel, storeName, warrantyLabel } from "@/lib/format";
+import { ago, bnplFits, bnplLabel, brandName, convert, money, parseProductId, productPath, regionLabel, storeName, warrantyLabel } from "@/lib/format";
 import { dailySeries, stats, verdict } from "@/lib/history";
 import { categoryName, CCS, COUNTRIES, t, type CC, type Lang } from "@/lib/i18n";
 import { getProduct, getSimilar, productBySlug, topProductIds } from "@/lib/queries";
@@ -145,9 +145,9 @@ export default async function ProductPage({ params }: { params: Params }) {
   const bestOffer = live.find((o) => Number(o.price) === min);
   // Smallest instalment any store offers on this product today (store must state the provider in its policy).
   const payLater = live.flatMap((o) => (o.policies?.bnpl ?? []).map((b) => {
-    const n = b.payments || 0; // only when the store states how many payments
-    return n ? { each: Number(o.price) / n, n, provider: b.provider, store: o.store } : null;
-  })).filter((x): x is { each: number; n: number; provider: string; store: string } => x !== null).sort((a, b) => a.each - b.each)[0];
+    const n = b.payments && bnplFits(Number(o.price), b.notes) ? b.payments : 0; // stated count, within stated limits
+    return n ? { each: Number(o.price) / n, n, label: bnplLabel(b, lang), store: o.store } : null;
+  })).filter((x): x is { each: number; n: number; label: string; store: string } => x !== null).sort((a, b) => a.each - b.each)[0];
   const bestWarranty = live.filter((o) => o.warranty_months).sort((a, b) => (b.warranty_months ?? 0) - (a.warranty_months ?? 0))[0];
 
   return (
@@ -187,7 +187,7 @@ export default async function ProductPage({ params }: { params: Params }) {
           {(payLater || bestWarranty) && (
             <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[13px] text-ink-2">
               {payLater && (
-                <span>{lang === "ar" ? "ادفع لاحقاً من" : "Pay later from"} <b className="num text-ink">{payLater.n} × {money(payLater.each, currency, lang)}</b> · {bnplName(payLater.provider, lang)} ({storeName(payLater.store, lang)})</span>
+                <span>{lang === "ar" ? "ادفع لاحقاً من" : "Pay later from"} <b className="num text-ink">{payLater.n} × {money(payLater.each, currency, lang)}</b> · {payLater.label} ({storeName(payLater.store, lang)})</span>
               )}
               {bestWarranty && <span className="text-deal-ink font-medium">{warrantyLabel(bestWarranty.warranty_months, bestWarranty.warranty_by, lang)} ({storeName(bestWarranty.store, lang)})</span>}
             </p>
@@ -234,7 +234,7 @@ export default async function ProductPage({ params }: { params: Params }) {
           {local.length > 0 && (
             <section id="prices" aria-labelledby="offers-h" className="panel overflow-hidden scroll-mt-32">
               <h2 id="offers-h" className="font-display text-[20px] font-bold px-4 sm:px-5 pt-4 pb-2">{d.sectionPrices} · {country}</h2>
-              <Offers offers={local} cc={cc} lang={lang} currency={currency} />
+              <Offers offers={local} cc={cc} lang={lang} currency={currency} category={product.category} />
             </section>
           )}
 
@@ -313,7 +313,7 @@ export default async function ProductPage({ params }: { params: Params }) {
               {product.brand && <><dt className="text-muted">{d.filterBrand}</dt><dd>{brandName(product.brand)}</dd></>}
               <dt className="text-muted">{lang === "ar" ? "القسم" : "Category"}</dt><dd>{categoryName(product.category, lang)}</dd>
               {product.storage && <><dt className="text-muted">{d.storage}</dt><dd className="ltr">{product.storage}</dd></>}
-              {versions.length > 0 && <><dt className="text-muted">{d.version}</dt><dd>{versions.join("، ")}</dd></>}
+              {versions.length > 0 && <><dt className="text-muted">{d.version}</dt><dd>{versions.join(lang === "ar" ? "، " : ", ")}</dd></>}
               {product.mpns?.length > 0 && <><dt className="text-muted">MPN</dt><dd className="ltr break-all">{product.mpns.slice(0, 2).join(", ")}</dd></>}
               {product.gtins?.length > 0 && <><dt className="text-muted">EAN</dt><dd className="ltr break-all">{product.gtins.slice(0, 2).join(", ")}</dd></>}
             </dl>

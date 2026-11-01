@@ -160,3 +160,27 @@ export function warrantyLabel(months: number | null | undefined, by: string | nu
   if (ar && by === "agent") return `ضمان الوكيل · ${len}`;
   return ar ? `ضمان ${len}${who ? ` · ${who}` : ""}` : `${len} warranty${who ? ` · ${who}` : ""}`;
 }
+
+/** Provider label; "other" entries carry the real name at the start of their notes ("Flooss (Bahrain): …"). */
+export function bnplLabel(b: { provider: string; notes?: string | null }, lang: Lang): string {
+  if (b.provider !== "other" || !b.notes) return bnplName(b.provider, lang);
+  const n = b.notes.split(/[(:,;.]| also | finance| offered/)[0].trim();
+  return n && n.length <= 28 ? n : bnplName("other", lang);
+}
+
+/** Whether a price sits inside the limits the store published for this plan (e.g. "BD 20 to 500"). Unknown = fits. */
+export function bnplFits(price: number, notes?: string | null): boolean {
+  if (!notes || !price) return true;
+  const m = notes.replace(/,/g, "").match(/(?:BD|BHD|SAR|AED|KWD|KD|QAR|OMR|QR)\s?(\d+(?:\.\d+)?)\s*(?:to|-|–)\s*(?:BD|BHD|SAR|AED|KWD|KD|QAR|OMR|QR)?\s?(\d+(?:\.\d+)?)/i);
+  if (!m) return true;
+  return price >= Number(m[1]) && price <= Number(m[2]);
+}
+
+/** Cash on delivery applies to this item: store offers it, price under its stated cap, category not excluded. */
+export function codFits(pol: { cod?: boolean | null; cod_max?: number | null; cod_exclude?: string[] | null } | null | undefined,
+                        price: number, category: string | null | undefined): boolean {
+  if (!pol?.cod) return false;
+  if (pol.cod_max != null && price > pol.cod_max) return false;
+  if (category && pol.cod_exclude?.includes(category)) return false;
+  return true;
+}
