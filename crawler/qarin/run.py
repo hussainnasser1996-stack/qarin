@@ -19,7 +19,7 @@ import time
 from collections import Counter, defaultdict
 
 from . import adapters, db, http, sitemaps
-from .normalize import display_name, identity, search_norm, slugify
+from .normalize import STATIONERY_RE, display_name, identity, search_norm, slugify
 from .stores import BY_ID, STORES
 
 
@@ -65,7 +65,7 @@ def _upsert_offer(conn, store_id: str, url: str, p: dict, ident: dict) -> bool:
     row = conn.execute("SELECT id, price, in_stock FROM offers WHERE store_id=%s AND url=%s", (store_id, url)).fetchone()
     vals = dict(
         title=p["title"][:500], brand=ident["brand"], category=ident["category"], is_accessory=ident["is_accessory"],
-        price=p.get("price"), currency=p.get("currency"), in_stock=p.get("in_stock"), gtin=p.get("gtin"),
+        price=(p.get("price") if (p.get("price") or 0) > 0 else None), currency=p.get("currency"), in_stock=p.get("in_stock"), gtin=p.get("gtin"),
         mpn=p.get("mpn"), sku=p.get("sku"), image=(p.get("image") or "")[:1000] or None, colour=ident["colour"],
         storage=ident["storage"], condition=ident["condition"], region=ident["region"], seller=p.get("seller"),
         match_key=ident["key"], match_method=ident["match_method"],
@@ -187,9 +187,12 @@ def cmd_rekey():
     """Re-run identity() on every stored offer so matcher improvements apply without re-crawling."""
     with db.connect() as conn:
         rows = conn.execute("SELECT id, title, brand, category, url, gtin, mpn FROM offers").fetchall()
-        out = []
+        out, drop = [], []
         for oid, title, brand, cat, url, gtin, mpn in rows:
             i = identity(title, brand, None, url, gtin, mpn)
+            if i["category"] is None and STATIONERY_RE.search(search_norm(title)):
+                drop.append(oid)  # paper notebooks etc. stored before the stationery rule existed
+                continue
             category = i["category"] or cat
             is_acc = i["is_accessory"] or (cat == "accessories" and i["category"] is None)
             out.append((oid, i["key"], i["match_method"], category, is_acc, i["storage"], i["colour"], i["condition"], i["region"]))
@@ -201,8 +204,14 @@ def cmd_rekey():
         n = conn.execute("""UPDATE offers o SET match_key=t.key, match_method=t.method, category=t.category, is_accessory=t.is_acc,
                               storage=t.storage, colour=t.colour, condition=t.condition, region=t.region
                             FROM tmp_k t WHERE o.id=t.id""").rowcount
+        if drop:
+            conn.execute("""UPDATE store_urls su SET kind='not_electronics' FROM offers o
+                            WHERE o.id = ANY(%s) AND su.store_id=o.store_id AND su.url=o.url""", (drop,))
+            conn.execute("DELETE FROM price_history WHERE offer_id = ANY(%s)", (drop,))
+            conn.execute("DELETE FROM clicks WHERE offer_id = ANY(%s)", (drop,))
+            conn.execute("DELETE FROM offers WHERE id = ANY(%s)", (drop,))
         conn.commit()
-        log(f"rekey: updated {n} offers")
+        log(f"rekey: updated {n} offers, removed {len(drop)} non-electronics")
 
 
 # ---------------------------------------------------------------- match
@@ -226,8 +235,12 @@ def cmd_match():
                 key, method = gtin_key[r[8]], "gtin"
             if not key and r[8]:
                 key, method = f"gtin {r[8]}", "gtin"
+            if not key and r[12]:
+                # Same chain + same SKU is the same item in every country (Jarir, eXtra, Sharaf DG, Lulu, OurShopee
+                # share one catalogue across the Gulf), which links it for the cross-GCC comparison.
+                key, method = f"sku {r[1].rsplit('-', 1)[0]} {r[12]}", "sku"
             if not key:
-                key, method = f"single {r[1]} {r[12] or hashlib.md5(r[3].encode()).hexdigest()[:10]}", "single"
+                key, method = f"single {r[1]} {hashlib.md5(r[3].encode()).hexdigest()[:10]}", "single"
             groups[key].append((r, method))
         log(f"match: {len(rows)} offers -> {len(groups)} products")
         # Bulk write: COPY computed products + offer->key map into temp tables, then merge in SQL.

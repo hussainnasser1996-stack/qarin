@@ -25,7 +25,7 @@ def search_norm(s: str) -> str:
 def slugify(s: str) -> str:
     s = unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode().lower()
     s = re.sub(r"[^a-z0-9]+", "-", s).strip("-")
-    return s[:80] or "item"
+    return s[:80] or "product"
 
 
 # ---------------------------------------------------------------- brands
@@ -73,7 +73,7 @@ def detect_brand(brand_field: str | None, title: str) -> str | None:
 # ---------------------------------------------------------------- categories
 ACCESSORY_RE = re.compile(
     r"\b(case|cover|protector|screen guard|tempered|glass|strap|band|bands|charger|charging (cable|pad|stand|dock)|"
-    r"cable|adapter|adaptor|stand|holder|mount|skin|pouch|sleeve|film|lens protector|replacement|tips|keyboard folio|"
+    r"cable|adapter|adaptor|cartridge|toner|apple pencil|stylus|s pen|laptop (bag|sleeve|backpack|stand)|backpack|cooling pad|ink bottle|ink tank refill|drum unit|ear ?hooks|eartips|ear tips|stand|holder|mount|skin|pouch|sleeve|film|lens protector|replacement|tips|keyboard folio|"
     r"compatible with|for iphone|for ipad|for samsung|for galaxy|for airpods|for macbook|for apple watch|for ps5|"
     r"for nintendo|for switch|for playstation|for xbox|magsafe wallet|wallet|bumper|grip|thumb grips|decal|sticker|tripod|selfie stick|gimbal for|"
     r"for smartphones?|for phones?|for mobile|phone holder|car holder|power ?bank|screen protector|earbuds case)\b"
@@ -84,7 +84,7 @@ CATEGORY_RULES: list[tuple[str, str]] = [
     ("gaming-consoles", r"\b((ps5|playstation ?5)( pro| slim)?( digital| disc)?( edition)?( console| gaming console)|ps5 (pro|slim)|playstation 5 (pro|slim)|"
                         r"xbox series [xs]( console)?|nintendo switch( 2| oled| lite)( console)?|nintendo switch console|steam deck|rog ally|legion go)\b"),
     ("phones", r"\b(iphone \d|iphone air|iphone se|galaxy (s|a|m|z ?fold|z ?flip|note)\s?\d|pixel \d|smartphone|mobile phone|redmi note|honor magic|honor \d|huawei (mate|pura|nova|p)\s?\d|oneplus \d|nothing phone)"),
-    ("tablets", r"\b(ipad|galaxy tab|tablet|matepad|xiaomi pad|redmi pad|kindle|e-?reader)\b"),
+    ("tablets", r"\b(ipad|galaxy tab|tablet|matepad|xiaomi pad|redmi pad|honor pad|oneplus pad|kindle|e-?reader|(lenovo|huawei|tcl|nokia) tab [a-z]?\d+)\b"),
     ("laptops", r"\b(macbook|laptop|notebook|chromebook|ultrabook|zenbook|vivobook|thinkpad|ideapad|yoga slim|pavilion|envy|spectre|xps|inspiron|aspire|swift|predator|rog|tuf gaming|legion|omen|victus)\b"),
     ("desktops", r"\b(imac|mac mini|mac studio|desktop|all-in-one|aio pc|gaming pc)\b"),
     ("monitors", r"\b(monitor)\b"),
@@ -107,17 +107,41 @@ ELECTRONIC_CRUMB_RE = re.compile(
 )
 
 
+# Paper notebooks, stationery and school supplies (Jarir sells both). "Notebook" alone means a laptop only with specs.
+STATIONERY_RE = re.compile(r"\b(roco|five star|oxford|moleskine|stapler|pencil|eraser|sticky notes?|highlighter|marker|crayon|"
+                           r"spiral|ruled|sheets|exercise book|homework|assignment|journal|diary|planner|sketch ?book|"
+                           r"a[3-6]|b5|\d+ ?x ?\d+ ?cm|kraft|ring binder|file folder|envelope)\b")
+LAPTOP_SPEC_RE = re.compile(r"\b(ram|ssd|hdd|intel|core|ryzen|snapdragon|windows|macos|chromebook|gb|tb|vivobook|zenbook|"
+                            r"ideapad|thinkpad|pavilion|victus|omen|inspiron|latitude|aspire|nitro|swift|rog|tuf|legion|yoga|surface|galaxy book)\b")
+
+
 def classify(title: str, crumbs: list[str] | None = None, url: str = "") -> tuple[str | None, bool]:
     """Return (category, is_accessory). category None = not electronics."""
+    cat, acc = _classify(title, crumbs, url)
+    # Paper "notebooks" and school supplies land in laptops / other electronics; drop them unless specs prove a device.
+    if cat in ("laptops", "other-electronics", "accessories") and STATIONERY_RE.search(search_norm(title)) \
+            and not LAPTOP_SPEC_RE.search(search_norm(title)) and not re.search(r"\b(apple pencil|s pen|stylus|laptop|ipad|tablet)\b", search_norm(title)):
+        return None, False
+    return cat, acc
+
+
+def _classify(title: str, crumbs: list[str] | None = None, url: str = "") -> tuple[str | None, bool]:
     t = search_norm(title)
     crumb_txt = " ".join(crumbs or []).lower()
-    is_acc = bool(ACCESSORY_RE.search(t)) and not re.search(r"\b(console|smartphone|laptop)\b", t)
+    # "Console with charger" is a console, but "smartphone case" is a case: wearables-on-the-device words always win.
+    strong = re.search(r"\b(case|cover|protector|screen guard|tempered glass|skin|pouch|sleeve|film|laptop (bag|backpack|stand)|backpack|cooling pad)\b", t)
+    is_acc = bool(ACCESSORY_RE.search(t)) and (not re.search(r"\b(console|smartphone|laptop)\b", t) or bool(strong))
     if "access" in crumb_txt and not re.search(r"console|smartphone", t):
         is_acc = True
     if is_acc:
         return "accessories", True
     for cat, rx in CATEGORY_RULES:
         if re.search(rx, t):
+            # "PS5 console with controller" is a console, not gaming gear
+            if cat == "gaming" and re.search(r"\b(console|ps5 (slim|pro|digital)|playstation 5 (slim|pro|digital)|xbox series [xs]|nintendo switch)\b", t) \
+                    and not re.search(r"\b(for|charging|charger|stand|station|dock|portal)\b", t) \
+                    and not (re.search(r"\b(controller|gamepad|joy-?con)\b", t) and not re.search(r"\bconsole\b", t)):
+                return "gaming-consoles", False
             return cat, False
     if ELECTRONIC_CRUMB_RE.search(crumb_txt) or ELECTRONIC_CRUMB_RE.search(url.lower()):
         return "other-electronics", False
@@ -133,8 +157,9 @@ COLOURS = (
 )
 COLOUR_RE = re.compile(rf"\b({COLOURS})\b")
 CONDITION_RE = re.compile(r"\b(refurbished|renewed|pre-?owned|used|open box|demo|ex-?display|rental)\b")
-BUNDLE_RE = re.compile(r"(\+\s*\w|\bbundle\b|\bwith (game|controller|voucher)|\bvoucher\b| fc ?2\d| \bgame\b.*\bedition\b)")
-REGION_RE = re.compile(r"\b(international version|middle east version|ksa version|uae version|global version|us version|china version|japan version|hk version|indian version)\b")
+# "+ item" is a bundle, but a model suffix glued to the name ("Tab A11+", "S25+") is not.
+BUNDLE_RE = re.compile(r"((?<![a-z0-9])\+\s*\w|\s\+\s*\w|\bbundle\b|\bwith (game|controller|voucher)|\bvoucher\b| fc ?2\d| \bgame\b.*\bedition\b)")
+REGION_RE = re.compile(r"\b(international version|middle east version|ksa version|uae version|tdra version|gcc version|global version|us version|china version|japan version|hk version|indian version)\b")
 
 
 def storage_of(t: str) -> str | None:
@@ -194,9 +219,15 @@ def _family(t: str, brand: str | None, category: str | None) -> str | None:
     if m and brand == "apple":
         size = re.search(r"\b(\d{2})\s?mm\b", t)
         return f"apple watch {m.group(1).replace('  ', ' ')} {size.group(1) + 'mm' if size else ''}".strip()
-    m = re.search(r"\bgalaxy\s?(z\s?fold\s?\d+|z\s?flip\s?\d+|s\d{2}|a\d{2}|m\d{2}|note\s?\d+|tab\s?s\d+|tab\s?a\d+|watch\s?\d+|buds\s?\d*)\s?(ultra|plus|\+|fe|edge|lite|pro|classic)?\b", t)
+    # Galaxy Buds: the bare name covers many models (Buds Core, Live, FE, Pro, 3 Pro...). Only group when the model is named.
+    m = re.search(r"\bgalaxy\s?buds\s?(\d+)?\s?(core|live|fe|pro|plus|\+)?(?!\w)", t)
     if m:
-        fam = re.sub(r"\s+", "", m.group(1)).replace("zfold", "z fold").replace("zflip", "z flip")
+        if not (m.group(1) or m.group(2)):
+            return None
+        return re.sub(r"\s+", " ", f"samsung galaxy buds {m.group(1) or ''} {(m.group(2) or '').replace('+', 'plus')}").strip()
+    m = re.search(r"\bgalaxy\s?(z\s?fold\s?\d+|z\s?flip\s?\d+|s\d{2}|a\d{2}|m\d{2}|note\s?\d+|tab\s?s\d+|tab\s?a\d+|watch\s?\d+)\s?(ultra|plus|\+|fe|edge|lite|pro|classic)?(?!\w)", t)
+    if m:
+        fam = re.sub(r"\s+", "", m.group(1)).replace("zfold", "z fold").replace("zflip", "z flip").replace("tab", "tab ").replace("watch", "watch ")
         return f"samsung galaxy {fam} {(m.group(2) or '').replace('+', 'plus')}".strip()
     if re.search(r"\b(ps5|playstation\s?5)\b", t) and category == "gaming-consoles":
         kind = "pro" if re.search(r"\bpro\b", t) else ("digital" if "digital" in t else "disc")
@@ -213,12 +244,15 @@ def _family(t: str, brand: str | None, category: str | None) -> str | None:
     m = re.search(r"\b(wh|wf)-?\s?(1000x?m\d|ch\d{3}n?)\b", t)
     if m:
         return f"sony {m.group(1)}-{m.group(2).replace(' ', '')}"
-    m = re.search(r"\bdualsense( edge)?\b", t)
+    m = re.search(r"\bdualsense", t)
     if m and category in ("gaming", "accessories", "gaming-consoles") and not re.search(r"console|charging|station|dock|stand|case|skin|cover|bundle|cable", t):
-        return "sony dualsense" + (" edge" if m.group(1) else "")
+        return "sony dualsense" + (" edge" if re.search(r"dualsense\W*edge", t) else "")
     return None
 
 
+CLONE_RE = re.compile(r"^(green ?lion|porodo|hoco|joyroom|xo|borofone|baseus|wiwu|devia|recci|lenyes|lavvento|ldnio|remax|yesido|"
+                      r"oraimo|soundpeats|haylou|qcy|aukey|powerology|smart|heatz|riversong|awei|lenovo thinkplus|i12|tws)\b"
+                      r"|\b(compatible|copy|replica|clone|style|like)\b")
 LUXURY_RE = re.compile(r"\b(merlin craft|caviar|24k|gold plated|gold edition|custom edition|diamond edition|lamborghini edition)\b")
 NOISE = re.compile(rf"\b(dual sim|single sim|esim|5g|4g|lte|smartphone|smart phone|mobile phone|phone|tablet|wi-?fi|cellular|"
                    rf"middle east version|international version|global version|ai|with|and|facetime|nfc|android|"
@@ -243,10 +277,10 @@ STOP_CODES = re.compile(r"^(\d+(gb|tb|mm|mah|w|hz|k|p|mp|cm|ml|l)|\d+(st|nd|rd|t
 
 
 NOT_CODE = re.compile(r"^(\d+-in-\d+|20\d\d|insta360|wi-?fi-?\d\w*|usb-?c\d*|ddr\d\w*|lpddr\d\w*|rtx-?\d+\w*|gtx-?\d+|i[3579]-?\d+\w*|"
-                      r"ryzen-?\d*|m\d-?(pro|max)?|\d+(hz|mah|mp|w|nm|gb|tb|mm|cm|kg|ml|fps|k)|hdr\d+|bt-?\d\w*|ip\d\d|qi\d?|a\d{2}-?pro)$")
+                      r"ryzen-?\d*|m\d-?(pro|max)?|\d+(hz|mah|mp|w|nm|gb|tb|mm|cm|kg|ml|fps|k)|hdr\d+|bt-?\d\w*|ip\d\d|qi\d?|a\d{2}-?pro|\d{3,5}(h|u|hx|hs|hk|k|ks|kf|f|x3d)|webos\d+|hdr\d+\+?)$")
 
 
-JOIN_STOP = {"for", "and", "the", "pro", "max", "gen", "new", "fhd", "uhd", "usb", "led", "with", "plus", "mini", "air", "ultra",
+JOIN_STOP = {"ai", "for", "and", "the", "pro", "max", "gen", "new", "fhd", "uhd", "usb", "led", "with", "plus", "mini", "air", "ultra",
              "lite", "ram", "ssd", "hdd", "inch", "oled", "qled", "smart", "tv", "wifi", "dual", "sim", "core", "intel", "amd",
              "apple", "sony", "lg", "hp", "dell", "asus", "acer", "msi", "jbl", "bose", "nova", "mate", "pura", "redmi", "poco"}
 
@@ -281,6 +315,9 @@ def identity(title: str, brand_field: str | None, crumbs: list[str] | None, url:
     # A different maker selling a customised device (e.g. "Merlin Craft iPhone", "Caviar") is not the stock device.
     bf = search_norm(brand_field or "")
     foreign = bool(bf) and BRAND_ALIASES.get(bf, bf) not in BRANDS and not re.match(r"^(apple|samsung|sony|google)", bf)
+    # Clones and third-party makers that put "AirPods 4" or "Galaxy Buds" in their own product names.
+    if CLONE_RE.search(t):
+        foreign = True
     if foreign or LUXURY_RE.search(t):
         fam = None
         brand = bf or brand
@@ -300,6 +337,13 @@ def identity(title: str, brand_field: str | None, crumbs: list[str] | None, url:
         if code and brand:
             key = f"{brand} {code}"
             method = "model_code"
+            # One TV/monitor model code often covers every size ("QNED82"): the size is part of what you buy.
+            if category in ("tvs", "monitors"):
+                size = re.search(r"\b(\d{2,3}(?:\.\d)?)\s?(?:-|\s)?(?:inch|in\b|\"|”|″|''|')", title.lower())
+                if size and size.group(1) not in code:
+                    key += f" {size.group(1)}in"
+    if key and is_acc:
+        key += " accessory"  # a cartridge or case shares its device's model code but is never the device
     if key and bundle:
         key += " bundle"
     if key and condition != "new":
@@ -332,8 +376,8 @@ def display_name(key: str | None, fallback_title: str) -> str:
             out.append(w.upper())
         elif w in ("iphone", "ipad", "macbook", "airpods"):
             out.append({"iphone": "iPhone", "ipad": "iPad", "macbook": "MacBook", "airpods": "AirPods"}[w])
-        elif w in ("anc",):
-            out.append("ANC")
+        elif w in ("anc", "fe", "se", "oled", "qled", "uhd"):
+            out.append(w.upper())
         elif re.fullmatch(r"m\d( pro| max)?|a1\d", w):
             out.append(w.upper())
         elif "-" in w or re.search(r"\d", w) and re.search(r"[a-z]", w):
@@ -341,4 +385,6 @@ def display_name(key: str | None, fallback_title: str) -> str:
         else:
             out.append(w.capitalize())
     s = " ".join(out)
+    if key.startswith("samsung galaxy"):
+        s = s.replace(" Plus", "+")  # Samsung's own spelling: Galaxy S25+, Tab A11+
     return s.replace("Wifi", "Wi-Fi").replace("Playstation", "PlayStation").replace("Dualsense", "DualSense").replace("Xbox", "Xbox")

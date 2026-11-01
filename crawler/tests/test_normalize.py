@@ -108,3 +108,46 @@ def test_spec_tokens_never_become_codes():
                  ("Belkin Power Bank 20000mAh Black BPB012BTBK", "Belkin UltraCharge Power Bank 20000mAh Black")]:
         ka, kb = K(a, a.split()[0]), K(b, b.split()[0])
         assert ka is None or ka != kb, (ka, kb)
+
+
+def test_galaxy_buds_models_stay_apart():
+    k = lambda t: identity(t, "Samsung", None)["key"]
+    assert k("Samsung Galaxy Buds Core Lite, White") == k("Samsung Galaxy Buds Core True Wireless Earbuds, Black – SM-R410NZKAMEA")
+    assert k("Samsung Galaxy Buds Core Lite, White") != k("Samsung Galaxy Buds Live Earbuds Bluetooth Mystic Black")
+    assert k("Samsung Galaxy Buds3 Pro Silver") == k("Samsung Galaxy Buds 3 Pro")
+
+
+def test_model_suffix_plus_is_not_a_bundle():
+    i = identity("Samsung Galaxy Tab A11+ WiFi 256GB", "Samsung", None)
+    assert not i["bundle"] and display_name(i["key"], "") == "Samsung Galaxy Tab A11+ 256GB"
+    assert identity("PS5 Console Slim Disc + 2 Controllers", "Sony", None)["bundle"]
+
+
+def test_dualsense_edge_separate():
+    a = identity("DualSense Edge™Wireless Controller,Midnight Black", "Sony", None)["key"]
+    b = identity("Sony DualSense Controller Wireless White", "Sony", None)["key"]
+    assert a != b
+
+
+@pytest.mark.parametrize("title,cat", [
+    ("Roco Notebook 18.5 X 25.5 cm", None),
+    ("Asus Vivobook 15 Notebook, 16 GB RAM", "laptops"),
+    ("Epson L3250 A4 printer", "printers"),
+    ("PS5 Console with controller", "gaming-consoles"),
+    ("Nintendo Switch 2 Pro Controller", "gaming"),
+    ("Samsung Galaxy S25 smartphone case", "accessories"),
+    ("Lenovo Tab M11 4GB 128GB", "tablets"),
+])
+def test_classify_edge_cases(title, cat):
+    from qarin.normalize import classify
+    assert classify(title, None, "")[0] == cat
+
+
+def test_tv_size_and_cartridge_keys():
+    a = identity("LG 55″ QNED AI QNED82 4K Smart TV", "LG", None)["key"]
+    b = identity("LG 65″ QNED AI QNED82 4K Smart TV", "LG", None)["key"]
+    assert a and b and a != b
+    p = identity("Brother MFC-L3720CDW Color Laser Printer", "Brother", None)["key"]
+    c = identity("TN279M--Brother MFC-L3720CDW Cartridge Magenta", "Brother", None)["key"]
+    assert p != c
+    assert identity('Lenovo Laptop 14" Intel Core i5-13420H (13th Gen)', "Lenovo", None)["key"] is None
