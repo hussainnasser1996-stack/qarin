@@ -8,12 +8,14 @@ import { PriceTag, SpreadBar } from "@/components/Spread";
 import { Offers } from "@/components/Offers";
 import { Insight } from "@/components/Insight";
 import { ShareButton, WatchButton } from "@/components/Watch";
-import { ago, brandName, convert, money, parseProductId, productPath, regionLabel, storeName } from "@/lib/format";
+import { CompareToggle } from "@/components/Compare";
+import { ago, bnplName, brandName, convert, money, parseProductId, productPath, regionLabel, storeName, warrantyLabel } from "@/lib/format";
 import { dailySeries, stats, verdict } from "@/lib/history";
 import { categoryName, CCS, COUNTRIES, t, type CC, type Lang } from "@/lib/i18n";
 import { getProduct, getSimilar, productBySlug, topProductIds } from "@/lib/queries";
 import { alternates } from "@/lib/seo";
 import { SITE } from "@/lib/site";
+import { alertChannels } from "@/lib/channels";
 
 export const revalidate = 3600;
 
@@ -141,6 +143,12 @@ export default async function ProductPage({ params }: { params: Params }) {
     similar.length > 0 && { id: "similar", label: d.sectionSimilar },
   ].filter(Boolean) as { id: string; label: string; n?: number }[];
   const bestOffer = live.find((o) => Number(o.price) === min);
+  // Smallest instalment any store offers on this product today (store must state the provider in its policy).
+  const payLater = live.flatMap((o) => (o.policies?.bnpl ?? []).map((b) => {
+    const n = b.payments || 0; // only when the store states how many payments
+    return n ? { each: Number(o.price) / n, n, provider: b.provider, store: o.store } : null;
+  })).filter((x): x is { each: number; n: number; provider: string; store: string } => x !== null).sort((a, b) => a.each - b.each)[0];
+  const bestWarranty = live.filter((o) => o.warranty_months).sort((a, b) => (b.warranty_months ?? 0) - (a.warranty_months ?? 0))[0];
 
   return (
     <article className="space-y-6 pb-20 lg:pb-0">
@@ -176,12 +184,21 @@ export default async function ProductPage({ params }: { params: Params }) {
           ) : (
             <p className="mt-4 rounded-xl bg-sunk border border-line p-3 text-ink-2">{d.notInCountry}</p>
           )}
+          {(payLater || bestWarranty) && (
+            <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[13px] text-ink-2">
+              {payLater && (
+                <span>{lang === "ar" ? "ادفع لاحقاً من" : "Pay later from"} <b className="num text-ink">{payLater.n} × {money(payLater.each, currency, lang)}</b> · {bnplName(payLater.provider, lang)} ({storeName(payLater.store, lang)})</span>
+              )}
+              {bestWarranty && <span className="text-deal-ink font-medium">{warrantyLabel(bestWarranty.warranty_months, bestWarranty.warranty_by, lang)} ({storeName(bestWarranty.store, lang)})</span>}
+            </p>
+          )}
           {storeSpread.length > 1 && (
             <div className="max-w-xl mt-1"><SpreadBar spread={storeSpread} currency={currency} lang={lang} size="lg" labels /></div>
           )}
           <div className={`flex flex-wrap items-center gap-2 ${storeSpread.length > 1 ? "" : "mt-4"}`}>
             {min !== null && v !== "new" && <p className={`rounded-lg px-3 py-1.5 text-[13px] font-medium ${verdictBox.cls}`}>{verdictBox.text}</p>}
             <WatchButton lang={lang} item={{ id: product.id, slug: product.slug, name: product.name, image: product.image, cc, price: min, currency }} />
+            <CompareToggle cc={cc} lang={lang} item={{ id: product.id, name: product.name, image: product.image }} />
             <ShareButton title={product.name} lang={lang} />
           </div>
           {variants.length > 0 && (
@@ -289,7 +306,7 @@ export default async function ProductPage({ params }: { params: Params }) {
         </div>
 
         <aside className="space-y-4 lg:sticky lg:top-32">
-          <div className="panel p-4"><AlertForm productId={product.id} cc={cc} lang={lang} currency={currency} /></div>
+          <div className="panel p-4"><AlertForm productId={product.id} cc={cc} lang={lang} currency={currency} channels={alertChannels()} inStock={min !== null} /></div>
           <div id="details" className="panel p-4 text-[13px] scroll-mt-32">
             <p className="font-semibold text-[14px] mb-2">{d.specs}</p>
             <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5">

@@ -20,7 +20,7 @@ export async function Listing({ cc, lang, base, p, hidden = {} }: {
   const cur = COUNTRIES[cc].currency;
   const state: Over = {
     q: p.q, brand: p.brand, sort: p.sort, stock: p.inStock ? "1" : undefined, store: p.store, storage: p.storage,
-    min: p.min, max: p.max, ...hidden,
+    min: p.min, max: p.max, bnpl: p.bnpl ? "1" : undefined, cod: p.cod ? "1" : undefined, warranty: p.warranty ? "1" : undefined, ...hidden,
   };
   const qs = (over: Over) => {
     const u = new URLSearchParams();
@@ -36,6 +36,13 @@ export async function Listing({ cc, lang, base, p, hidden = {} }: {
   if (p.store) active.push({ label: storeName(data.stores.find((s) => s.id === p.store)?.name ?? p.store, lang), href: qs({ store: undefined }) });
   if (p.min !== undefined || p.max !== undefined) active.push({ label: `${p.min ?? "0"}–${p.max ?? "∞"} ${cur}`, href: qs({ min: undefined, max: undefined }) });
   if (p.inStock) active.push({ label: d.filterInStock, href: qs({ stock: undefined }) });
+  const ar = lang === "ar";
+  const trust: [string, string, boolean | undefined][] = [
+    ["bnpl", ar ? "الدفع لاحقاً (تابي، تمارا…)" : "Pay later (Tabby, Tamara…)", p.bnpl],
+    ["cod", ar ? "الدفع عند الاستلام" : "Cash on delivery", p.cod],
+    ["warranty", ar ? "ضمان سنة أو أكثر" : "1+ year warranty", p.warranty],
+  ];
+  for (const [k, label, on] of trust) if (on) active.push({ label, href: qs({ [k]: undefined }) });
 
   const sorts: [string | undefined, string][] = [
     [undefined, d.sortRelevance], ["price_asc", d.sortPriceAsc], ["price_desc", d.sortPriceDesc], ["offers", d.sortOffers], ["gap", d.sortGap],
@@ -107,6 +114,16 @@ export async function Listing({ cc, lang, base, p, hidden = {} }: {
           </ul>
         </section>
       )}
+      <section>
+        <h3 className="font-semibold text-[13px] text-muted mb-2">{ar ? "الدفع والضمان" : "Payment & warranty"}</h3>
+        <div className="space-y-0.5">
+          {trust.map(([k, label, on]) => (
+            <Link key={k} href={toggle(k, "1")} scroll={false} className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-sunk">
+              <span aria-hidden className={`w-4 h-4 rounded border ${on ? "bg-ink border-ink" : "border-line-strong"}`} />{label}
+            </Link>
+          ))}
+        </div>
+      </section>
       <Link href={toggle("stock", "1")} scroll={false} className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-sunk">
         <span aria-hidden className={`w-4 h-4 rounded border ${p.inStock ? "bg-ink border-ink" : "border-line-strong"}`} />
         {d.filterInStock}
@@ -141,7 +158,7 @@ export async function Listing({ cc, lang, base, p, hidden = {} }: {
                 {a.label} <span aria-hidden className="text-ink-2">×</span>
               </Link>
             ))}
-            <Link href={qs({ brand: undefined, storage: undefined, store: undefined, min: undefined, max: undefined, stock: undefined })} scroll={false}
+            <Link href={qs({ brand: undefined, storage: undefined, store: undefined, min: undefined, max: undefined, stock: undefined, bnpl: undefined, cod: undefined, warranty: undefined })} scroll={false}
               className="text-[13px] underline underline-offset-4 text-ink-2 ms-1">{d.clearAll}</Link>
           </div>
         )}
@@ -173,4 +190,7 @@ export const listParams = (sp: Record<string, string | string[] | undefined>): L
   storage: one(sp.storage)?.slice(0, 10),
   min: num(one(sp.min)),
   max: num(one(sp.max)),
+  bnpl: one(sp.bnpl) === "1",
+  cod: one(sp.cod) === "1",
+  warranty: one(sp.warranty) === "1",
 });

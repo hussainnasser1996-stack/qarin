@@ -173,6 +173,39 @@ def from_microdata(tree: LexborHTMLParser) -> tuple[dict | None, list[str]]:
     }, crumbs
 
 
+def warranty_of(html: str) -> tuple[int | None, str | None]:
+    """Warranty the store states for THIS product: (months, who gives it). Only formats seen on real product pages;
+    generic footer/FAQ text never counts. Returns (None, None) when the page does not say."""
+    # schema.org WarrantyPromise (JumboSouq and any standards-following store): "P1Y", "P24M"
+    m = re.search(r'"durationOfWarranty"\s*:\s*(?:\{[^}]*?"value"\s*:\s*"?(\d+)"?[^}]*?"unitCode"\s*:\s*"(ANN|MON)"|"P(\d+)([YM])")', html)
+    if m:
+        if m.group(3):
+            n, unit = int(m.group(3)), m.group(4)
+        else:
+            n, unit = int(m.group(1)), "Y" if m.group(2) == "ANN" else "M"
+        return (n * 12 if unit == "Y" else n), "store"
+    # eXtra product payload: "yearOfWarranty":"2"
+    m = re.search(r'"yearOfWarranty"\s*:\s*"?(\d+)"?', html)
+    if m and int(m.group(1)) > 0:
+        return int(m.group(1)) * 12, "manufacturer"
+    text = re.sub(r"\s+", " ", re.sub(r"<[^>]{0,400}>", " ", html))
+    # Jarir: "24 months warranty by JARIR" / "12 months warranty by Apple"
+    m = re.search(r"\b(\d{1,2})\s*(months?|years?)\s*warranty by\s*([A-Za-z][A-Za-z&.\- ]{1,30}?)(?=\s{1,}[A-Z<]|\s*$|\s{2})", text)
+    if m:
+        n = int(m.group(1)) * (12 if m.group(2).startswith("year") else 1)
+        who = m.group(3).strip()
+        return n, ("store" if who.lower() in ("jarir",) else "agent" if who.lower() in ("agent", "the agent", "official agent") else who)
+    # Sharaf DG: "FREE - 1 Year Manufacturer Warranty"
+    m = re.search(r"\b(\d{1,2})\s*(year|month)s?\s*(manufacturer|brand|official|agent)\s*warranty", text, re.I)
+    if m:
+        return int(m.group(1)) * (12 if m.group(2).lower() == "year" else 1), "manufacturer"
+    # OurShopee: "12 Months Warranty" badge / "12-Month Warranty"
+    m = re.search(r"\b(\d{1,2})[\s-]*(months?|years?)\s*warranty\b", text, re.I)
+    if m and "ourshopee" in html[:5000].lower() + html[-5000:].lower():
+        return int(m.group(1)) * (12 if m.group(2).lower().startswith("year") else 1), "seller"
+    return None, None
+
+
 def _meta(tree: LexborHTMLParser, key: str) -> str | None:
     n = tree.css_first(f'meta[property="{key}"]') or tree.css_first(f'meta[name="{key}"]')
     return n.attributes.get("content") if n else None
@@ -209,6 +242,7 @@ def parse(html: str, url: str = "") -> dict | None:
         m = re.search(r'"seller_name":"([^"]+)"', html)
         if m:
             product["seller"] = m.group(1)
+    product["warranty_months"], product["warranty_by"] = warranty_of(html)
     product["title"] = clean_title(product.get("title") or _meta(tree, "og:title"))
     product["crumbs"] = [c for c in crumbs if c and c.lower() not in ("home", "online shopping", "الرئيسية")]
     product["url"] = url

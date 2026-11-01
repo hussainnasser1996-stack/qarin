@@ -3,6 +3,7 @@ import { money, productPath, storeName } from "@/lib/format";
 import { categoryName, t, type CC, type Lang } from "@/lib/i18n";
 import type { ListItem } from "@/lib/queries";
 import { PriceTag, SpreadBar } from "./Spread";
+import { CompareToggle } from "./Compare";
 
 export function Thumb({ src, size = 64, alt = "" }: { src: string | null; size?: number; alt?: string }) {
   return (
@@ -23,9 +24,9 @@ export function ProductList({ items, cc, lang, showGap = false }: { items: ListI
         const saving = max && min && max > min ? max - min : 0;
         const spread = (p.spread || []).map((x) => ({ s: x.s, p: Number(x.p) }));
         return (
-          <li key={p.id}>
+          <li key={p.id} className="flex items-stretch">
             <Link href={productPath(cc, lang, p.slug, p.id)}
-              className="grid grid-cols-[auto_1fr_auto] items-center gap-x-3 sm:gap-x-5 gap-y-1 px-3 sm:px-5 py-3.5 hover:bg-sunk transition-colors">
+              className="flex-1 min-w-0 grid grid-cols-[auto_1fr_auto] items-center gap-x-3 sm:gap-x-5 gap-y-1 px-3 sm:px-5 py-3.5 hover:bg-sunk transition-colors">
               <Thumb src={p.image} />
               <span className="min-w-0">
                 <span className="block font-medium clamp-2 leading-snug text-[15px]">{p.name}</span>
@@ -47,6 +48,9 @@ export function ProductList({ items, cc, lang, showGap = false }: { items: ListI
                 )}
               </span>
             </Link>
+            <span className="hidden sm:flex w-[76px] shrink-0 border-s border-line">
+              <CompareToggle compact cc={cc} lang={lang} item={{ id: p.id, name: p.name, image: p.image }} />
+            </span>
           </li>
         );
       })}

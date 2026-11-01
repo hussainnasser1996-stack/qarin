@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Listing, listParams, type SP } from "@/components/Listing";
+import { StorePolicies } from "@/components/StorePolicies";
 import { ago, storeName } from "@/lib/format";
 import { COUNTRIES, t, type CC, type Lang } from "@/lib/i18n";
 import { getStores } from "@/lib/queries";
@@ -32,6 +33,7 @@ export default async function StorePage({ params, searchParams }: { params: Para
         </div>
         {s.home && <a href={s.home} rel="nofollow noopener" target="_blank" className="h-10 px-4 inline-flex items-center rounded-md border border-line hover:bg-paper">{d.visitStore} <span aria-hidden className="ms-1 flip-rtl">↗</span></a>}
       </header>
+      <StorePolicies p={s.policies} lang={lang} />
       <Listing cc={scc} lang={lang} base={`/${cc}/${lang}/stores/${store}`} p={{ ...listParams(sp), store }} />
     </div>
   );

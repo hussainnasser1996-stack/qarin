@@ -137,3 +137,26 @@ const COLOUR_AR: Record<string, string> = {
 };
 export const colourName = (c: string | null | undefined, lang: Lang) =>
   c ? (lang === "ar" ? COLOUR_AR[c] ?? c : c.replace(/\b\w/g, (x) => x.toUpperCase())) : "";
+
+const BNPL_NAME: Record<string, { en: string; ar: string }> = {
+  tabby: { en: "Tabby", ar: "تابي" }, tamara: { en: "Tamara", ar: "تمارا" }, spotii: { en: "Spotii", ar: "سبوتي" },
+  postpay: { en: "Postpay", ar: "بوست باي" }, cashew: { en: "Cashew", ar: "كاشيو" }, other: { en: "Pay later", ar: "الدفع لاحقاً" },
+};
+export const bnplName = (p: string, lang: Lang) => (BNPL_NAME[p.toLowerCase()] ?? { en: p, ar: p })[lang];
+
+/** "1 year warranty · manufacturer" from what the store published for this listing. */
+export function warrantyLabel(months: number | null | undefined, by: string | null | undefined, lang: Lang): string | null {
+  if (!months || months <= 0) return null;
+  const ar = lang === "ar";
+  const len = months % 12 === 0
+    ? (ar ? ({ 1: "سنة", 2: "سنتان" } as Record<number, string>)[months / 12] ?? `${months / 12} سنوات` : `${months / 12} year${months === 12 ? "" : "s"}`)
+    : (ar ? `${months} شهراً` : `${months} months`);
+  const who = !by ? null
+    : by === "manufacturer" ? (ar ? "من الشركة المصنّعة" : "manufacturer")
+    : by === "agent" ? (ar ? "ضمان الوكيل" : "official agent")
+    : by === "store" ? (ar ? "من المتجر" : "by the store")
+    : by === "seller" ? (ar ? "من البائع" : "by the seller")
+    : (ar ? `من ${by}` : `by ${by}`);
+  if (ar && by === "agent") return `ضمان الوكيل · ${len}`;
+  return ar ? `ضمان ${len}${who ? ` · ${who}` : ""}` : `${len} warranty${who ? ` · ${who}` : ""}`;
+}

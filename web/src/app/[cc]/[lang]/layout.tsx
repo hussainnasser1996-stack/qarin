@@ -5,6 +5,7 @@ import "../../globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Consent } from "@/components/Consent";
+import { CompareTray } from "@/components/Compare";
 import { CCS, COUNTRIES, isCC, isLang, LANGS, t, type CC, type Lang } from "@/lib/i18n";
 import { SITE } from "@/lib/site";
 
@@ -57,6 +58,7 @@ export default async function Layout({ children, params }: { children: React.Rea
         <Header cc={cc as CC} lang={lang as Lang} />
         <main id="main" className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-6">{children}</main>
         <Footer cc={cc as CC} lang={lang as Lang} />
+        <CompareTray cc={cc as CC} lang={lang as Lang} />
         <Consent lang={lang as Lang} />
       </body>
     </html>

@@ -56,3 +56,28 @@ Add a `Store(...)` entry in `crawler/qarin/stores.py` with its sitemap, product 
 - Blink
 - Tamkeen
 - Eureka: sitemap not found yet
+
+## Trust labels (warranty, pay later, cash on delivery)
+
+- **Warranty** is read per listing, and only where the store states it on the product page: eXtra (`yearOfWarranty`), Jarir ("N months warranty by JARIR/Agent"), Sharaf DG ("1 Year Manufacturer Warranty"), OurShopee ("12 Months Warranty"), Lulu, and JumboSouq (schema.org `WarrantyPromise`). Footer and FAQ text never counts. The parser is `crawler/qarin/adapters.py: warranty_of`, tested against saved pages.
+- **Store policies** cover pay later (Tabby, Tamara and others), cash on delivery, delivery, returns and warranty policy. They come from each store's own help pages and live in `db/policies_*.json`, with their sources and the date checked. `python -m qarin.run policies` loads them; the daily workflow runs it too. To change a policy, edit the JSON and push.
+- **Display:** chips appear in each store row, "Pay later from 4 × …" shows under the price, filters sit on category and search pages, and a policy panel is on each store page. A chip only shows when there is evidence for it.
+
+## Alert channels
+
+Alerts are sent by `python -m qarin.run alerts` after each daily crawl. They go out when the price drops below its level when the alert was made, reaches the target, or the product comes back in stock, and at most once a day per alert. A channel without keys keeps its alerts queued.
+
+| Channel | Switch it on |
+|---|---|
+| Email (Resend) | set `RESEND_API_KEY`, `ALERT_FROM` in Vercel + GitHub (needs your own domain) |
+| Browser notifications | `scripts/push-setup.sh` (keys already generated in `~/tools/keys/qarin-vapid.json`) |
+| Telegram | create a bot with @BotFather, then `scripts/telegram-setup.sh <token> <username>` |
+| WhatsApp | Meta Business verification + approved template, then `scripts/whatsapp-setup.sh …` and set the webhook in Meta to `/api/whatsapp` |
+
+WhatsApp template to submit in Meta (category **Utility**), with two language versions:
+- EN: `Price drop on {{1}}: now {{2}} at {{3}}. Compare: {{4}}  Reply STOP to stop alerts.`
+- AR: `نزل سعر {{1}}: الآن {{2}} لدى {{3}}. قارن: {{4}}  أرسل STOP لإيقاف التنبيهات.`
+
+## Compare
+
+Shoppers can tick up to 4 products. The tray at the bottom opens `/{cc}/{lang}/compare?ids=…`, which compares price, stores, 90-day low, all 6 GCC prices, warranty, pay later, cash on delivery and version.

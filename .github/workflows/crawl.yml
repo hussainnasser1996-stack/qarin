@@ -75,9 +75,16 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           ALERT_FROM: ${{ secrets.ALERT_FROM }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          WHATSAPP_TOKEN: ${{ secrets.WHATSAPP_TOKEN }}
+          WHATSAPP_PHONE_ID: ${{ secrets.WHATSAPP_PHONE_ID }}
+          WHATSAPP_TEMPLATE: ${{ secrets.WHATSAPP_TEMPLATE }}
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          VAPID_SUBJECT: ${{ secrets.VAPID_SUBJECT }}
           REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
           SITE_URL: ${{ vars.SITE_URL || 'https://qarin-gulf.vercel.app' }}
         run: |
+          python -m qarin.run policies
           python -m qarin.run rekey
           python -m qarin.run alerts
           python -m qarin.run revalidate

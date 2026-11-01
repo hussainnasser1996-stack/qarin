@@ -104,7 +104,7 @@ export const getDrops = cached(async (cc: CC, limit: number): Promise<Drop[]> =>
 // ---------------------------------------------------------------- search / category
 export type ListParams = {
   q?: string; category?: string; brand?: string; inStock?: boolean; sort?: string; page?: number; store?: string;
-  storage?: string; min?: number; max?: number;
+  storage?: string; min?: number; max?: number; bnpl?: boolean; cod?: boolean; warranty?: boolean;
 };
 export const PAGE_SIZE = 24;
 
@@ -128,6 +128,11 @@ export const listProducts = cached(async (cc: CC, p: ListParams) => {
   if (p.storage) { params.push(p.storage); where.push(`upper(p.storage) = upper($${params.length})`); }
   if (p.min !== undefined && !Number.isNaN(p.min)) { params.push(p.min); where.push(`agg.min_price >= $${params.length}`); }
   if (p.max !== undefined && !Number.isNaN(p.max)) { params.push(p.max); where.push(`agg.min_price <= $${params.length}`); }
+  const offerHas = (cond: string) => `EXISTS (SELECT 1 FROM offers o3 JOIN stores s3 ON s3.id = o3.store_id
+      WHERE o3.product_id = p.id AND s3.country = $1 AND o3.price > 0 AND o3.in_stock IS NOT FALSE AND ${cond})`;
+  if (p.bnpl) where.push(offerHas(`jsonb_array_length(COALESCE(s3.policies->'bnpl', '[]'::jsonb)) > 0`));
+  if (p.cod) where.push(offerHas(`(s3.policies->>'cod')::boolean IS TRUE`));
+  if (p.warranty) where.push(offerHas(`o3.warranty_months >= 12`));
   if (p.store) {
     params.push(p.store);
     where.push(`EXISTS (SELECT 1 FROM offers o2 WHERE o2.product_id = p.id AND o2.store_id = $${params.length})`);
@@ -193,6 +198,15 @@ export type Offer = {
   id: number; store_id: string; store: string; country: string; url: string; title: string; price: string | null;
   currency: string; in_stock: boolean | null; condition: string; region: string | null; colour: string | null;
   seller: string | null; last_seen: string; last_changed: string;
+  warranty_months: number | null; warranty_by: string | null; policies: Policies | null;
+};
+export type Policies = {
+  bnpl?: { provider: string; payments?: number | null; notes?: string | null }[];
+  cod?: boolean | null; cod_notes?: string | null;
+  free_delivery_over?: number | null; free_delivery_currency?: string | null; delivery_fee?: number | null;
+  delivery_days?: string | null; same_day?: boolean | null; click_collect?: boolean | null;
+  returns_days?: number | null; returns_notes?: string | null; warranty_policy?: string | null;
+  sources?: string[]; checked?: string;
 };
 export type HistoryRow = { offer_id: number; store: string; observed_at: string; price: string | null; in_stock: boolean | null };
 
@@ -210,7 +224,7 @@ export const getProduct = cached(async (id: number) => {
   const product = rows[0];
   const [offers, history, variants] = await Promise.all([
     sql`SELECT o.id, o.store_id, s.name AS store, s.country, o.url, o.title, o.price, o.currency, o.in_stock, o.condition,
-               o.region, o.colour, o.seller, o.last_seen, o.last_changed
+               o.region, o.colour, o.seller, o.last_seen, o.last_changed, o.warranty_months, o.warranty_by, s.policies
         FROM offers o JOIN stores s ON s.id = o.store_id WHERE o.product_id = ${id}
         ORDER BY (o.in_stock IS NOT FALSE AND o.price IS NOT NULL) DESC, o.price ASC NULLS LAST`,
     sql`SELECT ph.offer_id, s.name AS store, s.country, ph.observed_at, ph.price, ph.in_stock
@@ -230,15 +244,15 @@ export const topProductIds = cached(async (limit = 200) => {
 }, "top");
 
 // ---------------------------------------------------------------- stores
-export type StoreRow = { id: string; name: string; country: string; home: string | null; domain: string; offers: number; products: number; last_seen: string | null };
+export type StoreRow = { id: string; name: string; country: string; home: string | null; domain: string; offers: number; products: number; last_seen: string | null; policies: Policies | null };
 export const getStores = cached(async (cc?: CC): Promise<StoreRow[]> => {
   return (await query(
-    `SELECT s.id, s.name, s.country, s.home, s.domain,
+    `SELECT s.id, s.name, s.country, s.home, s.domain, s.policies,
             count(o.id) FILTER (WHERE o.price IS NOT NULL)::int AS offers,
             count(DISTINCT o.product_id)::int AS products, max(o.last_seen) AS last_seen
      FROM stores s LEFT JOIN offers o ON o.store_id = s.id
      WHERE s.active ${cc ? "AND s.country = $1" : ""}
-     GROUP BY s.id ORDER BY offers DESC`,
+     GROUP BY s.id, s.policies ORDER BY offers DESC`,
     cc ? [cc] : [],
   )) as StoreRow[];
 }, "stores");

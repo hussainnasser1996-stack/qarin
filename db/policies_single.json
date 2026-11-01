@@ -1,0 +1,187 @@
+{
+  "ashrafs-bh": {
+    "bnpl": [],
+    "cod": null,
+    "cod_notes": "No BNPL or cash-on-delivery stated on policy pages; footer payment logos show Visa, Mastercard, JCB and one local card logo only. www.ashrafs.com refused connections; the live store is www.ashrafsbahrain.com.",
+    "free_delivery_over": 20,
+    "free_delivery_currency": "BHD",
+    "delivery_fee": 1,
+    "delivery_days": "Next business day, may slip 2-3 working days; large appliances / TVs 50in+ delivered by supplier in 5-7 business days",
+    "same_day": null,
+    "click_collect": true,
+    "returns_days": 7,
+    "returns_notes": "Exchange or refund within 7 days. Excludes laptops, tablets, printers, mobile phones, cameras/camcorders, DVDs/CDs, personal care. Opened but unused items: 15% restocking fee. DOA/defective within 15 days exchanged/refunded after technical test. Original invoice required; returns at Hoora showroom; card refunds to card only.",
+    "warranty_policy": "Manufacturer's warranty (claims via manufacturer's authorised service centre); optional paid Ashrafs Extended Warranty starts after manufacturer warranty expires and includes a one-time replacement guarantee during manufacturer warranty.",
+    "sources": [
+      "https://www.ashrafsbahrain.com/shipping-delivery-policy/",
+      "https://www.ashrafsbahrain.com/return-and-exchange-policy",
+      "https://www.ashrafsbahrain.com/terms-conditions"
+    ],
+    "checked": "2026-11-01"
+  },
+  "jumbo-ae": {
+    "bnpl": [
+      {"provider": "tabby", "payments": null, "notes": "Terms & conditions list BNPL 'such as Tabby, Tamara etc.'; instalment count not stated by Jumbo"},
+      {"provider": "tamara", "payments": null, "notes": "Named in terms & conditions as a BNPL option; Tamara terms embedded in /terms-and-conditions; instalment count not stated"},
+      {"provider": "other", "payments": null, "notes": "Easy Pay bank card instalments (0% interest, 3-24 months; Emirates NBD/Emirates Islamic; processing fee e.g. 9% for 18m, 12% for 24m)"}
+    ],
+    "cod": true,
+    "cod_notes": "Terms & conditions offer Cash on Delivery (COD) or Credit Card on Delivery (CCOD); no limit or fee stated.",
+    "free_delivery_over": 2000,
+    "free_delivery_currency": "AED",
+    "delivery_fee": 20,
+    "delivery_days": "5-7 working days (7-10 outside delivery areas), no Friday/holiday delivery (per terms & conditions)",
+    "same_day": true,
+    "click_collect": true,
+    "returns_days": 7,
+    "returns_notes": "7 days from delivery or in-store collection. Electronics must be unopened/unused with seals intact; 15% restocking fee on non-defective opened items; accessories, storage, software/games, headphones, personal care non-returnable. Online refunds to original payment method within 7 business days (older T&C page says credit vouchers only).",
+    "warranty_policy": "Limited warranty from the brand/manufacturer/distributor; Jumbo acts as retailer only. Paid Jumbo extended warranty available.",
+    "sources": [
+      "https://www.jumbo.ae/customer-support/delivery-and-installation",
+      "https://www.jumbo.ae/customer-support/return-and-exchange",
+      "https://www.jumbo.ae/about-jumbo/terms-conditions",
+      "https://www.jumbo.ae/terms-and-conditions",
+      "https://www.jumbo.ae/payments/easypay"
+    ],
+    "checked": "2026-11-01"
+  },
+  "almanea-sa": {
+    "bnpl": [
+      {"provider": "tabby", "payments": null, "notes": "Terms state bank-card offers do not apply to 'Tabby or Tamara's purchases' (implies accepted); instalment count not stated"},
+      {"provider": "tamara", "payments": null, "notes": "Same terms clause; instalment count not stated"}
+    ],
+    "cod": null,
+    "cod_notes": "Not stated on terms or services pages.",
+    "free_delivery_over": null,
+    "free_delivery_currency": "SAR",
+    "delivery_fee": null,
+    "delivery_days": "3-5 working days maximum in major cities (Sun-Thu delivery); extra fee outside Riyadh, Dammam, Jeddah, Al-Kharj",
+    "same_day": true,
+    "click_collect": true,
+    "returns_days": 7,
+    "returns_notes": "7 days from purchase, unopened/unused with all packaging; mobiles, computers, tablets, cameras only within 24 hours and unopened. Change-of-mind returns after delivery charged 2% of invoice (min SAR 100) plus return fees. Software/games and gift items non-returnable. Delivery fee is 'for a fee' with amounts behind a link not stated in text.",
+    "warranty_policy": "Manufacturer / authorised agent warranty of two years from purchase; claims go to the agent, not Almanea. Original invoice required.",
+    "sources": [
+      "https://www.almanea.sa/en/terms-conditions",
+      "https://almanea.sa/en/services"
+    ],
+    "checked": "2026-11-01"
+  },
+  "saco-sa": {
+    "bnpl": [
+      {"provider": "tabby", "payments": null, "notes": "Tabby logo in site payment methods; instalment count not stated"},
+      {"provider": "tamara", "payments": null, "notes": "Tamara logo in site payment methods; instalment count not stated"}
+    ],
+    "cod": null,
+    "cod_notes": "Payment options shown (Mada, Visa, Mastercard, Amex, Apple Pay, STC Pay, Tabby, Tamara etc.) include no cash option; COD not stated either way.",
+    "free_delivery_over": 1000,
+    "free_delivery_currency": "SAR",
+    "delivery_fee": 50,
+    "delivery_days": null,
+    "same_day": true,
+    "click_collect": true,
+    "returns_days": 7,
+    "returns_notes": "Returns within 7 days of purchase, exchanges within 14 days; online orders returned to store within 14 days of delivery. Must be unused, original packaging, original invoice. Defective electrical items need an agent's report. Delivery + assembly SAR 150. Customer pays return shipping unless item defective/wrong.",
+    "warranty_policy": "Saco maintenance/warranty policy: items with an authorised agent go to the agent's service centre; device warranty stated as 2 years (battery 6 months, charger 1 month); original Saco invoice required. Paid 'Dhaman Plus' extended warranty available.",
+    "sources": [
+      "https://www.saco.sa/",
+      "https://www.saco.sa/delivery-and-installation",
+      "https://www.saco.sa/return-exchange",
+      "https://www.saco.sa/maintenance-policy",
+      "https://www.saco.sa/yalla"
+    ],
+    "checked": "2026-11-01"
+  },
+  "alsaif-sa": {
+    "bnpl": [
+      {"provider": "tabby", "payments": 4, "notes": "4 monthly instalments, no fees, first at order; site config shows max SAR 4,000"},
+      {"provider": "tamara", "payments": 3, "notes": "3 instalments, first at order, rest within two months"}
+    ],
+    "cod": true,
+    "cod_notes": "Saudi Arabia only; COD fee SAR 28, non-refundable on returns; orders outside Riyadh must be confirmed via WhatsApp before shipping.",
+    "free_delivery_over": null,
+    "free_delivery_currency": "SAR",
+    "delivery_fee": null,
+    "delivery_days": null,
+    "same_day": null,
+    "click_collect": null,
+    "returns_days": 3,
+    "returns_notes": "Return period 3 days, exchange 7 days; discounted items exchange only; used items not returnable; Tabby/Tamara purchases replaced via voucher within 7 days. Terms note free shipping does not apply to ACs (SAR 160 shipping + installation); no general delivery fee/threshold stated (given after purchase).",
+    "warranty_policy": "Al Saif Gallery gives a 3-year warranty on its own Edison brand; other brands carry only the authorised dealer's warranty.",
+    "sources": [
+      "https://alsaifgallery.com/SA_en/m-26/faq",
+      "https://alsaifgallery.com/SA_en/m-27/shipping-delivery",
+      "https://alsaifgallery.com/SA_en/m-29/terms-and-conditions",
+      "https://alsaifgallery.com/SA_en/m-30/faqs",
+      "https://alsaifgallery.com/SA_en/m-31/return-policy",
+      "https://alsaifgallery.com/SA_en/m-32/warrenty"
+    ],
+    "checked": "2026-11-01"
+  },
+  "xcite-kw": {
+    "bnpl": [
+      {"provider": "other", "payments": null, "notes": "Own 'Easy Credit' instalments via an Alghanim company, and XPay lease (up to KD 500, default 4-month term). Tabby/Tamara/Deema not stated on any policy page."}
+    ],
+    "cod": null,
+    "cod_notes": "Policy pages list KNET, Visa, Mastercard, Apple Pay only; COD not stated.",
+    "free_delivery_over": null,
+    "free_delivery_currency": "KWD",
+    "delivery_fee": 0,
+    "delivery_days": null,
+    "same_day": true,
+    "click_collect": null,
+    "returns_days": 14,
+    "returns_notes": "Return/exchange within 14 days of delivery, original saleable condition (FAQ: sealed). No refunds on e-delivery products. Delivery: free 'All-Day Delivery' on most products; specific time slots may cost extra; 3-Hour Express KD 1.500, 1-Hour Super Express KD 2.000. Click & collect conflicting: T&C 9.12 references Click & Collect orders but FAQ says no showroom pickups.",
+    "warranty_policy": "Minimum 1-year manufacturing warranty on all products (5 years on cooling compressors); paid Xcare extended warranty up to 5 years.",
+    "sources": [
+      "https://www.xcite.com/faq",
+      "https://www.xcite.com/terms-and-conditions",
+      "https://www.xcite.com/delivery-installation",
+      "https://www.xcite.com/express-delivery",
+      "https://www.xcite.com/xpay"
+    ],
+    "checked": "2026-11-01"
+  },
+  "jumbosouq-qa": {
+    "bnpl": [],
+    "cod": true,
+    "cod_notes": "Cash or card payment on delivery accepted; no limit/fee stated. No BNPL stated (Visa/MC, Amex, Apple Pay, Doha Bank internet banking).",
+    "free_delivery_over": null,
+    "free_delivery_currency": "QAR",
+    "delivery_fee": 0,
+    "delivery_days": "Within 24 hours of order",
+    "same_day": null,
+    "click_collect": null,
+    "returns_days": 14,
+    "returns_notes": "Return within 14 days of receipt, undamaged with all accessories; but page also says no return/exchange after 3 days of delivery (conflict). Earphones, mobiles, laptops, TVs, large appliances etc. not returnable unless manufacturer defect; QAR 200 deduction on certain appliances. Delivery free within Qatar unless otherwise mentioned.",
+    "warranty_policy": "Manufacturer's warranty only, valid in Qatar; repairs/replacements handled by the manufacturer, not JS.QA.",
+    "sources": [
+      "https://js.qa/faq",
+      "https://js.qa/en/payment-policy",
+      "https://js.qa/en/delivery-and-installation-policy",
+      "https://js.qa/en/hassle-free-return",
+      "https://js.qa/en/product-warranty-info"
+    ],
+    "checked": "2026-11-01"
+  },
+  "ansar-qa": {
+    "bnpl": [],
+    "cod": true,
+    "cod_notes": "Card on delivery and cash on delivery accepted (payment policy); FAQ says COD for supermarket orders up to QAR 500. Minimum order QAR 20. No BNPL stated.",
+    "free_delivery_over": 99,
+    "free_delivery_currency": "QAR",
+    "delivery_fee": 10,
+    "delivery_days": "Choice of three time slots at checkout; next-day slot for orders after 10 PM",
+    "same_day": true,
+    "click_collect": null,
+    "returns_days": 7,
+    "returns_notes": "General 7-day return policy (T&C apply). Faulty items refunded within 3 days; laptops, tablets, phones, cameras, storage, consoles/games etc. only returnable if defective within 3 days. Express orders 9 AM-10 PM delivered within one hour.",
+    "warranty_policy": "All products carry warranty as shown on the delivered invoice; keep invoice as proof. Provider/duration not stated.",
+    "sources": [
+      "https://www.ansargallery.com/en/faqs",
+      "https://www.ansargallery.com/en/payment-policy",
+      "https://www.ansargallery.com/en/return-policy"
+    ],
+    "checked": "2026-11-01"
+  }
+}

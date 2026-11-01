@@ -1,4 +1,4 @@
-import { ago, colourName, conditionLabel, exactTime, money, regionLabel, storeName } from "@/lib/format";
+import { ago, bnplName, colourName, conditionLabel, exactTime, money, regionLabel, storeName, warrantyLabel } from "@/lib/format";
 import { t, type CC, type Lang } from "@/lib/i18n";
 import type { Offer } from "@/lib/queries";
 
@@ -36,6 +36,40 @@ export function Offers({ offers, cc, lang, currency }: { offers: Offer[]; cc: CC
     );
   };
 
+  const ar = lang === "ar";
+  const checkedOn = (p: Offer["policies"]) => p?.checked
+    ? (ar ? `تم التحقق من سياسات المتجر في ${p.checked}` : `Store policy checked ${p.checked}`) : undefined;
+  /** Trust chips: warranty from this listing; payment, delivery and returns from the store's checked policy. */
+  const chips = (o: Offer) => {
+    const out: { text: string; tone: "deal" | "plain"; title?: string }[] = [];
+    const w = warrantyLabel(o.warranty_months, o.warranty_by, lang);
+    if (w) out.push({ text: w, tone: "deal", title: ar ? "كما يذكره المتجر لهذا المنتج" : "As the store states for this product" });
+    const pol = o.policies;
+    const price = Number(o.price);
+    for (const b of pol?.bnpl ?? []) {
+      const n = b.payments || null; // only the number of payments the store itself states
+      out.push({
+        text: n && price ? `${bnplName(b.provider, lang)} · ${n} × ${money(price / n, o.currency || currency, lang)}` : bnplName(b.provider, lang),
+        tone: "plain", title: checkedOn(pol),
+      });
+    }
+    if (pol?.cod) out.push({ text: ar ? "الدفع عند الاستلام" : "Cash on delivery", tone: "plain", title: pol.cod_notes || checkedOn(pol) });
+    if (pol?.free_delivery_over != null && price >= pol.free_delivery_over) out.push({ text: ar ? "توصيل مجاني" : "Free delivery", tone: "plain", title: checkedOn(pol) });
+    if (pol?.same_day) out.push({ text: ar ? "خيار توصيل سريع" : "Express delivery option", tone: "plain", title: pol.delivery_days || checkedOn(pol) });
+    if (pol?.click_collect) out.push({ text: ar ? "استلام من الفرع" : "Pick up in store", tone: "plain", title: checkedOn(pol) });
+    if (!out.length) return null;
+    return (
+      <span className="flex flex-wrap gap-1.5 mt-2">
+        {out.map((c) => (
+          <span key={c.text} title={c.title}
+            className={`text-[11px] px-2 py-0.5 rounded-full border ${c.tone === "deal" ? "bg-deal-wash text-deal-ink border-deal/25 font-semibold" : "bg-surface text-ink-2 border-line"}`}>
+            {c.text}
+          </span>
+        ))}
+      </span>
+    );
+  };
+
   return (
     <div>
       <p className="px-4 sm:px-5 py-2.5 text-[12px] text-muted border-b border-line bg-sunk">{d.rankingNote}</p>
@@ -55,6 +89,7 @@ export function Offers({ offers, cc, lang, currency }: { offers: Offer[]; cc: CC
                   </p>
                   <p className="text-[12px] text-ink-2 clamp-2 mt-0.5">{g.best.title}</p>
                   {meta(g.best)}
+                  {chips(g.best)}
                 </div>
                 <div className="text-end">
                   <p className="font-display font-bold text-[18px] num whitespace-nowrap leading-tight">{money(g.best.price, g.best.currency || currency, lang)}</p>

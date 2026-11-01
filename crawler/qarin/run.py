@@ -69,6 +69,7 @@ def _upsert_offer(conn, store_id: str, url: str, p: dict, ident: dict) -> bool:
         mpn=p.get("mpn"), sku=p.get("sku"), image=(p.get("image") or "")[:1000] or None, colour=ident["colour"],
         storage=ident["storage"], condition=ident["condition"], region=ident["region"], seller=p.get("seller"),
         match_key=ident["key"], match_method=ident["match_method"],
+        warranty_months=p.get("warranty_months"), warranty_by=(p.get("warranty_by") or None) and str(p.get("warranty_by"))[:60],
     )
     if row is None:
         cols = ", ".join(vals)
@@ -298,43 +299,72 @@ def cmd_match():
 
 # ---------------------------------------------------------------- alerts
 def cmd_alerts():
-    key = os.environ.get("RESEND_API_KEY")
-    sender = os.environ.get("ALERT_FROM")
+    """Send due alerts on every channel that has credentials. Due = price fell below the price when the alert was made
+    (or the last one we sent), or reached the target, or the product came back in stock. At most one message per alert per day."""
+    from . import notify
+    on = notify.enabled()
+    log("alerts: channels on:", ", ".join(k for k, v in on.items() if v) or "none")
     site = os.environ.get("SITE_URL", "https://qarin-gulf.vercel.app").rstrip("/")
-    if not key or not sender:
-        log("alerts: RESEND_API_KEY / ALERT_FROM not set; skipping (alerts stay queued)")
-        return
     with db.connect() as conn:
         due = conn.execute(
-            """SELECT a.id, a.email, a.lang, a.country, a.target_price, a.last_sent_price, a.token, p.name, p.slug, p.id,
-                      m.price, c.currency, m.store
+            """SELECT a.id, a.channel, a.address, a.push_sub, a.lang, a.country, a.token, a.base_price, a.last_sent_price,
+                      a.target_price, p.name, p.slug, p.id, m.price, c.currency, c.decimals, m.store
                FROM alerts a JOIN products p ON p.id=a.product_id JOIN countries c ON c.code=a.country
                JOIN LATERAL (SELECT o.price, s.name store FROM offers o JOIN stores s ON s.id=o.store_id
-                             WHERE o.product_id=p.id AND s.country=a.country AND o.in_stock AND o.price IS NOT NULL
+                             WHERE o.product_id=p.id AND s.country=a.country AND o.in_stock IS NOT FALSE AND o.price > 0
                              ORDER BY o.price LIMIT 1) m ON true
-               WHERE a.verified_at IS NOT NULL AND a.unsubscribed_at IS NULL
-                 AND (a.target_price IS NULL OR m.price <= a.target_price)
-                 AND (a.last_sent_price IS NULL OR m.price < a.last_sent_price)"""
+               WHERE a.verified_at IS NOT NULL AND a.unsubscribed_at IS NULL AND a.address IS NOT NULL
+                 AND (a.last_sent_at IS NULL OR a.last_sent_at < now() - interval '20 hours')
+                 AND (
+                   (a.target_price IS NOT NULL AND m.price <= a.target_price AND (a.last_sent_price IS NULL OR m.price < a.last_sent_price))
+                   OR (a.target_price IS NULL AND a.base_price IS NULL AND a.last_sent_price IS NULL)              -- back in stock
+                   OR (a.target_price IS NULL AND m.price < COALESCE(a.last_sent_price, a.base_price) * 0.995)    -- dropped
+                 )"""
         ).fetchall()
-        sent = 0
-        for (aid, email, lang, cc, target, last, token, name, slug, pid, price, cur, store) in due:
-            url = f"{site}/{cc}/{lang}/p/{slug}-{pid}"
+        sent = queued = 0
+        for (aid, ch, addr, sub, lang, cc, token, base, last, target, name, slug, pid, price, cur, dec, store) in due:
+            if not on.get(ch):
+                queued += 1
+                continue
+            kind = "stock" if base is None and last is None and target is None else "drop"
+            pstr = f"{float(price):,.{dec}f} {cur}" if lang != "ar" else f"{float(price):,.{dec}f} {cur}"
+            subject, line = notify.text_for(lang, kind, name, pstr, store)
+            url = f"{site}/{cc}/{lang}/p/{slug}-{pid}?utm_source=alert&utm_medium={ch}"
             unsub = f"{site}/api/alerts/unsubscribe?token={token}"
-            ar = lang == "ar"
-            subject = (f"انخفض سعر {name} إلى {price} {cur}" if ar else f"{name} dropped to {cur} {price}")
-            body = (f"<p>{'أرخص سعر الآن' if ar else 'Cheapest price now'}: <b>{cur} {price}</b> — {store}</p>"
-                    f"<p><a href=\"{url}\">{'قارن الأسعار' if ar else 'Compare prices'}</a></p>"
-                    f"<p style=\"color:#888;font-size:12px\"><a href=\"{unsub}\">{'إلغاء التنبيه' if ar else 'Unsubscribe'}</a></p>")
-            r = http._client.post("https://api.resend.com/emails", headers={"Authorization": f"Bearer {key}"},
-                                  json={"from": sender, "to": [email], "subject": subject, "html": body,
-                                        "headers": {"List-Unsubscribe": f"<{unsub}>"}})
-            if r.status_code < 300:
+            try:
+                if ch == "email":
+                    ok = notify.send_email(addr, subject, line, url, unsub, lang)
+                elif ch == "telegram":
+                    ok = notify.send_telegram(addr, subject, line, url, unsub, lang)
+                elif ch == "whatsapp":
+                    ok = notify.send_whatsapp(addr, name, pstr, store, url, lang)
+                elif ch == "push":
+                    ok = notify.send_push(sub if isinstance(sub, dict) else json.loads(sub), subject, line, url)
+                else:
+                    ok = False
+            except Exception as e:  # one bad address never stops the run
+                log("alerts:", ch, "error", str(e)[:200])
+                ok = False
+            if ok is None:
+                conn.execute("UPDATE alerts SET unsubscribed_at=now() WHERE id=%s", (aid,))
+            elif ok:
                 conn.execute("UPDATE alerts SET last_sent_at=now(), last_sent_price=%s WHERE id=%s", (price, aid))
                 sent += 1
-            else:
-                log("alerts: resend error", r.status_code, r.text[:200])
         conn.commit()
-        log(f"alerts: sent {sent} of {len(due)} due")
+        log(f"alerts: sent {sent}, waiting for channel keys {queued}, due {len(due)}")
+
+
+def cmd_policies():
+    """Load checked store policies (db/policies_*.json, written from each store's own help pages) into stores.policies."""
+    data = {}
+    for f in sorted((db.ROOT / "db").glob("policies_*.json")):
+        data.update(json.loads(f.read_text()))
+    with db.connect() as conn:
+        n = 0
+        for sid, pol in data.items():
+            n += conn.execute("UPDATE stores SET policies=%s WHERE id=%s", (json.dumps(pol), sid)).rowcount
+        conn.commit()
+    log(f"policies: loaded {n} stores from {len(data)} entries")
 
 
 def cmd_revalidate():
@@ -392,6 +422,8 @@ def main(argv=None):
         cmd_match()
     elif a.cmd == "alerts":
         cmd_alerts()
+    elif a.cmd == "policies":
+        cmd_policies()
     elif a.cmd == "revalidate":
         cmd_revalidate()
     elif a.cmd == "stats":

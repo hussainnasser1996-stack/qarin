@@ -46,7 +46,11 @@ export default async function Admin() {
         WHERE NOT r.resolved ORDER BY r.id DESC LIMIT 50`,
     sql`SELECT store_name, website, country, contact, message, created_at FROM merchant_leads ORDER BY id DESC LIMIT 50`,
     sql`SELECT count(*)::int AS total, count(*) FILTER (WHERE verified_at IS NOT NULL)::int AS verified,
-               count(*) FILTER (WHERE unsubscribed_at IS NOT NULL)::int AS unsubscribed FROM alerts`,
+               count(*) FILTER (WHERE unsubscribed_at IS NOT NULL)::int AS unsubscribed,
+               count(*) FILTER (WHERE channel = 'email' AND verified_at IS NOT NULL AND unsubscribed_at IS NULL)::int AS email,
+               count(*) FILTER (WHERE channel = 'telegram' AND verified_at IS NOT NULL AND unsubscribed_at IS NULL)::int AS telegram,
+               count(*) FILTER (WHERE channel = 'whatsapp' AND verified_at IS NOT NULL AND unsubscribed_at IS NULL)::int AS whatsapp,
+               count(*) FILTER (WHERE channel = 'push' AND verified_at IS NOT NULL AND unsubscribed_at IS NULL)::int AS push FROM alerts`,
     sql`SELECT p.id, p.name, p.offer_count, p.country_count, array_to_string(array_agg(DISTINCT o.store_id), ', ') AS stores,
                max(o.price) / NULLIF(min(o.price), 0) AS max_over_min
         FROM products p JOIN offers o ON o.product_id = p.id JOIN stores s ON s.id = o.store_id
@@ -59,7 +63,7 @@ export default async function Admin() {
         <h1 className="text-[24px] font-bold">Qarin admin</h1>
         <form method="post" action="/api/admin/logout"><button className="h-9 px-3 rounded-md border border-line">Sign out</button></form>
       </div>
-      <p className="text-[14px] text-muted">Alerts: {alerts[0].total} total · {alerts[0].verified} verified · {alerts[0].unsubscribed} unsubscribed</p>
+      <p className="text-[14px] text-muted">Alerts: {alerts[0].total} total · {alerts[0].verified} verified · {alerts[0].unsubscribed} unsubscribed · active by channel: email {alerts[0].email}, Telegram {alerts[0].telegram}, WhatsApp {alerts[0].whatsapp}, browser {alerts[0].push}</p>
       <Table title="Clicks by store (30 days) — the number we sell to stores" rows={clicksByStore} />
       <Table title="Clicks by day & country (14 days)" rows={clicksByDay} />
       <Table title="Coverage by store" rows={coverage} />
