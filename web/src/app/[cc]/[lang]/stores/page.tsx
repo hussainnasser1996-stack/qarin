@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ago } from "@/lib/format";
+import { ago, storeName } from "@/lib/format";
 import { CCS, COUNTRIES, t, type CC, type Lang } from "@/lib/i18n";
 import { getStores } from "@/lib/queries";
 import { alternates } from "@/lib/seo";
@@ -30,7 +30,7 @@ export default async function Stores({ params }: { params: Promise<{ cc: CC; lan
               {list.map((s) => (
                 <li key={s.id}>
                   <Link href={`/${c}/${lang}/stores/${s.id}`} className="panel block p-3 hover:border-line-strong">
-                    <span className="block font-semibold">{s.name}</span>
+                    <span className="block font-semibold">{storeName(s.name, lang)}</span>
                     <span className="block text-muted text-[13px]"><span className="num">{s.offers.toLocaleString("en-US")}</span> {d.offersTracked}</span>
                     <span className="block text-muted text-[12px]">{d.updated} {ago(s.last_seen, lang)}</span>
                   </Link>

@@ -15,6 +15,7 @@ export default async function sitemap({ id }: { id: Promise<string> }): Promise<
   for (const lang of LANGS) {
     out.push({ url: `${SITE}/${cc}/${lang}`, changeFrequency: "daily", priority: 1 });
     out.push({ url: `${SITE}/${cc}/${lang}/deals`, changeFrequency: "daily", priority: 0.8 });
+    out.push({ url: `${SITE}/${cc}/${lang}/white-friday`, changeFrequency: "daily", priority: 0.8 });
     for (const c of CATEGORIES) out.push({ url: `${SITE}/${cc}/${lang}/c/${c.slug}`, changeFrequency: "daily", priority: 0.7 });
   }
   const products = await getSitemapProducts(cc).catch(() => []);

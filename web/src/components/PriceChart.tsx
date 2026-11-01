@@ -16,8 +16,10 @@ const RANGES = [
 const STORE_COLORS = ["#5b6b8c", "#a0703c", "#7a5ea8", "#3f8aa8", "#a85e7a", "#6f8a3f", "#8a6f3f", "#3f6f8a"];
 
 export function PriceChart({ points, stores, currency, lang, labels }: {
-  points: Point[]; stores: string[]; currency: string; lang: Lang; labels: { lowest: string; all: string };
+  points: Point[]; stores: string[]; currency: string; lang: Lang;
+  labels: { lowest: string; all: string; ranges?: Record<string, string>; store?: Record<string, string> };
 }) {
+  const sl = (s: string) => labels.store?.[s] ?? s;
   const [range, setRange] = useState("3M");
   const [shown, setShown] = useState<Record<string, boolean>>({});
   const days = RANGES.find((r) => r.k === range)!.days;
@@ -30,7 +32,7 @@ export function PriceChart({ points, stores, currency, lang, labels }: {
           {RANGES.map((r) => (
             <button key={r.k} type="button" onClick={() => setRange(r.k)} aria-pressed={range === r.k}
               className={`px-3 h-8 text-[13px] ${range === r.k ? "bg-ink text-surface" : "hover:bg-paper"}`}>
-              {r.k === "All" ? labels.all : r.k}
+              {labels.ranges?.[r.k] ?? (r.k === "All" ? labels.all : r.k)}
             </button>
           ))}
         </div>
@@ -41,7 +43,7 @@ export function PriceChart({ points, stores, currency, lang, labels }: {
           {stores.map((s, i) => (
             <button key={s} type="button" aria-pressed={!!shown[s]} onClick={() => setShown((x) => ({ ...x, [s]: !x[s] }))}
               className={`inline-flex items-center gap-1.5 px-2 h-7 rounded-full border ${shown[s] ? "border-line-strong bg-surface" : "border-line text-muted"}`}>
-              <span className="w-2.5 h-0.5 rounded" style={{ background: STORE_COLORS[i % STORE_COLORS.length] }} />{s}
+              <span className="w-2.5 h-0.5 rounded" style={{ background: STORE_COLORS[i % STORE_COLORS.length] }} />{sl(s)}
             </button>
           ))}
         </div>
@@ -56,7 +58,7 @@ export function PriceChart({ points, stores, currency, lang, labels }: {
               tickFormatter={(v: number) => v.toLocaleString("en-US", { maximumFractionDigits: 0 })} />
             <Tooltip
               contentStyle={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 8, fontSize: 12 }}
-              formatter={(v, name) => [money(v as number, currency, lang), name === "min" ? labels.lowest : String(name)]}
+              formatter={(v, name) => [money(v as number, currency, lang), name === "min" ? labels.lowest : sl(String(name))]}
             />
             {stores.map((s, i) => shown[s] && (
               <Line key={s} type="stepAfter" dataKey={s} stroke={STORE_COLORS[i % STORE_COLORS.length]} strokeWidth={1.5} dot={false} connectNulls isAnimationActive={false} />

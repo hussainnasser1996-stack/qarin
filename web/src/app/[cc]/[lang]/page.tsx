@@ -1,11 +1,11 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { SearchBox } from "@/components/SearchBox";
-import { ProductList, Thumb } from "@/components/ProductList";
+import { ProductCards, ProductList, Thumb } from "@/components/ProductList";
 import { PriceTag, SpreadBar } from "@/components/Spread";
-import { ago, convert, money, productPath } from "@/lib/format";
+import { ago, convert, money, productPath, storeName } from "@/lib/format";
 import { categoryName, COUNTRIES, t, type CC, type Lang } from "@/lib/i18n";
-import { getGccHero, getHome, type ListItem } from "@/lib/queries";
+import { getGccHero, getHome, getPopular, type ListItem } from "@/lib/queries";
 import { alternates } from "@/lib/seo";
 
 export const revalidate = 3600;
@@ -72,12 +72,18 @@ function GccTicket({ h, cc, lang }: { h: NonNullable<Awaited<ReturnType<typeof g
 export default async function Home({ params }: { params: Promise<{ cc: CC; lang: Lang }> }) {
   const { cc, lang } = await params;
   const d = t(lang);
-  const data = await getHome(cc).catch(() => null);
+  const [data, popular] = await Promise.all([getHome(cc).catch(() => null), getPopular(cc, 12).catch(() => [])]);
   const country = COUNTRIES[cc][lang];
   const hero = data?.gaps.find((g) => (g.spread?.length ?? 0) >= 2 && g.image) ?? data?.gaps[0];
   const gccHero = hero ? null : await getGccHero().catch(() => null);
   return (
     <div className="space-y-12">
+      {new Date().getMonth() === 10 && (
+        <Link href={`/${cc}/${lang}/white-friday`} className="-mb-4 flex items-center justify-between gap-3 rounded-xl bg-ink text-surface px-4 py-3 text-[14px] hover:opacity-95">
+          <span><span aria-hidden className="tag inline-flex h-6 items-center pe-2 me-2 text-[12px] font-bold align-middle">%</span>{t(lang).wfTitle}</span>
+          <span aria-hidden className="flip-rtl">→</span>
+        </Link>
+      )}
       <section className="grid gap-8 lg:grid-cols-[1.15fr_1fr] items-center pt-2 sm:pt-6">
         <div>
           <p className="text-[13px] font-medium text-ink-2 mb-3"><span aria-hidden>{COUNTRIES[cc].flag}</span> {d.tagline} · {country}</p>
@@ -97,16 +103,30 @@ export default async function Home({ params }: { params: Promise<{ cc: CC; lang:
 
       {data && data.cats.length > 0 && (
         <nav aria-label={d.categories}>
-          <ul className="flex flex-wrap gap-2">
+          <h2 className="sr-only">{d.categories}</h2>
+          <ul className="grid gap-2.5 grid-cols-3 sm:grid-cols-4 lg:grid-cols-6">
             {data.cats.filter((c) => c.category && !["accessories", "other-electronics"].includes(c.category)).slice(0, 12).map((c) => (
               <li key={c.category}>
-                <Link href={`/${cc}/${lang}/c/${c.category}`} className="inline-flex items-center gap-2 h-10 px-4 rounded-full bg-surface border border-line hover:border-ink-2 transition-colors text-[14px]">
-                  {categoryName(c.category, lang)} <span className="text-muted text-[12px] num">{c.n}</span>
+                <Link href={`/${cc}/${lang}/c/${c.category}`} className="panel group flex flex-col items-center text-center gap-2 p-3 h-full hover:border-ink-2 transition-colors">
+                  <span className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-white flex items-center justify-center overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    {c.image && <img src={c.image} alt="" loading="lazy" className="max-w-[85%] max-h-[85%] object-contain group-hover:scale-105 transition-transform" />}
+                  </span>
+                  <span className="text-[13px] font-medium leading-tight">{categoryName(c.category, lang)}</span>
+                  <span className="text-muted text-[11px] num -mt-1">{c.n.toLocaleString("en-US")}</span>
                 </Link>
               </li>
             ))}
           </ul>
         </nav>
+      )}
+
+      {popular.length > 2 && (
+        <section aria-labelledby="popular">
+          <h2 id="popular" className="font-display text-[22px] sm:text-[26px] font-bold">{d.popularIn(country)}</h2>
+          <p className="text-muted text-[14px] mt-1 mb-4">{d.popularSub}</p>
+          <ProductCards items={popular} cc={cc} lang={lang} scroll />
+        </section>
       )}
 
       {data && data.gaps.length > 1 && (
@@ -140,7 +160,7 @@ export default async function Home({ params }: { params: Promise<{ cc: CC; lang:
                         <s className="text-muted text-[12px] num">{money(p.old_price, p.currency, lang)}</s>
                         <span className="text-deal-ink text-[12px] font-semibold num">−{Math.round(drop)}%</span>
                       </span>
-                      <span className="block text-muted text-[12px] mt-1">{p.store}</span>
+                      <span className="block text-muted text-[12px] mt-1">{storeName(p.store, lang)}</span>
                     </span>
                   </Link>
                 </li>
@@ -157,7 +177,7 @@ export default async function Home({ params }: { params: Promise<{ cc: CC; lang:
             {data.stores.map((s) => (
               <li key={s.id}>
                 <Link href={`/${cc}/${lang}/stores/${s.id}`} className="group block">
-                  <span className="block font-semibold group-hover:underline underline-offset-4">{s.name}</span>
+                  <span className="block font-semibold group-hover:underline underline-offset-4">{storeName(s.name, lang)}</span>
                   <span className="block text-muted text-[13px]">
                     <span className="num">{s.offers.toLocaleString("en-US")}</span> {d.offersTracked} · {ago(s.last_seen, lang)}
                   </span>

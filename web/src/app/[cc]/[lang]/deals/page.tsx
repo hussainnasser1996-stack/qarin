@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { Empty, ProductList, Thumb } from "@/components/ProductList";
-import { money, productPath } from "@/lib/format";
+import { money, productPath, storeName } from "@/lib/format";
 import { COUNTRIES, t, type CC, type Lang } from "@/lib/i18n";
 import { getDrops, getHome } from "@/lib/queries";
 import { alternates } from "@/lib/seo";
@@ -33,7 +33,7 @@ export default async function Deals({ params }: { params: Promise<{ cc: CC; lang
                     <Thumb src={p.image} />
                     <span className="flex-1 min-w-0">
                       <span className="block font-medium clamp-2">{p.name}</span>
-                      <span className="block text-muted text-[13px]">{p.store}</span>
+                      <span className="block text-muted text-[13px]">{storeName(p.store, lang)}</span>
                       {p.raised_before && <span className="block text-warn text-[12px]">{d.raisedBefore}</span>}
                     </span>
                     <span className="text-end">

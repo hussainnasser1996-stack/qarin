@@ -53,7 +53,7 @@ export default async function Layout({ children, params }: { children: React.Rea
   return (
     <html lang={`${lang}-${COUNTRIES[cc as CC].locale}`} dir={lang === "ar" ? "rtl" : "ltr"} className={`${body.variable} ${display.variable}`}>
       <body className="min-h-dvh flex flex-col">
-        <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:p-2 focus:bg-surface">Skip to content</a>
+        <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:p-2 focus:bg-surface">{t(lang).skip}</a>
         <Header cc={cc as CC} lang={lang as Lang} />
         <main id="main" className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-6">{children}</main>
         <Footer cc={cc as CC} lang={lang as Lang} />

@@ -55,9 +55,13 @@ export const getHome = cached(async (cc: CC) => {
     ),
     getDrops(cc, 12),
     query(
-      `SELECT p.category, count(DISTINCT p.id)::int AS n FROM products p
-       JOIN offers o ON o.product_id = p.id JOIN stores s ON s.id = o.store_id
-       WHERE s.country = $1 AND o.price IS NOT NULL GROUP BY 1 ORDER BY 2 DESC`,
+      `WITH c AS (
+         SELECT p.category, p.id, p.image, p.offer_count, p.family IS NOT NULL AS fam FROM products p
+         JOIN offers o ON o.product_id = p.id JOIN stores s ON s.id = o.store_id
+         WHERE s.country = $1 AND o.price IS NOT NULL GROUP BY 1, 2, 3, 4, 5)
+       SELECT category, count(*)::int AS n,
+              (array_agg(image ORDER BY fam DESC, offer_count DESC) FILTER (WHERE image IS NOT NULL))[1] AS image
+       FROM c GROUP BY 1 ORDER BY 2 DESC`,
       [cc],
     ),
     getStores(cc),
@@ -67,7 +71,7 @@ export const getHome = cached(async (cc: CC) => {
       [cc],
     ),
   ]);
-  return { gaps: gaps as (ListItem & { saving: string })[], drops, cats: cats as { category: string; n: number }[], stores, totals: totals[0] };
+  return { gaps: gaps as (ListItem & { saving: string })[], drops, cats: cats as { category: string; n: number; image: string | null }[], stores, totals: totals[0] };
 }, "home");
 
 // ---------------------------------------------------------------- drops
@@ -100,6 +104,7 @@ export const getDrops = cached(async (cc: CC, limit: number): Promise<Drop[]> =>
 // ---------------------------------------------------------------- search / category
 export type ListParams = {
   q?: string; category?: string; brand?: string; inStock?: boolean; sort?: string; page?: number; store?: string;
+  storage?: string; min?: number; max?: number;
 };
 export const PAGE_SIZE = 24;
 
@@ -120,6 +125,9 @@ export const listProducts = cached(async (cc: CC, p: ListParams) => {
   if (p.category) { params.push(p.category); where.push(`p.category = $${params.length}`); }
   if (p.brand) { params.push(p.brand); where.push(`p.brand = $${params.length}`); }
   if (p.inStock) where.push(`agg.n_offers > 0`);
+  if (p.storage) { params.push(p.storage); where.push(`upper(p.storage) = upper($${params.length})`); }
+  if (p.min !== undefined && !Number.isNaN(p.min)) { params.push(p.min); where.push(`agg.min_price >= $${params.length}`); }
+  if (p.max !== undefined && !Number.isNaN(p.max)) { params.push(p.max); where.push(`agg.min_price <= $${params.length}`); }
   if (p.store) {
     params.push(p.store);
     where.push(`EXISTS (SELECT 1 FROM offers o2 WHERE o2.product_id = p.id AND o2.store_id = $${params.length})`);
@@ -140,14 +148,30 @@ export const listProducts = cached(async (cc: CC, p: ListParams) => {
      ${w} ORDER BY ${order} LIMIT ${PAGE_SIZE} OFFSET ${(page - 1) * PAGE_SIZE}`,
     params,
   );
-  const brands = await query(
-    `SELECT p.brand, count(DISTINCT p.id)::int AS n FROM products p JOIN offers o ON o.product_id = p.id
-     JOIN stores s ON s.id = o.store_id
-     WHERE s.country = $1 AND p.brand IS NOT NULL ${p.category ? "AND p.category = $2" : ""}
-     GROUP BY 1 ORDER BY 2 DESC LIMIT 30`,
-    p.category ? [cc, p.category] : [cc],
-  );
-  return { items: rows as (ListItem & { total: number })[], total: rows[0]?.total ?? 0, brands: brands as { brand: string; n: number }[] };
+  // Facets for the current category (or search), so filters only offer choices that return something.
+  const fParams: unknown[] = [cc];
+  const fWhere: string[] = ["s.country = $1", "o.price IS NOT NULL"];
+  if (p.category) { fParams.push(p.category); fWhere.push(`p.category = $${fParams.length}`); }
+  if (p.q) {
+    const toks = searchTokens(arToEn(searchNorm(p.q)));
+    if (toks.length) { fParams.push(toks); fWhere.push(`p.search_norm ILIKE ALL($${fParams.length}::text[])`); }
+  }
+  const fw = fWhere.join(" AND ");
+  const [brands, storages, stores] = await Promise.all([
+    query(`SELECT p.brand, count(DISTINCT p.id)::int AS n FROM products p JOIN offers o ON o.product_id = p.id
+           JOIN stores s ON s.id = o.store_id WHERE ${fw} AND p.brand IS NOT NULL GROUP BY 1 ORDER BY 2 DESC LIMIT 40`, fParams),
+    query(`SELECT upper(p.storage) AS storage, count(DISTINCT p.id)::int AS n FROM products p JOIN offers o ON o.product_id = p.id
+           JOIN stores s ON s.id = o.store_id WHERE ${fw} AND p.storage IS NOT NULL GROUP BY 1 HAVING count(DISTINCT p.id) > 1
+           ORDER BY (regexp_replace(upper(p.storage), '[^0-9]', '', 'g'))::int * CASE WHEN upper(p.storage) LIKE '%TB' THEN 1024 ELSE 1 END`, fParams),
+    query(`SELECT s.id, s.name, count(DISTINCT p.id)::int AS n FROM products p JOIN offers o ON o.product_id = p.id
+           JOIN stores s ON s.id = o.store_id WHERE ${fw} GROUP BY 1, 2 ORDER BY 3 DESC`, fParams),
+  ]);
+  return {
+    items: rows as (ListItem & { total: number })[], total: rows[0]?.total ?? 0,
+    brands: brands as { brand: string; n: number }[],
+    storages: storages as { storage: string; n: number }[],
+    stores: stores as { id: string; name: string; n: number }[],
+  };
 }, "list", 1800);
 
 export const suggest = cached(async (cc: CC, q: string) => {
@@ -243,3 +267,41 @@ export const getGccHero = cached(async () => {
   return { id: rows[0].id as number, slug: rows[0].slug as string, name: rows[0].name as string, image: rows[0].image as string | null,
            prices: rows.map((r) => ({ country: r.country as CC, currency: r.currency as string, price: Number(r.price) })) };
 }, "gcc-hero");
+
+/** Popular: products sold by the most stores here, then the most clicked. */
+export const getPopular = cached(async (cc: CC, limit = 10) => {
+  return (await query(
+    `${OFFER_AGG}
+     SELECT ${LIST_COLS} FROM products p JOIN agg ON agg.product_id = p.id JOIN countries c ON c.code = $1
+     WHERE p.family IS NOT NULL AND p.image IS NOT NULL AND p.category NOT IN ('accessories') AND agg.n_offers >= 2
+     ORDER BY p.popularity DESC, agg.n_offers DESC, p.country_count DESC LIMIT $2`,
+    [cc, limit],
+  )) as ListItem[];
+}, "popular");
+
+/** Similar: same category, same brand first, close in price, sold here. */
+export const getSimilar = cached(async (cc: CC, id: number, category: string | null, brand: string | null, price: number | null, limit = 6) => {
+  if (!category) return [];
+  return (await query(
+    `${OFFER_AGG}
+     SELECT ${LIST_COLS} FROM products p JOIN agg ON agg.product_id = p.id JOIN countries c ON c.code = $1
+     WHERE p.id <> $2 AND p.category = $3 AND agg.min_price IS NOT NULL AND p.image IS NOT NULL
+       AND ($5::numeric IS NULL OR agg.min_price BETWEEN $5 * 0.6 AND $5 * 1.6)
+     ORDER BY (p.brand IS NOT DISTINCT FROM $4) DESC, (p.family IS NOT NULL) DESC, agg.n_offers DESC,
+              abs(agg.min_price - COALESCE($5, agg.min_price)) ASC
+     LIMIT $6`,
+    [cc, id, category, brand, price, limit],
+  )) as ListItem[];
+}, "similar");
+
+/** Current lowest price per product here, for the saved list. Not cached: ids vary per visitor. */
+export async function pricesFor(cc: CC, ids: number[]) {
+  if (!ids.length) return [];
+  return (await query(
+    `${OFFER_AGG}
+     SELECT p.id, p.slug, p.name, p.image, agg.min_price, agg.n_offers::int AS n_offers, agg.cheapest_store, c.currency
+     FROM products p LEFT JOIN agg ON agg.product_id = p.id JOIN countries c ON c.code = $1
+     WHERE p.id = ANY($2::bigint[])`,
+    [cc, ids.slice(0, 100)],
+  )) as { id: number; slug: string; name: string; image: string | null; min_price: string | null; n_offers: number | null; cheapest_store: string | null; currency: string }[];
+}

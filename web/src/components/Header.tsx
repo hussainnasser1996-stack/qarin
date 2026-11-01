@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SearchBox } from "./SearchBox";
 import { LocaleSwitch } from "./LocaleSwitch";
+import { ListLink } from "./Watch";
 import { t, type CC, type Lang } from "@/lib/i18n";
 
 export function Logo({ lang }: { lang: Lang }) {
@@ -26,7 +27,8 @@ export function Header({ cc, lang }: { cc: CC; lang: Lang }) {
         </div>
         <nav className="flex items-center gap-1 sm:gap-3 ms-auto md:ms-0 text-[14px]">
           <Link href={`/${cc}/${lang}/deals`} className="px-2 py-1.5 rounded-md hover:bg-paper font-medium">{d.deals}</Link>
-          <Link href={`/${cc}/${lang}/stores`} className="px-2 py-1.5 rounded-md hover:bg-paper hidden sm:inline">{d.allStores}</Link>
+          <Link href={`/${cc}/${lang}/stores`} className="px-2 py-1.5 rounded-md hover:bg-paper hidden lg:inline">{d.allStores}</Link>
+          <ListLink cc={cc} lang={lang} />
           <LocaleSwitch cc={cc} lang={lang} />
         </nav>
       </div>

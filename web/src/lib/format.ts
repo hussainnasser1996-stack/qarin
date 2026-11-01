@@ -84,7 +84,9 @@ const AR_TERMS: [RegExp, string][] = [
   [/جوجل|قوقل/g, "google"], [/بكسل|بيكسل/g, "pixel"], [/برو ?ماكس/g, "pro max"], [/برو/g, "pro"], [/الترا|ألترا/g, "ultra"], [/ماكس/g, "max"],
   [/بلس/g, "plus"], [/ميني/g, "mini"], [/اير/g, "air"], [/لابتوب|لاب توب|كمبيوتر محمول/g, "laptop"], [/تلفزيون|تلفاز|شاشه تلفزيون/g, "tv"],
   [/شاشه|مونيتر/g, "monitor"], [/سماعه|سماعات/g, "headphones"], [/مكبر صوت|سبيكر/g, "speaker"], [/كاميرا/g, "camera"], [/طابعه/g, "printer"],
-  [/جوال|هاتف|موبايل/g, "phone"], [/جيجا|قيقا/g, "gb"], [/تيرا/g, "tb"], [/يد تحكم|ذراع تحكم|جوي ستيك/g, "controller"], [/مكنسه/g, "vacuum"],
+  [/جوال|هاتف|موبايل/g, "phone"], [/كيبورد|لوحه مفاتيح/g, "keyboard"], [/ماوس/g, "mouse"], [/راوتر/g, "router"],
+  [/باور ?بانك|شاحن متنقل/g, "power bank"], [/ساعه ذكيه/g, "smart watch"], [/شاحن/g, "charger"], [/قلم ابل/g, "apple pencil"],
+  [/بروجكتر|جهاز عرض/g, "projector"], [/درون/g, "drone"], [/هارد ?ديسك|هارد/g, "hard drive"], [/فلاش/g, "flash"], [/جيجا|قيقا/g, "gb"], [/تيرا/g, "tb"], [/يد تحكم|ذراع تحكم|جوي ستيك/g, "controller"], [/مكنسه/g, "vacuum"],
 ];
 export function arToEn(norm: string): string {
   if (!/[\u0600-\u06ff]/.test(norm)) return norm;
@@ -93,3 +95,45 @@ export function arToEn(norm: string): string {
   for (const [re, en] of AR_TERMS) out = out.replace(new RegExp(`(?<=\\s)(?:${re.source})(?=\\s)`, "g"), ` ${en} `);
   return out.replace(/\s+/g, " ").trim();
 }
+
+/** Store names as Gulf shoppers write them in Arabic. */
+const STORE_AR: Record<string, string> = {
+  "Al Saif Gallery": "السيف غاليري", Almanea: "المنيع", "Ansar Gallery": "أنصار غاليري", Ashrafs: "أشرفز",
+  "Best Al-Yousifi": "بست اليوسفي", Eureka: "يوريكا", Jarir: "جرير", Jumbo: "جمبو", JumboSouq: "جمبو سوق",
+  "Lets Tango": "ليتس تانغو", Lulu: "لولو", OurShopee: "أور شوبي", SACO: "ساكو", "Sharaf DG": "شرف دي جي",
+  Xcite: "إكسايت", eXtra: "إكسترا", iStyle: "آي ستايل",
+};
+export const storeName = (name: string | null | undefined, lang: Lang) => (name ? (lang === "ar" ? STORE_AR[name] ?? name : name) : "");
+
+/** Version labels found in listing titles, in the shopper's language. */
+const REGION: Record<string, { en: string; ar: string; tone: "ok" | "note" }> = {
+  "middle east version": { en: "Middle East version", ar: "نسخة الشرق الأوسط", tone: "ok" },
+  "gcc version": { en: "GCC version", ar: "نسخة الخليج", tone: "ok" },
+  "ksa version": { en: "Saudi version", ar: "النسخة السعودية", tone: "ok" },
+  "uae version": { en: "UAE version", ar: "النسخة الإماراتية", tone: "ok" },
+  "tdra version": { en: "UAE (TDRA) version", ar: "نسخة الإمارات (TDRA)", tone: "ok" },
+  "international version": { en: "International version", ar: "نسخة دولية", tone: "note" },
+  "global version": { en: "Global version", ar: "نسخة عالمية", tone: "note" },
+  "us version": { en: "US version", ar: "نسخة أمريكية", tone: "note" },
+  "china version": { en: "China version", ar: "نسخة صينية", tone: "note" },
+  "japan version": { en: "Japan version", ar: "نسخة يابانية", tone: "note" },
+  "hk version": { en: "Hong Kong version", ar: "نسخة هونغ كونغ", tone: "note" },
+  "indian version": { en: "India version", ar: "نسخة هندية", tone: "note" },
+};
+export const regionLabel = (r: string | null | undefined, lang: Lang) => (r && REGION[r] ? { text: REGION[r][lang], tone: REGION[r].tone } : null);
+
+const CONDITION: Record<string, { en: string; ar: string }> = {
+  renewed: { en: "Renewed", ar: "مجدّد" }, refurbished: { en: "Refurbished", ar: "مجدّد" }, used: { en: "Used", ar: "مستعمل" },
+  demo: { en: "Display unit", ar: "جهاز عرض" }, "open box": { en: "Open box", ar: "علبة مفتوحة" }, rental: { en: "Rental", ar: "تأجير" },
+};
+export const conditionLabel = (c: string | null | undefined, lang: Lang) => (c && c !== "new" ? CONDITION[c]?.[lang] ?? c : null);
+
+/** Colour words in titles → Arabic, for the per-store option list. */
+const COLOUR_AR: Record<string, string> = {
+  black: "أسود", white: "أبيض", silver: "فضي", gold: "ذهبي", grey: "رمادي", gray: "رمادي", blue: "أزرق", red: "أحمر", green: "أخضر",
+  pink: "وردي", purple: "بنفسجي", yellow: "أصفر", orange: "برتقالي", titanium: "تيتانيوم", natural: "طبيعي", navy: "كحلي",
+  midnight: "ميدنايت", starlight: "ستارلايت", graphite: "جرافيت", lavender: "لافندر", mint: "نعناعي", cream: "كريمي", beige: "بيج",
+  brown: "بني", teal: "تركوازي", "sky blue": "أزرق سماوي", "space black": "أسود فلكي", "space gray": "رمادي فلكي", "rose gold": "ذهبي وردي",
+};
+export const colourName = (c: string | null | undefined, lang: Lang) =>
+  c ? (lang === "ar" ? COLOUR_AR[c] ?? c : c.replace(/\b\w/g, (x) => x.toUpperCase())) : "";
